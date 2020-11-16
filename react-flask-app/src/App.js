@@ -25,6 +25,12 @@ function App() {
         >
           Learn React
         </a>
+        <form>
+            <label> Text:
+                <input type="text" input="text"/>
+            </label>
+            <input type="submit" value="Submit"/>
+        </form>
 		<p>The current time is {currentTime}.</p>
       </header>
     </div>
