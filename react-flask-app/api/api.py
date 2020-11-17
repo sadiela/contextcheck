@@ -1,8 +1,11 @@
-import time
-from flask import Flask
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/time')
-def get_current_time():
-		return {'time': time.time()}
+
+@app.route('/result', methods=['POST'])
+def api_post():
+    text = request.data
+    texty = text.decode('utf-8')
+    print(texty)
+    return jsonify(text=texty)
