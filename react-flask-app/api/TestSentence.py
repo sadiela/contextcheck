@@ -312,27 +312,36 @@ def test_sentence(s):
     #print(ids, ids.size(1))
 
     output = run_inference(model, ids, tokenizer)
-    return output, length 
+    return output, length
 
 
 
 def output(sentence):
-#sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
-    out, length = test_sentence(sentence) 
+    #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
+    out, length = test_sentence(sentence)
     print("Results:")
 
     #print(length)
     #print(out['input_toks'][0][:29])
     #print(out['tok_probs'][0][:29])
 
-    avg_sum = 0
+    words = out['input_toks'][0][:length]
+    bias_values = out['tok_probs'][0][:length]
 
-    for l in out['tok_probs'][0][:length]:
+    avg_sum = 0
+    most_biased_words = []
+
+    output = ""
+
+    for word, l in zip(words, bias_values):
         #print(l.index(max(l)))
         avg_sum += l[1]
+        output += word + " " + "{:.5f}".format(l[1]) + "\n"
+        if l[1] >= 0.45:
+            most_biased_words.append(word)
 
     print("Average bias: ", avg_sum/length)
 
-    return "Average bias: " + str(avg_sum/length)
+    output += "Average bias: " + "{:.5f}".format(avg_sum/length) + "\n"
 
-    #print(out['input_toks'][:][:length],out['tok_probs'][:][:length])
+    return output

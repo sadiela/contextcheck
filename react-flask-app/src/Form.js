@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import './Form.css';
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -12,7 +13,6 @@ class Form extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(event){
-        console.log("handleChange: " + event.target.value);
         this.setState({text: event.target.value, response: event.target.response});
     }
     handleSubmit(event){
@@ -27,12 +27,15 @@ class Form extends React.Component {
     }
     render(){
         return(
-            <form onSubmit={this.handleSubmit}>
+            <form className="form" onSubmit={this.handleSubmit}>
+            <p></p>
                 <label>
-                    Text: <input key="text-input" type="text" value={this.state.text} onChange={this.handleChange} />
+                    <strong>Text:</strong> <input className="text_input" key="text-input" type="text" value={this.state.text} onChange={this.handleChange} />
                 </label>
-                <input type="submit" value="Submit"/>
-                <p>Response: {this.state.response}</p>
+                <button className="submit_button" type="submit" value="Submit">Submit</button>
+                <ul>
+                <li className="list_item"> Response: {this.state.response} </li>
+                </ul>
             </form>
         );
     }
