@@ -1,12 +1,15 @@
 # Imports
 #from pytorch_pretrained_bert.modeling import PreTrainedBertModel, BertModel, BertSelfAttention
+import sys
+print(sys.path)
+sys.path.append("/usr/local/lib/python3.7/site-packages")
 import pytorch_pretrained_bert.modeling as modeling
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import copy
-from collections import defaultdict
+# import copy
+# from collections import defaultdict
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 
 from tqdm import tqdm
@@ -16,12 +19,12 @@ import pickle
 import os
 from pytorch_pretrained_bert.modeling import BertForTokenClassification
 from torch.nn import CrossEntropyLoss
-from tensorboardX import SummaryWriter
-import argparse
+# from tensorboardX import SummaryWriter
+# import argparse
 import sklearn.metrics as metrics
 #from simplediff import diff
 from pytorch_pretrained_bert.tokenization import BertTokenizer
-from pytorch_pretrained_bert.optimization import BertAdam
+# from pytorch_pretrained_bert.optimization import BertAdam
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
@@ -293,9 +296,10 @@ def test_sentence(s):
         cache_dir=cache_dir,
         tok2id=tok2id)
 
-    # Load model 
-    saved_model_path = '/usr4/ec523/sadiela/ec463_proj/results/saved_models/model_3.ckpt'
-    model.load_state_dict(torch.load(saved_model_path))
+    # Load model
+    print("Loading Model")
+    saved_model_path = model_save_dir + 'model_3.ckpt'
+    model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     tokens = s.strip().split()
     length = len(tokens)
@@ -312,7 +316,7 @@ def test_sentence(s):
 
 
 
-def output(sentence)
+def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     out, length = test_sentence(sentence) 
     print("Results:")
