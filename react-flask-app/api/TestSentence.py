@@ -1,12 +1,16 @@
 # Imports
 #from pytorch_pretrained_bert.modeling import PreTrainedBertModel, BertModel, BertSelfAttention
+import sys
+print(sys.path)
+sys.path.append('c:\python38\lib\site-packages')
+sys.path.append('c:\\users\\sadie\\appdata\roaming\\python\\python38\\site-packages')
 import pytorch_pretrained_bert.modeling as modeling
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import copy
-from collections import defaultdict
+#import copy
+#from collections import defaultdict
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 
 from tqdm import tqdm
@@ -16,8 +20,8 @@ import pickle
 import os
 from pytorch_pretrained_bert.modeling import BertForTokenClassification
 from torch.nn import CrossEntropyLoss
-from tensorboardX import SummaryWriter
-import argparse
+#from tensorboardX import SummaryWriter
+#import argparse
 import sklearn.metrics as metrics
 #from simplediff import diff
 from pytorch_pretrained_bert.tokenization import BertTokenizer
@@ -102,7 +106,7 @@ PRYZANT_DATA = DATA_DIRECTORY + 'bias_data/WNC/'
 #IMPORTS = 
 training_data = PRYZANT_DATA + 'biased.word.train'
 testing_data = PRYZANT_DATA + 'biased.word.test'
-categories_file = PRYZANT_DATA + 'revision_topics.csv'
+#categories_file = PRYZANT_DATA + 'revision_topics.csv'
 pickle_directory = '../../ML/data/pickle_dir/'
 cache_dir = DATA_DIRECTORY + 'cache/'
 model_save_dir = '../../ML/data/saved_models/'
@@ -312,7 +316,7 @@ def test_sentence(s):
 
 
 
-def output(sentence)
+def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     out, length = test_sentence(sentence) 
     print("Results:")
@@ -321,14 +325,26 @@ def output(sentence)
     #print(out['input_toks'][0][:29])
     #print(out['tok_probs'][0][:29])
 
-    avg_sum = 0
+    words = out['input_toks'][0][:length]
+    bias_values = out['tok_probs'][0][:length]
 
-    for l in out['tok_probs'][0][:length]:
+    avg_sum = 0
+    most_biased_words = []
+
+    output = ""
+
+    for word, l in zip(words, bias_values):
         #print(l.index(max(l)))
         avg_sum += l[1]
+        output += word +  str(l[1])
+        if l[1] >= 0.45:
+            most_biased_words.append(word)
 
     print("Average bias: ", avg_sum/length)
 
-    return "Average bias: " + str(avg_sum/length)
+    output = "Average bias: " + str(avg_sum/length)
+    output += "Most biased " + str(most_biased_words)
+
+    return output
 
     #print(out['input_toks'][:][:length],out['tok_probs'][:][:length])

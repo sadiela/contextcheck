@@ -10,4 +10,4 @@ def api_post():
     texty = text.decode('utf-8')
     results = TestSentence.output(texty)
     #print(texty)
-    return jsonify(text=texty)
+    return jsonify(text=results)
