@@ -4,6 +4,7 @@ import sys
 print(sys.path)
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\roaming\\python\\python38\\site-packages')
+
 import pytorch_pretrained_bert.modeling as modeling
 import torch
 import torch.nn as nn
@@ -25,7 +26,7 @@ from torch.nn import CrossEntropyLoss
 import sklearn.metrics as metrics
 #from simplediff import diff
 from pytorch_pretrained_bert.tokenization import BertTokenizer
-from pytorch_pretrained_bert.optimization import BertAdam
+# from pytorch_pretrained_bert.optimization import BertAdam
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
@@ -297,9 +298,10 @@ def test_sentence(s):
         cache_dir=cache_dir,
         tok2id=tok2id)
 
-    # Load model 
-    saved_model_path = '/usr4/ec523/sadiela/ec463_proj/results/saved_models/model_3.ckpt'
-    model.load_state_dict(torch.load(saved_model_path))
+    # Load model
+    print("Loading Model")
+    saved_model_path = model_save_dir + 'model_3.ckpt'
+    model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     tokens = s.strip().split()
     length = len(tokens)
@@ -312,7 +314,7 @@ def test_sentence(s):
     #print(ids, ids.size(1))
 
     output = run_inference(model, ids, tokenizer)
-    return output, length 
+    return output, length
 
 
 
@@ -336,15 +338,12 @@ def output(sentence):
     for word, l in zip(words, bias_values):
         #print(l.index(max(l)))
         avg_sum += l[1]
-        output += word +  str(l[1])
+        output += word + " " + "{:.5f}".format(l[1]) + "\n"
         if l[1] >= 0.45:
             most_biased_words.append(word)
 
     print("Average bias: ", avg_sum/length)
 
-    output = "Average bias: " + str(avg_sum/length)
-    output += "Most biased " + str(most_biased_words)
+    output += "Average bias: " + "{:.5f}".format(avg_sum/length) + "\n"
 
     return output
-
-    #print(out['input_toks'][:][:length],out['tok_probs'][:][:length])
