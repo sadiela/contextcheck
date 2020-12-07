@@ -224,15 +224,15 @@ class BertForMultitask(BertPreTrainedModel):
         return cls_logits, tok_logits
 
 def to_probs(logits, lens):
-    print(logits)
     per_tok_probs = softmax(np.array(logits)[:, :, :2], axis=2)
     pos_scores = per_tok_probs[-1, :, :]
-    print(per_tok_probs)
-    print(pos_scores, len(pos_scores))
-    print(lens)
+    #print(per_tok_probs)
+    #print("Pos scores:", pos_scores, len(pos_scores))
+    #print(lens)
     out = []
     #for score_seq, l in zip(pos_scores, lens):
-    out.append(pos_scores[:lens].tolist())
+    out.append(pos_scores[:].tolist())
+
     return out
 
 # Take one sentence ... 
@@ -247,6 +247,7 @@ def run_inference(model, ids, tokenizer):
         'tok_probs': []
         #'tok_labels': [],
         #'labeling_hits': []
+        #'input_len': 0
     }
 
     #for step, batch in enumerate(tqdm(eval_dataloader)):
@@ -269,37 +270,62 @@ def run_inference(model, ids, tokenizer):
     out['tok_logits'] += logits.tolist()
     #out['tok_labels'] += labels.tolist()
     out['tok_probs'] += to_probs(logits, pre_len)
+    #out['input_len'] = pre_len
     #out['labeling_hits'] += tag_hits(logits, labels)
 
     return out
 
-# BERT initialization params
-config = 'bert-base-uncased'
-cls_num_labels = 43
-tok_num_labels = 3
-tok2id = tok2id
+def test_sentence(s): 
+    POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
 
-# define model!!
-model = BertForMultitask.from_pretrained(
-    'bert-base-uncased',
-    cls_num_labels=cls_num_labels,
-    tok_num_labels=tok_num_labels, 
-    cache_dir=cache_dir,
-    tok2id=tok2id)
+    EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
 
-# Load model 
-saved_model_path = '/usr4/ec523/sadiela/ec463_proj/results/saved_models/model_3.ckpt'
-model.load_state_dict(torch.load(saved_model_path))
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
+    tok2id = tokenizer.vocab
+    tok2id['<del>'] = len(tok2id)
 
-sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
-tokens = sentence.strip().split()
-ids = pad([tok2id[x] for x in tokens], 0)
-#print(ids)
-ids = torch.LongTensor(ids)
-#ids = ids.type(torch.LongTensor)
-#print(ids, ids.size())
-ids = ids.unsqueeze(0)
-print(ids, ids.size(1))
+    # BERT initialization params
+    config = 'bert-base-uncased'
+    cls_num_labels = 43
+    tok_num_labels = 3
+    tok2id = tok2id
 
-output = run_inference(model, ids, tokenizer)
-print(output)
+    # define model!!
+    model = BertForMultitask.from_pretrained(
+        'bert-base-uncased',
+        cls_num_labels=cls_num_labels,
+        tok_num_labels=tok_num_labels, 
+        cache_dir=cache_dir,
+        tok2id=tok2id)
+_
+    # Load model 
+    saved_model_path = model_save_dir + 'model_3.ckpt'
+    model.load_state_dict(torch.load(saved_model_path))
+
+    tokens = s.strip().split()
+    length = len(tokens)
+    ids = pad([tok2id[x] for x in tokens], 0)
+    #print(ids)
+    ids = torch.LongTensor(ids)
+    #ids = ids.type(torch.LongTensor)
+    #print(ids, ids.size())
+    ids = ids.unsqueeze(0)
+    #print(ids, ids.size(1))
+
+    output = run_inference(model, ids, tokenizer)
+    return output, length 
+
+out, length = test_sentence(sentence) 
+print("Results:")
+
+#print(length)
+#print(out['input_toks'][0][:29])
+#print(out['tok_probs'][0][:29])
+
+avg_sum = 0
+
+for l in out['tok_probs'][0][:length]:
+    #print(l.index(max(l)))
+    avg_sum += l[1]
+
+print("Average bias: ", avg_sum/length)
