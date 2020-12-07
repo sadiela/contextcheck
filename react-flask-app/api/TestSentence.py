@@ -1,15 +1,16 @@
 # Imports
 #from pytorch_pretrained_bert.modeling import PreTrainedBertModel, BertModel, BertSelfAttention
 import sys
+import time
 print(sys.path)
 sys.path.append('c:\python38\lib\site-packages')
-sys.path.append('c:\\users\\sadie\\appdata\roaming\\python\\python38\\site-packages')
+sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 
-import pytorch_pretrained_bert.modeling as modeling
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
+import pytorch_pretrained_bert.modeling as modeling
 #import copy
 #from collections import defaultdict
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
@@ -108,9 +109,9 @@ PRYZANT_DATA = DATA_DIRECTORY + 'bias_data/WNC/'
 training_data = PRYZANT_DATA + 'biased.word.train'
 testing_data = PRYZANT_DATA + 'biased.word.test'
 #categories_file = PRYZANT_DATA + 'revision_topics.csv'
-pickle_directory = '../../ML/data/pickle_dir/'
+pickle_directory = '../../ML/pickle_dir/'
 cache_dir = DATA_DIRECTORY + 'cache/'
-model_save_dir = '../../ML/data/saved_models/'
+model_save_dir = '../../ML/saved_models/'
 
 
 RELATIONS = [
@@ -301,6 +302,7 @@ def test_sentence(s):
     # Load model
     print("Loading Model")
     saved_model_path = model_save_dir + 'model_3.ckpt'
+    #'C:\Users\sadie\Documents\fall2020\ec463\21-22-newsbias\ML\saved_models\model_3.ckpt'
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     tokens = s.strip().split()
@@ -320,6 +322,8 @@ def test_sentence(s):
 
 def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
+    start_time = time.time()
+
     out, length = test_sentence(sentence) 
     print("Results:")
 
@@ -334,9 +338,14 @@ def output(sentence):
     most_biased_words = []
 
     output = ""
+    max_biased = words[0]
+    max_score = bias_values[0][1]
 
     for word, l in zip(words, bias_values):
         #print(l.index(max(l)))
+        if l[1] > max_score:
+            max_biased = word
+            max_score = l[1] 
         avg_sum += l[1]
         output += word + " " + "{:.5f}".format(l[1]) + "\n"
         if l[1] >= 0.45:
@@ -345,5 +354,7 @@ def output(sentence):
     print("Average bias: ", avg_sum/length)
 
     output += "Average bias: " + "{:.5f}".format(avg_sum/length) + "\n"
+    output += 'Most biased word: ' + max_biased + " " + "{:.5f}".format(max_score) + "\n" #str(max_score) #
+    output += "Runtime:" + str(time.time() - start_time) + " seconds\n"
 
     return output
