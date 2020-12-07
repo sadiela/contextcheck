@@ -1,2 +1,5 @@
 data/
 /react-flask-app/node_modules
+trained_models/
+saved_models/
+

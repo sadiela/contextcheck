@@ -30,5 +30,11 @@ for paragraph in para3:
     fullArticle += paragraph.text_content()
 
 parsedArticle = re.split(r'[.]',fullArticle.lower())
-print(parsedArticle)
+
+for sentence in parsedArticle:
+	out, length = eval.test_sentence(sentence)
+	print(sentence)
+	for l in out['tok_probs'][0][:length]:
+		avg_sum += l[1]
+	print("Average bias: ", avg_sum/length)
 

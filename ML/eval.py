@@ -179,7 +179,13 @@ POS_TAGS = [
   '<UNK>' # unknown
 ]
 
+POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
 
+EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
+tok2id = tokenizer.vocab
+tok2id['<del>'] = len(tok2id)
 
 # PADDING TO MAX_SEQ_LENGTH
 def pad(id_arr, pad_idx):
@@ -218,7 +224,6 @@ class BertForMultitask(BertPreTrainedModel):
         return cls_logits, tok_logits
 
 def to_probs(logits, lens):
-    #print(logits)
     per_tok_probs = softmax(np.array(logits)[:, :, :2], axis=2)
     pos_scores = per_tok_probs[-1, :, :]
     #print(per_tok_probs)
@@ -227,6 +232,7 @@ def to_probs(logits, lens):
     out = []
     #for score_seq, l in zip(pos_scores, lens):
     out.append(pos_scores[:].tolist())
+
     return out
 
 # Take one sentence ... 
@@ -269,7 +275,6 @@ def run_inference(model, ids, tokenizer):
 
     return out
 
-
 def test_sentence(s): 
     POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
 
@@ -310,8 +315,6 @@ _
     output = run_inference(model, ids, tokenizer)
     return output, length 
 
-
-sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
 out, length = test_sentence(sentence) 
 print("Results:")
 
@@ -326,5 +329,3 @@ for l in out['tok_probs'][0][:length]:
     avg_sum += l[1]
 
 print("Average bias: ", avg_sum/length)
-
-#print(out['input_toks'][:][:length],out['tok_probs'][:][:length])
