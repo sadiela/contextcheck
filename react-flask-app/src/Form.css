@@ -25,6 +25,7 @@
 .text_input {
     background-color: white;
     padding: 12px;
+    width: 750px;
     font-size: 16px;
     border-radius: 10px;
 }

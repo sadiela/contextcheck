@@ -6,14 +6,14 @@ class Form extends React.Component {
         super(props);
         this.state = {
             text: "Enter text here",
-            response: "Default"
+            response: []
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(event){
-        this.setState({text: event.target.value, response: event.target.response});
+        this.setState({text: event.target.value}); //, response: event.target.response});
     }
     handleSubmit(event){
         event.preventDefault();
@@ -21,11 +21,18 @@ class Form extends React.Component {
         console.log("Input: " + myText);
         axios.post("/result", {myText})
             .then(res => {
-                this.setState({response: res.data.text});
-                console.log("Output: " + res.data.text);
+                this.setState({ response: [...this.state.response, res.data] })
+                //this.setState({response: res.data});//.data.text});
+                console.log(res.data);//.data.text);
             });
     }
     render(){
+
+        var listItems = this.state.response.map((item) =>
+            <li>
+                {item}
+            </li>
+            );
         return(
             <form className="form" onSubmit={this.handleSubmit}>
             <p></p>
@@ -33,9 +40,7 @@ class Form extends React.Component {
                     <strong>Text:</strong> <input className="text_input" key="text-input" type="text" value={this.state.text} onChange={this.handleChange} />
                 </label>
                 <button className="submit_button" type="submit" value="Submit">Submit</button>
-                <ul>
-                <li className="list_item"> Response: {this.state.response} </li>
-                </ul>
+                <ul>{listItems}</ul>
             </form>
         );
     }

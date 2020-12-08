@@ -13,4 +13,4 @@ def api_post():
     print(dictionary['myText'])
     var = dictionary['myText'].lower()
     results = TestSentence.output(var)
-    return jsonify(text=results)
+    return results #jsonify(text=results)
