@@ -27,6 +27,23 @@ from pytorch_pretrained_bert.optimization import BertAdam
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
+import features
+
+###################
+# DIRECTORY PATHS #
+###################
+## UPDATE THESE!!!
+DATA_DIRECTORY = 'data/'
+LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
+PRYZANT_DATA = DATA_DIRECTORY + 'bias_data/WNC/'
+#IMPORTS = 
+training_data = PRYZANT_DATA + 'biased.word.train'
+testing_data = PRYZANT_DATA + 'biased.word.test'
+categories_file = PRYZANT_DATA + 'revision_topics.csv'
+pickle_directory = '/usr4/ec523/sadiela/ec463_proj/results/pickle_dir/'
+cache_dir = DATA_DIRECTORY + 'cache/'
+model_save_dir = '/usr4/ec523/sadiela/ec463_proj/results/saved_models/'
+
 
 #####################
 ### DIF #############
@@ -376,18 +393,6 @@ def get_dataloader(data_path, tok2id, batch_size,
 
 CUDA = (torch.cuda.device_count() > 0)
 
-## UPDATE THESE!!!
-DATA_DIRECTORY = '/usr4/ec523/sadiela/ec463_proj/data/'
-LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
-PRYZANT_DATA = DATA_DIRECTORY + 'bias_data/WNC/'
-#IMPORTS = 
-training_data = PRYZANT_DATA + 'biased.word.train'
-testing_data = PRYZANT_DATA + 'biased.word.test'
-categories_file = PRYZANT_DATA + 'revision_topics.csv'
-pickle_directory = '/usr4/ec523/sadiela/ec463_proj/results/pickle_dir/'
-cache_dir = DATA_DIRECTORY + 'cache/'
-model_save_dir = '/usr4/ec523/sadiela/ec463_proj/results/saved_models/'
-
 # GET DATA LOADERS!
 train_dataloader, num_train_examples = get_dataloader(
     data_path=training_data,
@@ -414,6 +419,70 @@ config = 'bert-base-uncased'
 cls_num_labels = 43
 tok_num_labels = 3
 tok2id = tok2id
+
+
+#####################
+# CLASS DEFINITIONS #
+#####################
+
+class AddCombine(nn.Module):
+    def __init__(self, hidden_dim, feat_dim, layers, dropout_prob, small=False,
+            out_dim=-1, pre_enrich=False, include_categories=False,
+            category_emb=False, add_category_emb=False):
+        super(AddCombine, self).__init__()
+
+        self.include_categories = include_categories
+        if include_categories:
+            feat_dim += 43
+
+        if layers == 1:
+            self.expand = nn.Sequential(
+                nn.Linear(feat_dim, hidden_dim),
+                nn.Dropout(dropout_prob))
+        else:
+            waist_size = min(feat_dim, hidden_dim) if small else max(feat_dim, hidden_dim)
+            self.expand = nn.Sequential(
+                nn.Linear(feat_dim, waist_size),
+                nn.Dropout(dropout_prob),
+                nn.Linear(waist_size, hidden_dim),
+                nn.Dropout(dropout_prob))
+        
+        if out_dim > 0:
+            self.out = nn.Linear(hidden_dim, out_dim)
+        else:
+            self.out = None
+
+        if pre_enrich:
+            self.enricher = nn.Linear(feature_size, feature_size)        
+        else:
+            self.enricher = None
+
+        # manually set cuda because module doesn't see these combiners for bottom         
+        if CUDA:
+            self.expand = self.expand.cuda()
+            if out_dim > 0:
+                self.out = self.out.cuda()
+            if self.enricher is not None:
+                self.enricher = self.enricher.cuda()
+
+    def forward(self, hidden, feat, categories=None):
+        if self.include_categories:
+            categories = categories.unsqueeze(1)
+            categories = categories.repeat(1, features.shape[1], 1)
+            if self.add_category_emb:
+                features = features + categories
+            else:
+                features = torch.cat((features, categories), -1)
+
+        if self.enricher is not None:
+            feat = self.enricher(feat)
+    
+        combined = self.expand(feat) + hidden
+    
+        if self.out is not None:
+            return self.out(combined)
+
+        return combined
 
 class BertForMultitask(BertPreTrainedModel):
 
@@ -445,6 +514,65 @@ class BertForMultitask(BertPreTrainedModel):
 
         return cls_logits, tok_logits
 
+class BertForMultitaskWithFeatures(PreTrainedBertModel): 
+    
+    def __init__(self, config, cls_num_labels=2, tok_num_labels=2, tok2id=None, lexicon_feature_bits=1):
+        super(BertForMultitaskWithFeatures, self).__init__(config)
+
+        self.bert = BertModel(config)
+
+        self.featureGenerator = features.FeatureGenerator(POS2ID, REL2ID, tok2id=tok2id, pad_id=0, lexicon_feature_bits=lexicon_feature_bits)
+        nfeats = 90 if lexicon_feature_bits == 1 else 118; 
+
+        # hidden_size = 512
+        # nfeats
+        # combiner_layers = 1
+        # hidden_dropout_prob = 
+        # small_waist = false
+        # out dim
+        # pre_enrich = false
+        # include_categories = False
+        # category_emb = 
+        # add_category_emb = 
+        self.tok_classifier = AddCombine(config.hidden_size, nfeats, 1,
+                config.hidden_dropout_prob, False,
+                out_dim=tok_num_labels, pre_enrich=False,
+                include_categories=False,
+                category_emb=False,
+                add_category_emb=False)
+
+        self.cls_dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.cls_classifier = nn.Linear(config.hidden_size, cls_num_labels)
+
+        self.apply(self.init_bert_weights)
+
+    def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None,
+                rel_ids=None, pos_ids=None, categories=None, pre_len=None)
+        
+        features = self.featurizer.featurize_batch(
+            input_ids.detach().cpu().numpy(), 
+            rel_ids.detach().cpu().numpy(), 
+            pos_ids.detach().cpu().numpy(), 
+            padded_len=input_ids.shape[1])
+        features = torch.tensor(features, dtype=torch.float)
+
+        sequence_output, pooled_output = self.bert(
+            input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
+
+        pooled_output = self.cls_dropout(pooled_output)
+        cls_logits = self.cls_classifier(pooled_output)
+
+        if ARGS.category_emb:
+            categories = self.category_embeddings(
+                categories.max(-1)[1].type(
+                    'torch.cuda.LongTensor' if CUDA else 'torch.LongTensor'))
+
+        tok_logits = self.tok_classifier(sequence_output, features, categories)
+
+        return cls_logits, tok_logits
+
+
+lexicon_feature_bits = 1
 
 # define model!!
 model = BertForMultitask.from_pretrained(
