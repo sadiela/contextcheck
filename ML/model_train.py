@@ -11,6 +11,9 @@ import copy
 from collections import defaultdict
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 
+import nltk
+from nltk.parse.stanford import StanfordDependencyParser
+
 from tqdm import tqdm
 import sys
 
@@ -27,7 +30,7 @@ from pytorch_pretrained_bert.optimization import BertAdam
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
-import features
+from features import FeatureGenerator
 
 ###################
 # DIRECTORY PATHS #
@@ -391,7 +394,7 @@ def get_dataloader(data_path, tok2id, batch_size,
     return dataloader, len(examples['pre_ids'])
 
 
-CUDA = (torch.cuda.device_count() > 0)
+CUDA = False #(torch.cuda.device_count() > 0)
 
 # GET DATA LOADERS!
 train_dataloader, num_train_examples = get_dataloader(
@@ -499,7 +502,7 @@ class BertForMultitask(BertPreTrainedModel):
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, 
         labels=None, rel_ids=None, pos_ids=None, categories=None, pre_len=None):
-        global ARGS
+
         sequence_output, pooled_output = self.bert(
             input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
 
@@ -519,7 +522,8 @@ class BertForMultitaskWithFeatures(BertPreTrainedModel):
 
         self.bert = BertModel(config)
 
-        self.featureGenerator = features.FeatureGenerator(POS2ID, REL2ID, tok2id=tok2id, pad_id=0, lexicon_feature_bits=lexicon_feature_bits)
+        self.featureGenerator = FeatureGenerator(POS2ID, REL2ID, tok2id=tok2id, pad_id=0, lexicon_feature_bits=lexicon_feature_bits)
+        print("Printing pad id:", self.featureGenerator.pad_id)
         nfeats = 90 if lexicon_feature_bits == 1 else 118; 
 
         # hidden_size = 512
@@ -547,6 +551,7 @@ class BertForMultitaskWithFeatures(BertPreTrainedModel):
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None,
                 rel_ids=None, pos_ids=None, categories=None, pre_len=None):
         
+        #featurize_batch(self, batch_ids, rel_ids, pos_ids, padded_len=0)
         features = self.featureGenerator.featurize_batch(
             input_ids.detach().cpu().numpy(), 
             rel_ids.detach().cpu().numpy(), 
@@ -554,16 +559,18 @@ class BertForMultitaskWithFeatures(BertPreTrainedModel):
             padded_len=input_ids.shape[1])
         features = torch.tensor(features, dtype=torch.float)
 
+        # make sure all inputs on CPU
+        print("TYPES:", type(input_ids), type(token_type_ids), type(attention_mask))
         sequence_output, pooled_output = self.bert(
-            input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
+            input_ids.detach().cpu(), token_type_ids, attention_mask.detach().cpu(), output_all_encoded_layers=False)
 
         pooled_output = self.cls_dropout(pooled_output)
         cls_logits = self.cls_classifier(pooled_output)
 
-        if ARGS.category_emb:
+        '''if ARGS.category_emb:
             categories = self.category_embeddings(
                 categories.max(-1)[1].type(
-                    'torch.cuda.LongTensor' if CUDA else 'torch.LongTensor'))
+                    'torch.cuda.LongTensor' if CUDA else 'torch.LongTensor'))'''
 
         tok_logits = self.tok_classifier(sequence_output, features, categories)
 
@@ -580,12 +587,17 @@ lexicon_feature_bits = 1
     cache_dir=cache_dir,
     tok2id=tok2id)'''
 
+device = torch.device("cpu")
+#BertForMultitaskWithFeatures().to(device)
+
 model = BertForMultitaskWithFeatures.from_pretrained(
     'bert-base-uncased',
     cls_num_labels=cls_num_labels,
     tok_num_labels=tok_num_labels,
     tok2id=tok2id, 
     lexicon_feature_bits=1)
+
+model.to(device)
 
 print('Printing model!')
 print(model.parameters())
@@ -665,6 +677,8 @@ def to_probs(logits, lens):
     for score_seq, l in zip(pos_scores, lens):
         out.append(score_seq[:l].tolist())
     return out
+
+#CUDA = False
 
 def run_inference(model, eval_dataloader, loss_fn, tokenizer):
     #global ARGS
