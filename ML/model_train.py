@@ -575,12 +575,20 @@ class BertForMultitaskWithFeatures(PreTrainedBertModel):
 lexicon_feature_bits = 1
 
 # define model!!
-model = BertForMultitask.from_pretrained(
+'''model = BertForMultitask.from_pretrained(
     'bert-base-uncased',
     cls_num_labels=cls_num_labels,
     tok_num_labels=tok_num_labels, 
     cache_dir=cache_dir,
-    tok2id=tok2id)
+    tok2id=tok2id)'''
+
+model = BertForMultitaskWithFeatures.from_pretrained(
+    'bert-based-uncased',
+    cls_num_labels=cls_num_labels,
+    tok_num_labels=tok_num_labels,
+    tok2id=None, 
+    lexicon_feature_bits=1)
+
 
 def build_optimizer(model, num_train_steps, learning_rate):
 #global ARGS
