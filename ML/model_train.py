@@ -418,8 +418,6 @@ print(num_train_examples, num_eval_examples)
 config = 'bert-base-uncased'
 cls_num_labels = 43
 tok_num_labels = 3
-tok2id = tok2id
-
 
 #####################
 # CLASS DEFINITIONS #
@@ -514,7 +512,7 @@ class BertForMultitask(BertPreTrainedModel):
 
         return cls_logits, tok_logits
 
-class BertForMultitaskWithFeatures(PreTrainedBertModel): 
+class BertForMultitaskWithFeatures(BertPreTrainedModel): 
     
     def __init__(self, config, cls_num_labels=2, tok_num_labels=2, tok2id=None, lexicon_feature_bits=1):
         super(BertForMultitaskWithFeatures, self).__init__(config)
@@ -547,9 +545,9 @@ class BertForMultitaskWithFeatures(PreTrainedBertModel):
         self.apply(self.init_bert_weights)
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None,
-                rel_ids=None, pos_ids=None, categories=None, pre_len=None)
+                rel_ids=None, pos_ids=None, categories=None, pre_len=None):
         
-        features = self.featurizer.featurize_batch(
+        features = self.featureGenerator.featurize_batch(
             input_ids.detach().cpu().numpy(), 
             rel_ids.detach().cpu().numpy(), 
             pos_ids.detach().cpu().numpy(), 
@@ -583,11 +581,14 @@ lexicon_feature_bits = 1
     tok2id=tok2id)'''
 
 model = BertForMultitaskWithFeatures.from_pretrained(
-    'bert-based-uncased',
+    'bert-base-uncased',
     cls_num_labels=cls_num_labels,
     tok_num_labels=tok_num_labels,
-    tok2id=None, 
+    tok2id=tok2id, 
     lexicon_feature_bits=1)
+
+print('Printing model!')
+print(model.parameters())
 
 
 def build_optimizer(model, num_train_steps, learning_rate):

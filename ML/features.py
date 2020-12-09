@@ -7,6 +7,15 @@ import sys
 
 # class to obtain linguistic bias features for sentences
 
+def read_lexicon(fp):
+            # returns word list as a set
+            out = set([
+                l.strip() for l in open(fp, errors='ignore') 
+                if not l.startswith('#') and not l.startswith(';')
+                and len(l.strip().split()) == 1
+            ])
+            return out
+
 class FeatureGenerator:
     def __init__(self, pos2id, rel2id, tok2id={}, pad_id=0, lexicon_feature_bits=1):
         self.tok2id = tok2id
@@ -16,20 +25,20 @@ class FeatureGenerator:
         self.rel2id = rel2id
 
         self.lexicons = {
-            'assertives': self.read_lexicon('data/lexicons/assertives_hooper1975.txt'),
-            'entailed_arg': self.read_lexicon('data/lexicons/entailed_arg_berant2012.txt'),
-            'entailed': self.read_lexicon('data/lexicons/entailed_berant2012.txt'), 
-            'entailing_arg': self.read_lexicon('data/lexicons/entailing_arg_berant2012.txt'), 
-            'entailing': self.read_lexicon('data/lexicons/entailing_berant2012.txt'), 
-            'factives': self.read_lexicon('data/lexicons/factives_hooper1975.txt'),
-            'hedges': self.read_lexicon('data/lexicons/hedges_hyland2005.txt'),
-            'implicatives': self.read_lexicon('data/lexicons/implicatives_karttunen1971.txt'),
-            'negatives': self.read_lexicon('data/lexicons/negative_liu2005.txt'),
-            'positives': self.read_lexicon('data/lexicons/positive_liu2005.txt'),
-            'npov': self.read_lexicon('data/lexicons/npov_lexicon.txt'),
-            'reports': self.read_lexicon('data/lexicons/report_verbs.txt'),
-            'strong_subjectives': self.read_lexicon('data/lexicons/strong_subjectives_riloff2003.txt'),
-            'weak_subjectives': self.read_lexicon('data/lexicons/weak_subjectives_riloff2003.txt')
+            'assertives': read_lexicon('data/lexicons/assertives_hooper1975.txt'),
+            'entailed_arg': read_lexicon('data/lexicons/entailed_arg_berant2012.txt'),
+            'entailed': read_lexicon('data/lexicons/entailed_berant2012.txt'), 
+            'entailing_arg': read_lexicon('data/lexicons/entailing_arg_berant2012.txt'), 
+            'entailing': read_lexicon('data/lexicons/entailing_berant2012.txt'), 
+            'factives': read_lexicon('data/lexicons/factives_hooper1975.txt'),
+            'hedges': read_lexicon('data/lexicons/hedges_hyland2005.txt'),
+            'implicatives': read_lexicon('data/lexicons/implicatives_karttunen1971.txt'),
+            'negatives': read_lexicon('data/lexicons/negative_liu2005.txt'),
+            'positives': read_lexicon('data/lexicons/positive_liu2005.txt'),
+            'npov': read_lexicon('data/lexicons/npov_lexicon.txt'),
+            'reports': read_lexicon('data/lexicons/report_verbs.txt'),
+            'strong_subjectives': read_lexicon('data/lexicons/strong_subjectives_riloff2003.txt'),
+            'weak_subjectives': read_lexicon('data/lexicons/weak_subjectives_riloff2003.txt')
         }
 
         self.lexicon_feature_bits = lexicon_feature_bits
@@ -42,15 +51,6 @@ class FeatureGenerator:
 
             print(lexicon_feature_names, context_feature_names, pos_names, rel_names)
             return lexicon_feature_names + context_feature_names + pos_names + rel_names  
-
-        def read_lexicon(self, fp):
-            # returns word list as a set
-            out = set([
-                l.strip() for l in open(fp, errors='ignore') 
-                if not l.startswith('#') and not l.startswith(';')
-                and len(l.strip().split()) == 1
-            ])
-            return out
 
         def lexicon_features(self, words, bits=2):
             assert bits in [1, 2]
