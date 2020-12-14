@@ -143,4 +143,3 @@ class FeatureGenerator:
             for id_seq, rel_ids, pos_ids in zip(batch_ids, rel_ids, pos_ids)]
         batch_feats = np.array(batch_feats)
         return batch_feats
->>>>>>> d701d435d6f4262ad0c40006510321efcf2161b1

@@ -394,7 +394,10 @@ def get_dataloader(data_path, tok2id, batch_size,
     return dataloader, len(examples['pre_ids'])
 
 
-CUDA = False #(torch.cuda.device_count() > 0)
+CUDA = (torch.cuda.device_count() > 0)
+if CUDA:
+    print("GPUS!")
+    input()
 
 # GET DATA LOADERS!
 train_dataloader, num_train_examples = get_dataloader(
@@ -506,6 +509,7 @@ class BertForMultitask(BertPreTrainedModel):
         sequence_output, pooled_output = self.bert(
             input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
 
+        # we don't use these... 
         cls_logits = self.cls_classifier(pooled_output)
         cls_logits = self.cls_dropout(cls_logits)
 
@@ -522,8 +526,10 @@ class BertForMultitaskWithFeatures(BertPreTrainedModel):
 
         self.bert = BertModel(config)
 
-        self.featureGenerator = FeatureGenerator(POS2ID, REL2ID, tok2id=tok2id, pad_id=0, lexicon_feature_bits=lexicon_feature_bits)
-        print("Printing pad id:", self.featureGenerator.pad_id)
+        self.featureGenerator = FeatureGenerator(
+            POS2ID, REL2ID, tok2id=tok2id, pad_id=0, 
+            lexicon_feature_bits=lexicon_feature_bits)
+        #print("Printing pad id:", self.featureGenerator.pad_id)
         nfeats = 90 if lexicon_feature_bits == 1 else 118; 
 
         # hidden_size = 512
@@ -558,11 +564,15 @@ class BertForMultitaskWithFeatures(BertPreTrainedModel):
             pos_ids.detach().cpu().numpy(), 
             padded_len=input_ids.shape[1])
         features = torch.tensor(features, dtype=torch.float)
+        if CUDA:
+            features = features.cuda()
 
         # make sure all inputs on CPU
-        print("TYPES:", type(input_ids), type(token_type_ids), type(attention_mask))
+        #print("TYPES:", type(input_ids), type(token_type_ids), type(attention_mask))
+        #sequence_output, pooled_output = self.bert(
+        #    input_ids.detach().cuda(), token_type_ids, attention_mask.detach().cpu(), output_all_encoded_layers=False)
         sequence_output, pooled_output = self.bert(
-            input_ids.detach().cpu(), token_type_ids, attention_mask.detach().cpu(), output_all_encoded_layers=False)
+            input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
 
         pooled_output = self.cls_dropout(pooled_output)
         cls_logits = self.cls_classifier(pooled_output)
@@ -587,7 +597,7 @@ lexicon_feature_bits = 1
     cache_dir=cache_dir,
     tok2id=tok2id)'''
 
-device = torch.device("cpu")
+#device = 
 #BertForMultitaskWithFeatures().to(device)
 
 model = BertForMultitaskWithFeatures.from_pretrained(
@@ -597,10 +607,10 @@ model = BertForMultitaskWithFeatures.from_pretrained(
     tok2id=tok2id, 
     lexicon_feature_bits=1)
 
-model.to(device)
+if CUDA:
+    print("GPUS!")
+    model.cuda()
 
-print('Printing model!')
-print(model.parameters())
 
 
 def build_optimizer(model, num_train_steps, learning_rate):
@@ -787,25 +797,19 @@ optimizer = build_optimizer(
     learning_rate)
 loss_fn = build_loss_fn()
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = model.to(device)
+#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 print('INITIAL EVAL...')
 model.eval()
 results = run_inference(model, eval_dataloader, loss_fn, tokenizer)
 
-# TRAIN MODEL!!
-# run_inference
-# train_for_epoch
 
 print(results['input_toks'][8])
 print(results['tok_labels'][8])
-#print(results['tok_logits'][8])
 
 summary = "" #SummaryWriter(model_save_dir)
 
 #input()
-#writer.add_scalar('eval/tok_loss', np.mean(results['tok_loss']), 0)
-#writer.add_scalar('eval/tok_acc', np.mean(results['labeling_hits']), 0)
 summary += 'eval/tok_loss' + str(np.mean(results['tok_loss'])) + '\n'
 summary += 'eval/tok_acc' + str(np.mean(results['labeling_hits'])) + '\n'
 
@@ -814,15 +818,12 @@ model.train()
 for epoch in range(epochs):
     print('STARTING EPOCH ', epoch)
     losses = train_for_epoch(model, train_dataloader, loss_fn, optimizer)
-    #writer.add_scalar('train/loss', np.mean(losses), epoch + 1)
     summary += 'train/loss' + str(np.mean(losses)) + '\n'
 
         # eval
     print('EVAL...')
     model.eval()
     results = run_inference(model, eval_dataloader, loss_fn, tokenizer)
-    #writer.add_scalar('eval/tok_loss', np.mean(results['tok_loss']), epoch + 1)
-    #writer.add_scalar('eval/tok_acc', np.mean(results['labeling_hits']), epoch + 1)
     summary += 'eval/tok_loss' + str(np.mean(results['tok_loss'])) + '\n'
     summary += 'eval/tok_acc' + str(np.mean(results['labeling_hits'])) + '\n'
 
