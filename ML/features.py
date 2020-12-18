@@ -1,35 +1,43 @@
+import sys
+import time
+sys.path.append('c:\python38\lib\site-packages')
+sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+
 import nltk
 import numpy as np 
 
 from nltk.parse.stanford import StanfordDependencyParser
 
 import sys
+import os
 
 # class to obtain linguistic bias features for sentences
 
 class FeatureGenerator:
-    def __init__(self, pos2id, rel2id, tok2id={}, pad_id=0, lexicon_feature_bits=1):
+    def __init__(self, pos2id, rel2id, lexicon_path, tok2id={}, pad_id=0, lexicon_feature_bits=1):
         self.tok2id = tok2id
         self.id2tok = {x: tok for tok, x in tok2id.items()}
         self.pad_id = pad_id
         self.pos2id = pos2id
         self.rel2id = rel2id
 
+        print("WORKING DIRECTORY: ", os.getcwd())
+
         self.lexicons = {
-            'assertives': self.read_lexicon('data/lexicons/assertives_hooper1975.txt'),
-            'entailed_arg': self.read_lexicon('data/lexicons/entailed_arg_berant2012.txt'),
-            'entailed': self.read_lexicon('data/lexicons/entailed_berant2012.txt'), 
-            'entailing_arg': self.read_lexicon('data/lexicons/entailing_arg_berant2012.txt'), 
-            'entailing': self.read_lexicon('data/lexicons/entailing_berant2012.txt'), 
-            'factives': self.read_lexicon('data/lexicons/factives_hooper1975.txt'),
-            'hedges': self.read_lexicon('data/lexicons/hedges_hyland2005.txt'),
-            'implicatives': self.read_lexicon('data/lexicons/implicatives_karttunen1971.txt'),
-            'negatives': self.read_lexicon('data/lexicons/negative_liu2005.txt'),
-            'positives': self.read_lexicon('data/lexicons/positive_liu2005.txt'),
-            'npov': self.read_lexicon('data/lexicons/npov_lexicon.txt'),
-            'reports': self.read_lexicon('data/lexicons/report_verbs.txt'),
-            'strong_subjectives': self.read_lexicon('data/lexicons/strong_subjectives_riloff2003.txt'),
-            'weak_subjectives': self.read_lexicon('data/lexicons/weak_subjectives_riloff2003.txt')
+            'assertives': self.read_lexicon(lexicon_path + 'assertives_hooper1975.txt'),
+            'entailed_arg': self.read_lexicon(lexicon_path + 'entailed_arg_berant2012.txt'),
+            'entailed': self.read_lexicon(lexicon_path + 'entailed_berant2012.txt'), 
+            'entailing_arg': self.read_lexicon(lexicon_path + 'entailing_arg_berant2012.txt'), 
+            'entailing': self.read_lexicon(lexicon_path + 'entailing_berant2012.txt'), 
+            'factives': self.read_lexicon(lexicon_path + 'factives_hooper1975.txt'),
+            'hedges': self.read_lexicon(lexicon_path + 'hedges_hyland2005.txt'),
+            'implicatives': self.read_lexicon(lexicon_path + 'implicatives_karttunen1971.txt'),
+            'negatives': self.read_lexicon(lexicon_path + 'negative_liu2005.txt'),
+            'positives': self.read_lexicon(lexicon_path + 'positive_liu2005.txt'),
+            'npov': self.read_lexicon(lexicon_path + 'npov_lexicon.txt'),
+            'reports': self.read_lexicon(lexicon_path + 'report_verbs.txt'),
+            'strong_subjectives': self.read_lexicon(lexicon_path + 'strong_subjectives_riloff2003.txt'),
+            'weak_subjectives': self.read_lexicon(lexicon_path + 'weak_subjectives_riloff2003.txt')
         }
 
         self.lexicon_feature_bits = lexicon_feature_bits
@@ -89,13 +97,13 @@ class FeatureGenerator:
 
         return np.array(out)
 
-    def features(self, id_seq, rel_ids, pos_ids):
+    def features(self, id_seq, rel_ids=None, pos_ids=None):
         if self.pad_id in id_seq:
             pad_idx = id_seq.index(self.pad_id)
             pad_len = len(id_seq[pad_idx:])
             id_seq = id_seq[:pad_idx]
-            rel_ids = rel_ids[:pad_idx]
-            pos_ids = pos_ids[:pad_idx]
+            #rel_ids = rel_ids[:pad_idx]
+            #pos_ids = pos_ids[:pad_idx]
         else:
             pad_len = 0
 
@@ -121,12 +129,19 @@ class FeatureGenerator:
             for (word_vec, indices) in zip(expert_feats, word_indices)
         ], axis=0)
 
+
         # add in the pos and relational features
-        pos_feats = np.zeros((len(pos_ids), len(self.pos2id)))
-        pos_feats[range(len(pos_ids)), pos_ids] = 1
-        rel_feats = np.zeros((len(rel_ids), len(self.rel2id)))
-        rel_feats[range(len(rel_ids)), rel_ids] = 1
-        
+        if pos_ids is not None: 
+            pos_feats = np.zeros((len(pos_ids), len(self.pos2id)))
+            pos_feats[range(len(pos_ids)), pos_ids] = 1
+            rel_feats = np.zeros((len(rel_ids), len(self.rel2id)))
+            rel_feats[range(len(rel_ids)), rel_ids] = 1
+        else:
+            pos_feats = np.zeros((len(id_seq), len(self.pos2id)))
+            #pos_feats[range(len(id_seq)), pos_ids] = 1
+            rel_feats = np.zeros((len(id_seq), len(self.rel2id)))
+            #rel_feats[range(len(id_seq)), rel_ids] = 1
+
         feats = np.concatenate((feats, pos_feats, rel_feats), axis=1)
 
         # add pad back in                
@@ -137,9 +152,12 @@ class FeatureGenerator:
     def featurize_batch(self, batch_ids, rel_ids, pos_ids, padded_len=0):
         """ takes [batch, len] returns [batch, len, features] """
         # featurize entire batch of sentences
-
-        batch_feats = [
-            self.features(list(id_seq), list(rel_ids), list(pos_ids)) 
-            for id_seq, rel_ids, pos_ids in zip(batch_ids, rel_ids, pos_ids)]
+        if rel_ids is None:
+            batch_feats = [
+                self.features(list(id_seq)) for id_seq in batch_ids]
+        else: 
+            batch_feats = [
+                self.features(list(id_seq), list(rel_ids), list(pos_ids)) 
+                for id_seq, rel_ids, pos_ids in zip(batch_ids, rel_ids, pos_ids)]
         batch_feats = np.array(batch_feats)
         return batch_feats

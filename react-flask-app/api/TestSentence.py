@@ -2,9 +2,9 @@
 #from pytorch_pretrained_bert.modeling import PreTrainedBertModel, BertModel, BertSelfAttention
 import sys
 import time
-print(sys.path)
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+sys.path.append('..\..\ML')
 
 import numpy as np
 import torch
@@ -31,6 +31,14 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
+from features import FeatureGenerator # might not need this
+from models import AddCombine, BertForMultitaskWithFeatures, BertForMultitask
+
+CUDA = (torch.cuda.device_count() > 0)
+if CUDA:
+    print("GPUS!")
+    input()
+
 #####################
 ### DIF #############
 #####################
@@ -46,29 +54,9 @@ def diff(old, new):
     for i, val in enumerate(old):
         old_index_map.setdefault(val,list()).append(i)
 
-    # Find the largest substring common to old and new.
-    # We use a dynamic programming approach here.
-    # 
-    # We iterate over each value in the `new` list, calling the
-    # index `inew`. At each iteration, `overlap[i]` is the
-    # length of the largest suffix of `old[:i]` equal to a suffix
-    # of `new[:inew]` (or unset when `old[i]` != `new[inew]`).
-    #
-    # At each stage of iteration, the new `overlap` (called
-    # `_overlap` until the original `overlap` is no longer needed)
-    # is built from the old one.
-    #
-    # If the length of overlap exceeds the largest substring
-    # seen so far (`sub_length`), we update the largest substring
-    # to the overlapping strings.
 
     overlap = dict()
-    # `sub_start_old` is the index of the beginning of the largest overlapping
-    # substring in the old list. `sub_start_new` is the index of the beginning
-    # of the same substring in the new list. `sub_length` is the length that
-    # overlaps in both.
-    # These track the largest overlapping substring seen so far, so naturally
-    # we start with a 0-length substring.
+
     sub_start_old = 0
     sub_start_new = 0
     sub_length = 0
@@ -186,50 +174,15 @@ POS_TAGS = [
 ]
 
 
-
 # PADDING TO MAX_SEQ_LENGTH
 def pad(id_arr, pad_idx):
   max_seq_len = 60
   return id_arr + ([pad_idx] * (max_seq_len - len(id_arr)))
 
-
-class BertForMultitask(BertPreTrainedModel):
-
-    def __init__(self, config, cls_num_labels=2, tok_num_labels=2, tok2id=None):
-        super(BertForMultitask, self).__init__(config)
-        self.bert = BertModel(config)
-
-        self.cls_dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.cls_classifier = nn.Linear(config.hidden_size, cls_num_labels)
-        
-        self.tok_dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.tok_classifier = nn.Linear(config.hidden_size, tok_num_labels)
-        
-        self.apply(self.init_bert_weights)
-
-
-    def forward(self, input_ids, token_type_ids=None, attention_mask=None, 
-        labels=None, rel_ids=None, pos_ids=None, categories=None, pre_len=None):
-        #global ARGS
-        sequence_output, pooled_output = self.bert(
-            input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
-
-        cls_logits = self.cls_classifier(pooled_output)
-        cls_logits = self.cls_dropout(cls_logits)
-
-        # NOTE -- dropout is after proj, which is non-standard
-        tok_logits = self.tok_classifier(sequence_output)
-        tok_logits = self.tok_dropout(tok_logits)
-
-        return cls_logits, tok_logits
-
 def to_probs(logits, lens):
     #print(logits)
     per_tok_probs = softmax(np.array(logits)[:, :, :2], axis=2)
     pos_scores = per_tok_probs[-1, :, :]
-    #print(per_tok_probs)
-    #print("Pos scores:", pos_scores, len(pos_scores))
-    #print(lens)
     out = []
     #for score_seq, l in zip(pos_scores, lens):
     out.append(pos_scores[:].tolist())
@@ -292,22 +245,30 @@ def test_sentence(s):
     tok2id = tok2id
 
     # define model!!
-    model = BertForMultitask.from_pretrained(
+    '''model = BertForMultitask.from_pretrained(
         'bert-base-uncased',
         cls_num_labels=cls_num_labels,
         tok_num_labels=tok_num_labels, 
         cache_dir=cache_dir,
-        tok2id=tok2id)
+        tok2id=tok2id)'''
+    model = BertForMultitaskWithFeatures.from_pretrained(
+        'bert-base-uncased', LEXICON_DIRECTORY,
+        cls_num_labels=cls_num_labels,
+        tok_num_labels=tok_num_labels,
+        tok2id=tok2id, 
+        lexicon_feature_bits=1)
 
     # Load model
     print("Loading Model")
-    saved_model_path = model_save_dir + 'model_3.ckpt'
+    saved_model_path = model_save_dir + 'features.ckpt'
     #'C:\Users\sadie\Documents\fall2020\ec463\21-22-newsbias\ML\saved_models\model_3.ckpt'
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
-    tokens = s.strip().split()
+    tokens = tokenizer.tokenize(s)
+    print(tokens)
     length = len(tokens)
-    ids = pad([tok2id[x] for x in tokens], 0)
+    ids = pad([tok2id.get(x, 0) for x in tokens], 0)
+
     #print(ids)
     ids = torch.LongTensor(ids)
     #ids = ids.type(torch.LongTensor)
@@ -324,6 +285,7 @@ def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     start_time = time.time()
 
+    print("TEST ", sentence)
     out, length = test_sentence(sentence) 
     print("Results:")
 
