@@ -279,8 +279,6 @@ def test_sentence(s):
     output = run_inference(model, ids, tokenizer)
     return output, length
 
-
-
 def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     start_time = time.time()
@@ -288,10 +286,6 @@ def output(sentence):
     print("TEST ", sentence)
     out, length = test_sentence(sentence) 
     print("Results:")
-
-    #print(length)
-    #print(out['input_toks'][0][:29])
-    #print(out['tok_probs'][0][:29])
 
     words = out['input_toks'][0][:length]
     bias_values = out['tok_probs'][0][:length]
