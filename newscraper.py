@@ -1,8 +1,9 @@
 from newspaper import Article
 import lxml.html
-import requests, re
+import requests, re, json
 from bs4 import BeautifulSoup
 #import eval
+import time
 
 def article_parse(url):
 	article = Article(url)	
@@ -53,7 +54,14 @@ def article_parse(url):
 		feedText = parseText.split(" ")
 		return author, [feedText], title
 	elif "twitter.com" in url:
-		print("functionality not implemented/awaiting dev account API key");
+		bearer_token = "AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAfBSf9znUqolOrWjG%2FvOu1PEhTI0%3DHo9Km1FgrlkW4otaX8fluQdRWJc3ItZcZg80n3xFtMiWrpEhKK"
+		t_id = re.split("/status/", url)[1]
+		ids = "ids="+t_id
+		tweet_fields = "tweet.fields=lang,author_id"
+		url = "https://api.twitter.com/2/tweets?{}&{}".format(ids, tweet_fields)
+		headers = {"Authorization": "Bearer {}".format(bearer_token)}
+		response = requests.request("GET", url, headers = headers)
+		twext = response.json()['data'][0]['text']
 		return "Error"
 	
 	
@@ -62,10 +70,16 @@ def article_parse(url):
 # twitter API
 # huffpost Author issue (403 blocked)
 # subscription based...?
-		
-url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
-author, feedText, title =  article_parse(url)
-print(feedText)
+def main():
+	tic = time.perf_counter()
+	url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
+	author, feedText, title =  article_parse(url)
+	print(feedText)
+	toc = time.perf_counter()
+	print(f"\nRuntime = {toc - tic:0.4f} seconds") 
+
+if __name__ == "__main__":
+	main()
 
 
 	
