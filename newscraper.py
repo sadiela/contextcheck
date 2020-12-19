@@ -20,7 +20,7 @@ def article_parse(url):
 		parseText = article.text.lower()
 		parseText = parseText.replace("\n", " ")
 		parseText = parseText.replace("\"", "")
-		feedText = parseText.split(" ")
+		feedText = parseText.split(".")
 		return title, author, feedText
 
 	elif "foxnews.com" in url:
@@ -31,7 +31,7 @@ def article_parse(url):
 		parseText = article.text.lower()
 		parseText = parseText.replace("\n", " ")
 		parseText = parseText.replace("\"", "")
-		feedText = parseText.split(" ")
+		feedText = parseText.split(".")
 		for word in feedText:
 			if word.isupper():
 				feedText.remove(word)
@@ -51,30 +51,32 @@ def article_parse(url):
 		parseText = article.text.lower()
 		parseText = parseText.replace("\n", " ")
 		parseText = parseText.replace("\"", "")
-		feedText = parseText.split(" ")
+		feedText = parseText.split(".")
 		return author, [feedText], title
 	elif "twitter.com" in url:
 		bearer_token = "AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAfBSf9znUqolOrWjG%2FvOu1PEhTI0%3DHo9Km1FgrlkW4otaX8fluQdRWJc3ItZcZg80n3xFtMiWrpEhKK"
 		t_id = re.split("/status/", url)[1]
 		ids = "ids="+t_id
 		tweet_fields = "tweet.fields=lang,author_id"
-		url = "https://api.twitter.com/2/tweets?{}&{}".format(ids, tweet_fields)
+		auth = "expansions=author_id"
+		url = "https://api.twitter.com/2/tweets?{}&{}&{}".format(ids, tweet_fields, auth)
 		headers = {"Authorization": "Bearer {}".format(bearer_token)}
 		response = requests.request("GET", url, headers = headers)
 		twext = response.json()['data'][0]['text']
-		return "Error"
+		atext = response.json()['includes']['users'][0]['username']
+		return twext, atext
 	
 	
 #to do: 
 # date time functionality
-# twitter API
-# huffpost Author issue (403 blocked)
 # subscription based...?
 def main():
 	tic = time.perf_counter()
 	url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
-	author, feedText, title =  article_parse(url)
-	print(feedText)
+	url2 = 'https://twitter.com/Twitter/status/1339350208942125066'
+	#author, feedText, title =  article_parse(url)
+	text, atext = article_parse(url2)
+	print(atext)
 	toc = time.perf_counter()
 	print(f"\nRuntime = {toc - tic:0.4f} seconds") 
 
