@@ -4,3 +4,4 @@ trained_models/
 saved_models/
 pickle_dir/
 
+config.py
