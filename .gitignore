@@ -1,3 +1,4 @@
+config.py
 data/
 /react-flask-app/node_modules
 trained_models/
