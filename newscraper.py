@@ -4,6 +4,7 @@ import requests, re, json
 from bs4 import BeautifulSoup
 #import eval
 import time
+import config
 
 def article_parse(url):
 	article = Article(url)	
@@ -54,7 +55,7 @@ def article_parse(url):
 		feedText = parseText.split(".")
 		return author, [feedText], title
 	elif "twitter.com" in url:
-		bearer_token = "AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAfBSf9znUqolOrWjG%2FvOu1PEhTI0%3DHo9Km1FgrlkW4otaX8fluQdRWJc3ItZcZg80n3xFtMiWrpEhKK"
+		bearer_token = config.bearer
 		t_id = re.split("/status/", url)[1]
 		ids = "ids="+t_id
 		tweet_fields = "tweet.fields=lang,author_id"
