@@ -18,7 +18,7 @@ def article_parse(url):
 	else:
 		return "Invalid or unsupported URL"
 	
-def cnnScrape(url):
+def cnnScrape(url): #run time ~.3 seconds
 	article = Article(url)	
 	try:
 		article.download()	
@@ -27,7 +27,7 @@ def cnnScrape(url):
 		return "Error"
 	article.parse()
 	author = article.authors
-	tite = article.title
+	title = article.title
 	date = article.publish_date
 	parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
@@ -35,7 +35,7 @@ def cnnScrape(url):
 	feedText = parseText.split(".")
 	return title, author, feedText, date
 
-def foxScrape(url):
+def foxScrape(url): #run time ~.2 seconds
 	article = Article(url)	
 	try:
 		article.download()	
@@ -56,7 +56,7 @@ def foxScrape(url):
 			feedText.remove(word)
 	return title, author, feedText, date
 
-def huffScrape(url):
+def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article = Article(url)	
 	try:
 		article.download()	
@@ -78,9 +78,9 @@ def huffScrape(url):
 	parseText = parseText.replace("\n", " ")
 	parseText = parseText.replace("\"", "")
 	feedText = parseText.split(".")
-	return author, [feedText], title, date
+	return title, author, [feedText], date
 
-def tweetScrape(url):
+def tweetScrape(url): #runtime sub .4 seconds
 	bearer_token = config.bearer
 	t_id = re.split("/status/", url)[1]
 	ids = "ids="+t_id
@@ -98,9 +98,14 @@ def main():
 	tic = time.perf_counter()
 	url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
 	url2 = 'https://twitter.com/Twitter/status/1339350208942125066'
+	url3 = 'https://www.foxnews.com/politics/ilhan-omar-slams-lawmakers-vaccine'
+	url4 = 'https://www.cnn.com/2020/12/21/politics/bidens-coronavirus-vaccination/index.html'
 	#author, feedText, title =  article_parse(url)
-	text, atext = article_parse(url2)
-	print(atext)
+	author, title, text, date = article_parse(url4)
+	print(author)
+	print(text)
+	print(title)
+	print(date)
 	toc = time.perf_counter()
 	print(f"\nRuntime = {toc - tic:0.4f} seconds") 
 
