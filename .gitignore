@@ -4,4 +4,4 @@ data/
 trained_models/
 saved_models/
 pickle_dir/
-
+/react-flask-app/api/venv/
