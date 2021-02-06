@@ -5,7 +5,7 @@ import axios from 'axios';
 /**
  * CNN: https://www.cnn.com/2021/02/05/media/lou-dobbs-fox-show-canceled/index.html
  * FOX: https://www.foxnews.com/politics/biden-terrorist-designation-yemens-houthi-militia
- * HUFFPOST: https://www.huffpost.com/entry/why-amazon-insisted-on-an-in-person-union-election-during-a-pandemic_n_601da0dec5b66c385ef94bc9
+ * HUFFPOST: https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11
  */
 
 export default class ScrapeInput extends Component {
