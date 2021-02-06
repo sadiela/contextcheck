@@ -59,8 +59,7 @@ def foxScrape(url): #run time ~.2 seconds
 	re = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
-	meta = meta.split(',')
-	meta = " ".join([str(entry) for entry in meta])
+	meta = meta.replace(',', " ")
 	data = {"title": title, "author": author, "feedText": parseText, "date": date, "meta": meta}
 	return json.dumps(data)
 
