@@ -22,7 +22,7 @@ class Form extends React.Component {
         console.log("Input: " + myText);
         axios.post("/result", {myText})
             .then(res => {
-                this.setState({ response: [...this.state.response, res.data.sentence_results] })
+                this.setState({ response: res.data.sentence_results })
                 //this.setState({response: res.data});//.data.text});
                 console.log(res.data.sentence_results[0][0]);//.data.text);
             });
@@ -32,7 +32,7 @@ class Form extends React.Component {
         var wordList = this.state.response.map((item) =>
             <section className="results_display">
                 <ul id="results">
-                        <li className="word" key={item}>
+                        <li className="word">
                             {item.words.map((word) =>
                                 <ul className="list-group list-group-flush">
                                     <li className="list-group-item" key={word}>
