@@ -209,7 +209,8 @@ def output(sentences):
 
     word_list = []
     bias_list = []
-    for sentence in sentences: 
+    for sentence in sentences:
+        sentence=sentence.lower() 
         #print(sentence)
         out, length = test_sentence(model, sentence) 
         #print("Results:")

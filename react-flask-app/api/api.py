@@ -1,6 +1,6 @@
 import sys
-#sys.path.append('c:\python38\lib\site-packages')
-#sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+sys.path.append('c:\python38\lib\site-packages')
+sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 from flask import Flask, request, jsonify
 import json
 import TestSentence
@@ -18,32 +18,17 @@ app = Flask(__name__)
 db = m_client.sentence_results
 collection = db.res'''
 
-@app.route('/result', methods=['POST'])
-def api_post():
-    print("GET RESULTS!")
-    start_time = time.time() # to keep track of analysis runtime
-
-    # get text and format it
-    text = request.data
-    #print("raw text:", text)
-    texty = text.decode('utf-8')
-    #texty.translate(str.maketrans('', '', string.punctuation))
-    dictionary = json.loads(texty) # why are we loading it into a dictionary and then back out? 
-    #print(dictionary['myText'])
-    var = dictionary['myText'].lower()
-
+def analyze_sentence(text, start_time):
     # Split into multiple sentences here
-    nltk.download('punkt')
+    #nltk.download('punkt')
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-    sentences = sentence_tokenizer.tokenize(var)
+    sentences = sentence_tokenizer.tokenize(text)
     #sentences = var.split('. ')
     print(sentences)
 
     # Run through algorithm 
-    results = TestSentence.output(sentences[:-1])
+    results = TestSentence.output(sentences)
     
-    #print("Average bias: ", avg_sum/len(words)
-
     # Insert data to database # change this to match test article analysis
     '''db_entry = {}
     db_entry['words'] = words
@@ -58,13 +43,35 @@ def api_post():
     #return_res = results['sentence_results']
     return results
 
+@app.route('/result', methods=['POST'])
+def api_post():
+    print("GET RESULTS!")
+    start_time = time.time() # to keep track of analysis runtime
+
+    # get text and format it
+    text = request.data
+    #print("raw text:", text)
+    texty = text.decode('utf-8')
+    #texty.translate(str.maketrans('', '', string.punctuation))
+    dictionary = json.loads(texty) # why are we loading it into a dictionary and then back out? 
+    #print(dictionary['myText'])
+    var = dictionary['myText'] #.lower()
+
+    results = analyze_sentence(var, start_time)
+
+    return results
+
 @app.route('/scrape', methods=['POST'])
 def scrape_article():
+    start_time = time.time() # to keep track of analysis runtime
     url = request.data
     url = url.decode('utf-8')
     url = json.loads(url)
     print(url)
     url = url['input_url']
     res = newscraper.article_parse(url)
+    # res.title, res.author, res.feedText, res.date, res.meta (?)
+    results = analyze_sentence(res.feedText, start_time)
+    res['bias_results'] = results
     return res
 
