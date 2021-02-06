@@ -2,9 +2,9 @@
 #from pytorch_pretrained_bert.modeling import PreTrainedBertModel, BertModel, BertSelfAttention
 import sys
 import time
-print(sys.path)
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+sys.path.append('..\..\ML')
 
 import numpy as np
 import torch
@@ -31,6 +31,14 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
+from features import FeatureGenerator # might not need this
+from models import AddCombine, BertForMultitaskWithFeatures, BertForMultitask
+
+CUDA = (torch.cuda.device_count() > 0)
+if CUDA:
+    print("GPUS!")
+    input()
+
 #####################
 ### DIF #############
 #####################
@@ -46,29 +54,9 @@ def diff(old, new):
     for i, val in enumerate(old):
         old_index_map.setdefault(val,list()).append(i)
 
-    # Find the largest substring common to old and new.
-    # We use a dynamic programming approach here.
-    # 
-    # We iterate over each value in the `new` list, calling the
-    # index `inew`. At each iteration, `overlap[i]` is the
-    # length of the largest suffix of `old[:i]` equal to a suffix
-    # of `new[:inew]` (or unset when `old[i]` != `new[inew]`).
-    #
-    # At each stage of iteration, the new `overlap` (called
-    # `_overlap` until the original `overlap` is no longer needed)
-    # is built from the old one.
-    #
-    # If the length of overlap exceeds the largest substring
-    # seen so far (`sub_length`), we update the largest substring
-    # to the overlapping strings.
 
     overlap = dict()
-    # `sub_start_old` is the index of the beginning of the largest overlapping
-    # substring in the old list. `sub_start_new` is the index of the beginning
-    # of the same substring in the new list. `sub_length` is the length that
-    # overlaps in both.
-    # These track the largest overlapping substring seen so far, so naturally
-    # we start with a 0-length substring.
+
     sub_start_old = 0
     sub_start_new = 0
     sub_length = 0
@@ -185,6 +173,19 @@ POS_TAGS = [
   '<UNK>' # unknown
 ]
 
+POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
+
+EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
+tok2id = tokenizer.vocab
+tok2id['<del>'] = len(tok2id)
+
+# BERT initialization params
+config = 'bert-base-uncased'
+cls_num_labels = 43
+tok_num_labels = 3
+tok2id = tok2id
 
 
 # PADDING TO MAX_SEQ_LENGTH
@@ -192,44 +193,10 @@ def pad(id_arr, pad_idx):
   max_seq_len = 60
   return id_arr + ([pad_idx] * (max_seq_len - len(id_arr)))
 
-
-class BertForMultitask(BertPreTrainedModel):
-
-    def __init__(self, config, cls_num_labels=2, tok_num_labels=2, tok2id=None):
-        super(BertForMultitask, self).__init__(config)
-        self.bert = BertModel(config)
-
-        self.cls_dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.cls_classifier = nn.Linear(config.hidden_size, cls_num_labels)
-        
-        self.tok_dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.tok_classifier = nn.Linear(config.hidden_size, tok_num_labels)
-        
-        self.apply(self.init_bert_weights)
-
-
-    def forward(self, input_ids, token_type_ids=None, attention_mask=None, 
-        labels=None, rel_ids=None, pos_ids=None, categories=None, pre_len=None):
-        #global ARGS
-        sequence_output, pooled_output = self.bert(
-            input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
-
-        cls_logits = self.cls_classifier(pooled_output)
-        cls_logits = self.cls_dropout(cls_logits)
-
-        # NOTE -- dropout is after proj, which is non-standard
-        tok_logits = self.tok_classifier(sequence_output)
-        tok_logits = self.tok_dropout(tok_logits)
-
-        return cls_logits, tok_logits
-
 def to_probs(logits, lens):
     #print(logits)
     per_tok_probs = softmax(np.array(logits)[:, :, :2], axis=2)
     pos_scores = per_tok_probs[-1, :, :]
-    #print(per_tok_probs)
-    #print("Pos scores:", pos_scores, len(pos_scores))
-    #print(lens)
     out = []
     #for score_seq, l in zip(pos_scores, lens):
     out.append(pos_scores[:].tolist())
@@ -242,12 +209,8 @@ def run_inference(model, ids, tokenizer):
 
     out = {
         'input_toks': [],
-        #'tok_loss': [],
         'tok_logits': [],
         'tok_probs': []
-        #'tok_labels': [],
-        #'labeling_hits': []
-        #'input_len': 0
     }
 
     #for step, batch in enumerate(tqdm(eval_dataloader)):
@@ -270,66 +233,100 @@ def run_inference(model, ids, tokenizer):
     out['tok_logits'] += logits.tolist()
     #out['tok_labels'] += labels.tolist()
     out['tok_probs'] += to_probs(logits, pre_len)
-    #out['input_len'] = pre_len
-    #out['labeling_hits'] += tag_hits(logits, labels)
 
     return out
 
 
-def test_sentence(s): 
-    POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
-
-    EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
-
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
-    tok2id = tokenizer.vocab
-    tok2id['<del>'] = len(tok2id)
-
-    # BERT initialization params
-    config = 'bert-base-uncased'
-    cls_num_labels = 43
-    tok_num_labels = 3
-    tok2id = tok2id
-
-    # define model!!
-    model = BertForMultitask.from_pretrained(
-        'bert-base-uncased',
-        cls_num_labels=cls_num_labels,
-        tok_num_labels=tok_num_labels, 
-        cache_dir=cache_dir,
-        tok2id=tok2id)
-
-    # Load model
-    print("Loading Model")
-    saved_model_path = model_save_dir + 'model_3.ckpt'
-    #'C:\Users\sadie\Documents\fall2020\ec463\21-22-newsbias\ML\saved_models\model_3.ckpt'
-    model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
-
-    tokens = s.strip().split()
+def test_sentence(model, s): 
+    tokens = tokenizer.tokenize(s)
+    #print('tokens:', tokens)
+    #print(tokens)
     length = len(tokens)
-    ids = pad([tok2id[x] for x in tokens], 0)
+    ids = pad([tok2id.get(x, 0) for x in tokens], 0)
+
     #print(ids)
     ids = torch.LongTensor(ids)
-    #ids = ids.type(torch.LongTensor)
-    #print(ids, ids.size())
     ids = ids.unsqueeze(0)
-    #print(ids, ids.size(1))
-
+    #print('ids:', ids)
+    
+    model.eval()
     output = run_inference(model, ids, tokenizer)
     return output, length
 
+def output(sentences):
+    #print('sentences:', sentences)
+    #print("New testsentence code!")
+    # Takes a list of sentences = [s1, s2, s3]
+    # Returns list of tokens and list of corresponding bias scores for each sentence
+    #   So, list of lists: 
+    #       word_list = [[w1,w2,...wn_1], . . . [w1, w2, ... wn_2]]
+    #       bias_list = [[0.1,0.33, ... 0.02], . . .[0.9, 0.002, ... 0.5]]
 
+    # using new models with linguistic features
+    model = BertForMultitaskWithFeatures.from_pretrained(
+        'bert-base-uncased', LEXICON_DIRECTORY,
+        cls_num_labels=cls_num_labels,
+        tok_num_labels=tok_num_labels,
+        tok2id=tok2id, 
+        lexicon_feature_bits=1)
 
+    # Load model
+    #print("Loading Model")
+    saved_model_path = model_save_dir + 'features.ckpt'
+    model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
+
+    word_list = []
+    bias_list = []
+    for sentence in sentences: 
+        #print(sentence)
+        out, length = test_sentence(model, sentence) 
+        #print("Results:")
+
+        bias_val = out['tok_probs'][0][:length]
+        prob_bias = [b[1] for b in bias_val]
+
+        word_list.append(out['input_toks'][0][:length])
+        bias_list.append(prob_bias)
+
+    for words, biases in zip(word_list, bias_list):
+        results = {}
+        results['sentence_results'] = []
+        # Format output string 
+        # starts as python dictionary which we will convert to a json string
+        outWordsScores = []
+        avg_sum = 0
+        max_biased = words[0]
+        max_score = biases[0]   
+        most_biased_words = []
+        #output = ""
+        for word, score in zip(words, biases):
+            if score > max_score:
+                max_biased = word
+                max_score = score
+            avg_sum += score
+            outWordsScores.append(word + ": " + "{:.5f}".format(score) + " ")
+            if score >= 0.45:
+                most_biased_words.append(word)
+
+        print("max biased and max score:", max_biased, max_score)
+
+        s_level_results = {
+            "words" : outWordsScores,
+            "average": "{:.5f}".format(avg_sum/len(words)),
+            "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
+        } 
+
+        results['sentence_results'].append(s_level_results)
+    
+    return results 
+'''
 def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     start_time = time.time()
 
+    print("TEST ", sentence)
     out, length = test_sentence(sentence) 
     print("Results:")
-
-    #print(length)
-    #print(out['input_toks'][0][:29])
-    #print(out['tok_probs'][0][:29])
 
     words = out['input_toks'][0][:length]
     bias_values = out['tok_probs'][0][:length]
@@ -357,4 +354,4 @@ def output(sentence):
     output += 'Most biased word: ' + max_biased + " " + "{:.5f}".format(max_score) + "\n" #str(max_score) #
     output += "Runtime:" + str(time.time() - start_time) + " seconds\n"
 
-    return output
+    return output'''
