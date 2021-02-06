@@ -79,13 +79,13 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
-	#article author does not work, utilize lxml
-	
 	parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
 	parseText = parseText.replace("\"", "")
 	feedText = parseText.split(".")
-	return title, author, [feedText], date
+	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	data = {"title": title, "author": author, "feedText": feedText, "date": date}
+	return json.dumps(data)
 '''
 def tweetScrape(url): #runtime sub .4 seconds
 	bearer_token = config.bearer
