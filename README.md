@@ -5,7 +5,7 @@ A web application that parses online articles/text and measures bias via a lingu
 ## How To Run
 1) First clone the repo `git clone https://github.com/BostonUniversitySeniorDesign/21-22-newsbias.git`
 
-2) Then start the virtual environment `cd 21-22-newsbias.git/react-flask-app/ && pipenv shell`
+2) Then start the virtual environment `cd 21-22-newsbias/react-flask-app/ && pipenv shell`
 
 3) Then download the backend dependencies `cd api && pipenv install`
 
