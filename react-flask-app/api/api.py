@@ -8,6 +8,7 @@ import time
 import string
 import pymongo
 from pymongo import MongoClient
+import nltk.data
 
 
 app = Flask(__name__)
@@ -31,7 +32,10 @@ def api_post():
     var = dictionary['myText'].lower()
 
     # Split into multiple sentences here
-    sentences = var.split('.')
+    nltk.download('punkt')
+    sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    sentences = sentence_tokenizer.tokenize(var)
+    #sentences = var.split('. ')
     print(sentences)
 
     # Run through algorithm 
