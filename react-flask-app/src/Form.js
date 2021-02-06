@@ -24,11 +24,11 @@ class Form extends React.Component {
             .then(res => {
                 this.setState({ response: [...this.state.response, res.data.sentence_results] })
                 //this.setState({response: res.data});//.data.text});
-                console.log(res.data.sentence_results);//.data.text);
+                console.log(res.data.sentence_results[0][0]);//.data.text);
             });
     }
     render(){
-        console.log(this.state.response)
+        console.log(this.state.response[0])
         var wordList = this.state.response.map((item) =>
             <section className="results_display">
                 <ul id="results">
