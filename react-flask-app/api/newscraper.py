@@ -34,7 +34,9 @@ def cnnScrape(url): #run time ~.3 seconds
 	parseText = parseText.replace("\n", " ")
 	parseText = parseText.replace("\"", "")
 	feedText = parseText.split(".")
-	return title, author, feedText, date
+	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	data = {"title": title, "author": author, "feedText": feedText, "date": date}
+	return json.dumps(data)
 
 def foxScrape(url): #run time ~.2 seconds
 	article = Article(url)	
@@ -58,9 +60,10 @@ def foxScrape(url): #run time ~.2 seconds
 	re = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
-	meta = meta.split(",")	
-	meta = " ".join(str(entry) for entry in meta)
-	return title, author, feedText, date, meta
+	meta = meta.split(',')
+	meta = " ".join([str(entry) for entry in meta])
+	data = {"title": title, "author": author, "feedText": feedText, "date": date, "meta": meta}
+	return json.dumps(data)
 
 def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article = Article(url)	
@@ -78,13 +81,14 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
-	
 	parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
 	parseText = parseText.replace("\"", "")
 	feedText = parseText.split(".")
-	return title, author, feedText, date
-
+	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	data = {"title": title, "author": author, "feedText": feedText, "date": date}
+	return json.dumps(data)
+'''
 def tweetScrape(url): #runtime sub .4 seconds
 	bearer_token = 'AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAsqkxgA%2FtgFF8xw1E1dmhnSc6ZfI%3D7s9HOywA3Oc7MPj4pNFRBJfTWtUXFlidRAggTVYmRdWQChjAOd'
 	t_id = re.split("/status/", url)[1]
@@ -98,7 +102,6 @@ def tweetScrape(url): #runtime sub .4 seconds
 	atext = response.json()['includes']['users'][0]['username']
 	return twext, atext
 	
-
 def main():
 	tic = time.perf_counter()
 	url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
@@ -119,6 +122,6 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
+'''
 
 	

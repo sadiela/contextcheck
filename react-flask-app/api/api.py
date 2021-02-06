@@ -6,6 +6,7 @@ import json
 import TestSentence
 import time
 import string
+import newscraper
 import pymongo
 from pymongo import MongoClient
 import nltk.data
@@ -57,32 +58,13 @@ def api_post():
     #return_res = results['sentence_results']
     return results
 
-    '''
-    results = {
-        sentence_results: [
-            {
-                words : donald 0.06030 trump 0.06710 sucks 0.12249 ,
-                average:  0.08330,
-                max_biased_word: sucks 0.12249
-            },
-            {
-                words : I 0.06030 like 0.01710 donuts 0.02249 ,
-                average:  0.0033,
-                max_biased_word: I 0.06030
-            }
-        ],
-        runtime: 8.332
-    }
-    '''
-
-'''
-@app.route('/result', methods=['POST'])
-def api_post():
-    text = request.data
-    texty = text.decode('utf-8')
-    dictionary = json.loads(texty)
-    print(dictionary['myText'])
-    var = dictionary['myText'].lower()
-    results = TestSentence.output(var)
-    return results #jsonify(text=results)'''
+@app.route('/scrape', methods=['POST'])
+def scrape_article():
+    url = request.data
+    url = url.decode('utf-8')
+    url = json.loads(url)
+    print(url)
+    url = url['input_url']
+    res = newscraper.article_parse(url)
+    return res
 
