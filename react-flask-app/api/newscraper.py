@@ -61,7 +61,7 @@ def foxScrape(url): #run time ~.2 seconds
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
 	meta = meta.split(',')
-  meta = " ".join(str(entry) for entry in meta)
+	meta = " ".join([str(entry) for entry in meta])
 	data = {"title": title, "author": author, "feedText": feedText, "date": date, "meta": meta}
 	return json.dumps(data)
 
@@ -122,6 +122,6 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
+'''
 
 	

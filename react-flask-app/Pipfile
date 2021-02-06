@@ -9,6 +9,7 @@ numpy = "*"
 torch = "*"
 pytorch-pretrained-bert = "*"
 sklearn = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
