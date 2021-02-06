@@ -50,17 +50,18 @@ def foxScrape(url): #run time ~.2 seconds
 	date = article.publish_date
 	title = article.title
 	#parseText = article.text.lower()
-	parseText = parseText.replace("\n", " ")
+	parseText = article.text.replace("\n", " ")
 	#feedText = parseText.split(".")
-	for word in feedText:
-		if word.isupper():
-			feedText.remove(word)
+	#for word in feedText:
+	#	if word.isupper():
+	#		feedText.remove(word)
+
 	re = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
 	meta = meta.split(',')
 	meta = " ".join([str(entry) for entry in meta])
-	data = {"title": title, "author": author, "feedText": feedText, "date": date, "meta": meta}
+	data = {"title": title, "author": author, "feedText": parseText, "date": date, "meta": meta}
 	return json.dumps(data)
 
 def huffScrape(url): #runtime ~1.2-1.4 seconds
@@ -107,12 +108,12 @@ def main():
 	url3 = 'https://www.foxnews.com/politics/ilhan-omar-slams-lawmakers-vaccine'
 	url4 = 'https://www.cnn.com/2020/12/21/politics/bidens-coronavirus-vaccination/index.html'
 	#author, feedText, title =  article_parse(url)
-	title, author, text, date = article_parse(url5)
+	title, author, text, date, meta = article_parse(url3)
 	print(title)
 	print(author)
 	print(text)
 	print(date)
-	#print(meta)
+	print(meta)
 	
 	toc = time.perf_counter()
 	print(f"\nRuntime = {toc - tic:0.4f} seconds") 
