@@ -173,6 +173,20 @@ POS_TAGS = [
   '<UNK>' # unknown
 ]
 
+POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
+
+EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
+tok2id = tokenizer.vocab
+tok2id['<del>'] = len(tok2id)
+
+# BERT initialization params
+config = 'bert-base-uncased'
+cls_num_labels = 43
+tok_num_labels = 3
+tok2id = tok2id
+
 
 # PADDING TO MAX_SEQ_LENGTH
 def pad(id_arr, pad_idx):
@@ -195,12 +209,8 @@ def run_inference(model, ids, tokenizer):
 
     out = {
         'input_toks': [],
-        #'tok_loss': [],
         'tok_logits': [],
         'tok_probs': []
-        #'tok_labels': [],
-        #'labeling_hits': []
-        #'input_len': 0
     }
 
     #for step, batch in enumerate(tqdm(eval_dataloader)):
@@ -223,34 +233,36 @@ def run_inference(model, ids, tokenizer):
     out['tok_logits'] += logits.tolist()
     #out['tok_labels'] += labels.tolist()
     out['tok_probs'] += to_probs(logits, pre_len)
-    #out['input_len'] = pre_len
-    #out['labeling_hits'] += tag_hits(logits, labels)
 
     return out
 
 
-def test_sentence(s): 
-    POS2ID = {x: i for i, x in enumerate(POS_TAGS)}
+def test_sentence(model, s): 
+    tokens = tokenizer.tokenize(s)
+    #print('tokens:', tokens)
+    #print(tokens)
+    length = len(tokens)
+    ids = pad([tok2id.get(x, 0) for x in tokens], 0)
 
-    EDIT_TYPE2ID = {'0':0, '1':1, 'mask':2}
+    #print(ids)
+    ids = torch.LongTensor(ids)
+    ids = ids.unsqueeze(0)
+    #print('ids:', ids)
+    
+    model.eval()
+    output = run_inference(model, ids, tokenizer)
+    return output, length
 
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', os.getcwd() + '/cache')
-    tok2id = tokenizer.vocab
-    tok2id['<del>'] = len(tok2id)
+def output(sentences):
+    #print('sentences:', sentences)
+    #print("New testsentence code!")
+    # Takes a list of sentences = [s1, s2, s3]
+    # Returns list of tokens and list of corresponding bias scores for each sentence
+    #   So, list of lists: 
+    #       word_list = [[w1,w2,...wn_1], . . . [w1, w2, ... wn_2]]
+    #       bias_list = [[0.1,0.33, ... 0.02], . . .[0.9, 0.002, ... 0.5]]
 
-    # BERT initialization params
-    config = 'bert-base-uncased'
-    cls_num_labels = 43
-    tok_num_labels = 3
-    tok2id = tok2id
-
-    # define model!!
-    '''model = BertForMultitask.from_pretrained(
-        'bert-base-uncased',
-        cls_num_labels=cls_num_labels,
-        tok_num_labels=tok_num_labels, 
-        cache_dir=cache_dir,
-        tok2id=tok2id)'''
+    # using new models with linguistic features
     model = BertForMultitaskWithFeatures.from_pretrained(
         'bert-base-uncased', LEXICON_DIRECTORY,
         cls_num_labels=cls_num_labels,
@@ -259,26 +271,55 @@ def test_sentence(s):
         lexicon_feature_bits=1)
 
     # Load model
-    print("Loading Model")
+    #print("Loading Model")
     saved_model_path = model_save_dir + 'features.ckpt'
-    #'C:\Users\sadie\Documents\fall2020\ec463\21-22-newsbias\ML\saved_models\model_3.ckpt'
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
-    tokens = tokenizer.tokenize(s)
-    print(tokens)
-    length = len(tokens)
-    ids = pad([tok2id.get(x, 0) for x in tokens], 0)
+    word_list = []
+    bias_list = []
+    for sentence in sentences: 
+        #print(sentence)
+        out, length = test_sentence(model, sentence) 
+        #print("Results:")
 
-    #print(ids)
-    ids = torch.LongTensor(ids)
-    #ids = ids.type(torch.LongTensor)
-    #print(ids, ids.size())
-    ids = ids.unsqueeze(0)
-    #print(ids, ids.size(1))
+        bias_val = out['tok_probs'][0][:length]
+        prob_bias = [b[1] for b in bias_val]
 
-    output = run_inference(model, ids, tokenizer)
-    return output, length
+        word_list.append(out['input_toks'][0][:length])
+        bias_list.append(prob_bias)
 
+    for words, biases in zip(word_list, bias_list):
+        results = {}
+        results['sentence_results'] = []
+        # Format output string 
+        # starts as python dictionary which we will convert to a json string
+        outWordsScores = []
+        avg_sum = 0
+        max_biased = words[0]
+        max_score = biases[0]   
+        most_biased_words = []
+        #output = ""
+        for word, score in zip(words, biases):
+            if score > max_score:
+                max_biased = word
+                max_score = score
+            avg_sum += score
+            outWordsScores.append(word + ": " + "{:.5f}".format(score) + " ")
+            if score >= 0.45:
+                most_biased_words.append(word)
+
+        print("max biased and max score:", max_biased, max_score)
+
+        s_level_results = {
+            "words" : outWordsScores,
+            "average": "{:.5f}".format(avg_sum/len(words)),
+            "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
+        } 
+
+        results['sentence_results'].append(s_level_results)
+    
+    return results 
+'''
 def output(sentence):
 #sentence = "the 51 day stand ##off and ensuing murder of 76 men , women , and children - - the branch david ##ians - - in wa ##co , texas"
     start_time = time.time()
@@ -313,4 +354,4 @@ def output(sentence):
     output += 'Most biased word: ' + max_biased + " " + "{:.5f}".format(max_score) + "\n" #str(max_score) #
     output += "Runtime:" + str(time.time() - start_time) + " seconds\n"
 
-    return output
+    return output'''

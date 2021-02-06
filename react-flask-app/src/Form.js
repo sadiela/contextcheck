@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import './Form.css';
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -21,27 +22,48 @@ class Form extends React.Component {
         console.log("Input: " + myText);
         axios.post("/result", {myText})
             .then(res => {
-                this.setState({ response: [...this.state.response, res.data] })
+                this.setState({ response: [...this.state.response, res.data.sentence_results] })
                 //this.setState({response: res.data});//.data.text});
-                console.log(res.data);//.data.text);
+                console.log(res.data.sentence_results);//.data.text);
             });
     }
     render(){
-
-        var listItems = this.state.response.map((item) =>
-            <li>
-                {item}
-            </li>
-            );
+        console.log(this.state.response)
+        var wordList = this.state.response.map((item) =>
+            <section className="results_display">
+                <ul id="results">
+                        <li className="word" key={item}>
+                            {item.words.map((word) =>
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item" key={word}>
+                                        {word}
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+                        <li className="other_info" key={item.average}>
+                            <p>
+                                Average Score: <strong>{item.average}</strong>.
+                            </p>
+                            <p>
+                                The most biased word is: <strong>{item.max_biased_word}</strong>.
+                            </p>
+                        </li>
+                </ul>
+            </section>
+            )
         return(
-            <form className="form" onSubmit={this.handleSubmit}>
-            <p></p>
-                <label>
-                    <strong>Text:</strong> <input className="text_input" key="text-input" type="text" value={this.state.text} onChange={this.handleChange} />
-                </label>
-                <button className="submit_button" type="submit" value="Submit">Submit</button>
-                <ul>{listItems}</ul>
-            </form>
+            <div>
+                <form className="form" onSubmit={this.handleSubmit}>
+                <p></p>
+                    <label>
+                        <strong>Text:</strong> <input className="text_input" key="text-input" type="text" value={this.state.text} onChange={this.handleChange} />
+                    </label>
+                    <button className="submit_button" type="submit" value="Submit">Submit</button>
+                    <ul className="results_wrapper">{wordList}</ul>
+                </form>
+                <p></p>
+            </div>
         );
     }
 }

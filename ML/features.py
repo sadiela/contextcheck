@@ -1,7 +1,7 @@
 import sys
 import time
-sys.path.append('c:\python38\lib\site-packages')
-sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+#sys.path.append('c:\python38\lib\site-packages')
+#sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 
 import nltk
 import numpy as np 
@@ -20,8 +20,6 @@ class FeatureGenerator:
         self.pad_id = pad_id
         self.pos2id = pos2id
         self.rel2id = rel2id
-
-        print("WORKING DIRECTORY: ", os.getcwd())
 
         self.lexicons = {
             'assertives': self.read_lexicon(lexicon_path + 'assertives_hooper1975.txt'),
