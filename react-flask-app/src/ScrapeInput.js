@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+
+/**
+ * CNN: https://www.cnn.com/2021/02/05/media/lou-dobbs-fox-show-canceled/index.html
+ * FOX: https://www.foxnews.com/politics/biden-terrorist-designation-yemens-houthi-militia
+ */
+
 export default class ScrapeInput extends Component {
     constructor(props){
         super(props);

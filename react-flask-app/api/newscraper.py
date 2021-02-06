@@ -60,7 +60,8 @@ def foxScrape(url): #run time ~.2 seconds
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
 	meta = meta.split(',')
-	return title, author, feedText, date, meta
+	data = {"title": title, "author": author, "feedText": feedText, "date": date, "meta": meta}
+	return json.dumps(data)
 
 def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article = Article(url)	
