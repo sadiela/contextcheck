@@ -30,10 +30,9 @@ def cnnScrape(url): #run time ~.3 seconds
 	author = article.authors
 	title = article.title
 	date = article.publish_date
-	parseText = article.text.lower()
+	#parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
-	parseText = parseText.replace("\"", "")
-	feedText = parseText.split(".")
+	#feedText = parseText.split(".")
 	date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	data = {"title": title, "author": author, "feedText": feedText, "date": date}
 	return json.dumps(data)
@@ -50,10 +49,9 @@ def foxScrape(url): #run time ~.2 seconds
 	author = author[0]
 	date = article.publish_date
 	title = article.title
-	parseText = article.text.lower()
+	#parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
-	parseText = parseText.replace("\"", "")
-	feedText = parseText.split(".")
+	#feedText = parseText.split(".")
 	for word in feedText:
 		if word.isupper():
 			feedText.remove(word)
@@ -81,10 +79,9 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
-	parseText = article.text.lower()
+	#parseText = article.text.lower()
 	parseText = parseText.replace("\n", " ")
-	parseText = parseText.replace("\"", "")
-	feedText = parseText.split(".")
+	#feedText = parseText.split(".")
 	date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	data = {"title": title, "author": author, "feedText": feedText, "date": date}
 	return json.dumps(data)
