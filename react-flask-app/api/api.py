@@ -11,7 +11,7 @@ import newscraper
 #import pymongo
 #from pymongo import MongoClient
 import nltk.data
-from Related_Articles import RelatedArticles
+from Related_Articles import getarticles
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ app = Flask(__name__)
 db = m_client.sentence_results
 collection = db.res'''
 
-def analyze_sentence(text, start_time):
+def analyze_sentences(text, start_time):
     # Split into multiple sentences here
     #nltk.download('punkt')
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
@@ -58,7 +58,7 @@ def api_post():
     #print(dictionary['myText'])
     var = dictionary['myText'] #.lower()
 
-    results = analyze_sentence(var, start_time)
+    results = analyze_sentences(var, start_time)
 
     return results
 
@@ -75,11 +75,13 @@ def scrape_article():
     #print(res_obj)
     print("Type:", type(res_obj))
     # res.title, res.author, res.feedText, res.date, res.meta (?)
-    results = analyze_sentence(res_obj['feedText'], start_time)
+    results = analyze_sentences(res_obj['feedText'], start_time)
     res_obj['bias_results'] = results
     ####
+    print(res_obj['title']) # remove 'the', 'a', etc in the future
+    related_articles = getarticles(res_obj['title'])
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
-    #res_obj['related'] = related_dict
+    res_obj['related'] = related_articles
     ####
     return res_obj
 

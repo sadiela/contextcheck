@@ -9,6 +9,7 @@ sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-pack
 sys.path.append('..\..\ML')
 
 import numpy as np
+import statistics
 
 # torch imports
 import torch
@@ -183,8 +184,16 @@ def test_sentence(model, s):
     output = run_inference(model, ids) #, tokenizer)
     return output, length
 
+def changeRange(old_range, new_range, value):
+    # given an old range, new range, and value in the old range, 
+    # maps it to the new range
+    # we will use old_range[0,1] new_range [0,10]
+    (old_min, old_max), (new_min, new_max) = old_range, new_range
+    return  new_min + ((value - old_min) * (new_max - new_min) / (old_max - old_min))
+
 def output(sentences):
     results = {}
+    words_list = [] # this will eventually be a key for results
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -221,6 +230,8 @@ def output(sentences):
         word_list.append(out['input_toks'][0][:length])
         bias_list.append(prob_bias)
 
+    scaled_bias_scores = []
+
     for words, biases in zip(word_list, bias_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
@@ -231,6 +242,7 @@ def output(sentences):
         most_biased_words = []
         #output = ""
         for word, score in zip(words, biases):
+            word_list.append({'word':word, 'score':score}) # add type later!
             if score > max_score:
                 max_biased = word
                 max_score = score
@@ -238,6 +250,8 @@ def output(sentences):
             outWordsScores.append(word + ": " + "{:.5f}".format(score) + " ")
             if score >= 0.45:
                 most_biased_words.append(word)
+        bias_score = changeRange([0,1], [0,10], value)
+        scaled_bias_scores.append(bias_score)
 
         #print("max biased and max score:", max_biased, max_score)
 
@@ -245,8 +259,11 @@ def output(sentences):
             "words" : outWordsScores,
             "average": "{:.5f}".format(avg_sum/len(words)),
             "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
+            "bias_score":bias_score
         } 
 
         results['sentence_results'].append(s_level_results)
+        results['article_score'] = statistics.mean([scaled_bias_scores[:int(len(scaled_bias_scores)/4)]])
+        results['word_list'] = word_list
     
     return results 
