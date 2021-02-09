@@ -70,8 +70,15 @@ def scrape_article():
     print(url)
     url = url['input_url']
     res = newscraper.article_parse(url)
+    res_obj = json.loads(res) 
+    #print(res_obj)
+    print("Type:", type(res_obj))
     # res.title, res.author, res.feedText, res.date, res.meta (?)
-    results = analyze_sentence(res.feedText, start_time)
-    res['bias_results'] = results
-    return res
+    results = analyze_sentence(res_obj['feedText'], start_time)
+    res_obj['bias_results'] = results
+    ####
+    # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
+    #res_obj['related'] = related_dict
+    ####
+    return res_obj
 
