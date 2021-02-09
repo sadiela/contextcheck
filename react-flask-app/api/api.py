@@ -1,16 +1,17 @@
 import sys
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
+sys.path.append('..\..\Related_Articles')
 from flask import Flask, request, jsonify
 import json
 import TestSentence
 import time
 import string
 import newscraper
-import pymongo
-from pymongo import MongoClient
+#import pymongo
+#from pymongo import MongoClient
 import nltk.data
-
+from Related_Articles import RelatedArticles
 
 app = Flask(__name__)
 

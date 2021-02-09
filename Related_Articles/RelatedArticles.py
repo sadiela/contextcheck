@@ -8,6 +8,7 @@ newsapi = NewsApiClient(api_key='c1ff125522de4c749e615dca5cba6eb5')
 
 def getarticles(inp):
        
+       related = {} # dictionary we will use
 
        url = ('http://newsapi.org/v2/everything?'
               f'q={inp}&'
@@ -160,7 +161,6 @@ def getarticles(inp):
               if po in news_urls[i]:
                      middle.append(news_urls[i])
 
-       related = []
        if len(pleft) > 1:
               pleft.remove('')
        if len(sleft) > 1:
@@ -172,11 +172,18 @@ def getarticles(inp):
        if len(pright) > 1:
               pright.remove('')
 
-       related.append(random.choice(pleft))
-       related.append(random.choice(sleft))
-       related.append(random.choice(middle))
-       related.append(random.choice(sright))
-       related.append(random.choice(pright))
+       related['partisan_left'] = random.choice(pleft)
+       related['skews_left'] = random.choice(sleft)
+       related['middle'] = random.choice(middle)
+       related['skews_right'] = random.choice(sright)
+       related['partisan_right'] = random.choice(pright)
+       # returns dictionary with each key pointing to a URL for a related article
+
+       # related.append(random.choice(pleft))
+       # related.append(random.choice(sleft))
+       # related.append(random.choice(middle))
+       # related.append(random.choice(sright))
+       # related.append(random.choice(pright))
    
        return related
 
