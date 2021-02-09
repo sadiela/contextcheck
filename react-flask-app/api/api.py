@@ -1,7 +1,7 @@
 import sys
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
-sys.path.append('..\..\Related_Articles')
+sys.path.append('..\\..\\Related_Articles')
 from flask import Flask, request, jsonify
 import json
 import TestSentence
@@ -11,7 +11,7 @@ import newscraper
 #import pymongo
 #from pymongo import MongoClient
 import nltk.data
-from Related_Articles import getarticles
+import RelatedArticles #import getarticles
 
 app = Flask(__name__)
 
@@ -73,13 +73,12 @@ def scrape_article():
     res = newscraper.article_parse(url)
     res_obj = json.loads(res) 
     #print(res_obj)
-    print("Type:", type(res_obj))
     # res.title, res.author, res.feedText, res.date, res.meta (?)
     results = analyze_sentences(res_obj['feedText'], start_time)
     res_obj['bias_results'] = results
     ####
     print(res_obj['title']) # remove 'the', 'a', etc in the future
-    related_articles = getarticles(res_obj['title'])
+    related_articles = RelatedArticles.getarticles(res_obj['title'])
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res_obj['related'] = related_articles
     ####

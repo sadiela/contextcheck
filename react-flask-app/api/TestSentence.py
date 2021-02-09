@@ -230,6 +230,8 @@ def output(sentences):
         word_list.append(out['input_toks'][0][:length])
         bias_list.append(prob_bias)
 
+    #print("LENGTHS:", len(word_list), len(bias_list))
+
     scaled_bias_scores = []
 
     for words, biases in zip(word_list, bias_list):
@@ -240,7 +242,6 @@ def output(sentences):
         max_biased = words[0]
         max_score = biases[0]   
         most_biased_words = []
-        #output = ""
         for word, score in zip(words, biases):
             word_list.append({'word':word, 'score':score}) # add type later!
             if score > max_score:
@@ -250,7 +251,9 @@ def output(sentences):
             outWordsScores.append(word + ": " + "{:.5f}".format(score) + " ")
             if score >= 0.45:
                 most_biased_words.append(word)
-        bias_score = changeRange([0,1], [0,10], value)
+        
+        # one of these per sentence
+        bias_score = changeRange([0,1], [0,10], max_score)
         scaled_bias_scores.append(bias_score)
 
         #print("max biased and max score:", max_biased, max_score)
@@ -263,7 +266,15 @@ def output(sentences):
         } 
 
         results['sentence_results'].append(s_level_results)
-        results['article_score'] = statistics.mean([scaled_bias_scores[:int(len(scaled_bias_scores)/4)]])
-        results['word_list'] = word_list
+    
+    # Full article data
+    #print('Length of scaled bias scores:', len(scaled_bias_scores))
+    # Sort scaled bias score largest to smallest: 
+    scaled_bias_scores.sort(reverse=True)
+    upper_bound = int(len(scaled_bias_scores)/4)
+    #print('So will take this many:', )
+    top_twenty_fifth = scaled_bias_scores[:upper_bound]
+    results['article_score'] = statistics.mean(top_twenty_fifth)
+    results['word_list'] = word_list
     
     return results 

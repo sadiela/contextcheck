@@ -1,3 +1,8 @@
+import sys
+import time
+import os
+sys.path.append('c:\python38\lib\site-packages')
+sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 from newsapi import NewsApiClient
 import json
 import random
