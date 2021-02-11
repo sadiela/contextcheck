@@ -11,11 +11,17 @@ A web application that parses online articles/text and measures bias via a lingu
 
 4) Then open a new tab in your terminal (rooted at `/react-flask-app`)
 
-5) Then download frontend dependencies `npm i`
+5) Then download frontend dependencies `npm i` (and then `npm audit fix` if prompted)
 
-6) From the first tab, with the pipenv running, start the flask server `flask run`
+6) Download `features.ckpt`, `data.zip`, and `lexicons.zip`
 
-7) Lastly, from the second tab, start the react server `yarn start` and the webapp should open in your browser
+7) Create a folder @ `/ML/saved_models` and place `features.ckpt` in there
+
+8) Unzip `data` and `lexicons`, place `lexicons` in `data` and place `data` @ `/ML/data`
+
+9) From the first terminal tab, with the pipenv running, start the flask server `flask run`
+
+10) Lastly, from the second tab, start the react server `yarn start` and the webapp should open in your browser
 
 ## ML 
 
