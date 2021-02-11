@@ -18,7 +18,7 @@ export default class WebscraperResultsDisplay extends Component {
             return sentences.map((sentence) => {
                 return (
                     <div className='individual-sentence-wrapper'>
-                        <p name='average'>{sentence.bias_score}</p>
+                        <p name='average'>{Math.round(sentence.bias_score * 100)/100}</p>
                         <p name='most-biased'>{sentence.max_biased_word}</p>
                     </div>
                 );
@@ -42,11 +42,11 @@ export default class WebscraperResultsDisplay extends Component {
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='article-score'>Article Score</label>
-                        <li name='article-score' className='webscraper-result'>{this.props.output.bias_results.article_score}</li>
+                        <li name='article-score' className='webscraper-result'>{Math.round(this.props.output.bias_results.article_score * 100)/100}</li>
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='runtime'>Runtime</label>
-                        <li name='runtime' className='webscraper-result'>{this.props.output.bias_results.runtime}</li>
+                        <li name='runtime' className='webscraper-result'>{this.props.output.bias_results.runtime.substr(0,5)}</li>
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='related-articles'>Related Articles (Middle)</label>
