@@ -27,7 +27,7 @@ export default class ScrapeInput extends Component {
     }
     render(){
         return(
-            <div>
+            <div className='url-input-wrapper'>
                 <input type='text' onChange={this.handleChange} value={this.state.input_url} placeholder='enter url'></input>
                 <button type='submit' onClick={this.handleSubmit}>Submit</button>
             </div>

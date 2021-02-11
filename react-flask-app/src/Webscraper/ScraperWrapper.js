@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import ScrapeInput from './ScrapeInput';
 import WebscraperResultsDisplay from './WebscraperResultsDisplay';
+import './Webscraper.css';
 
 export default class ScraperWrapper extends Component {
     constructor(props){
@@ -28,7 +29,7 @@ export default class ScraperWrapper extends Component {
     }
     render() {
         return(
-            <div>
+            <div className='scraper-wrapper'>
                 <ScrapeInput 
                     handleSubmit={this.handleSubmit}
                 />
