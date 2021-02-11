@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
 
 export default class WebscraperResultsDisplay extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            sorted: false,
+        }
+        this.handleSort = this.handleSort.bind(this);
+    }
     getArticleContent() {
-        const sentences = this.props.output.bias_results.sentence_results;
-        console.log(sentences);
-        return sentences.map((sentence) => {
+        if (this.props.output.title !== ""){
+            var sentences = this.props.output.bias_results.sentence_results;
+            if(this.state.sorted === true){
+                sentences = this.props.output.bias_results.sentence_results.sort((a, b) => (a.bias_score > b.bias_score)? -1 : 1);
+            }
+            console.log(sentences);
+            return sentences.map((sentence) => {
+                return (
+                    <div className='individual-sentence-wrapper'>
+                        <p name='average'>{sentence.bias_score}</p>
+                        <p name='most-biased'>{sentence.max_biased_word}</p>
+                    </div>
+                );
+            });
+        } else {
             return (
-                <div className='individual-sentence-wrapper'>
-                    <p name='average'>{sentence.bias_score}</p>
-                    <p name='most-biased'>{sentence.max_biased_word}</p>
-                </div>
-            );
-        });
+                <div></div>
+            )
+        }
+    }
+    handleSort(){
+        this.setState({sorted: !this.state.sorted});
     }
     render() {
         return(
@@ -40,6 +59,7 @@ export default class WebscraperResultsDisplay extends Component {
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='article'>Article Content</label>
                         <ul className='webscraper-article-content-list' name='article'>
+                            <button onClick={this.handleSort}>Sort By Sentence Score</button>
                             <span className='sentences-header'>
                                 <p>Sentence Score</p>
                                 <p>Most Biased Word</p>
