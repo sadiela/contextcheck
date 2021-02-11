@@ -193,7 +193,7 @@ def changeRange(old_range, new_range, value):
 
 def output(sentences):
     results = {}
-    words_list = [] # this will eventually be a key for results
+    word_score_list = []
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -243,7 +243,7 @@ def output(sentences):
         max_score = biases[0]   
         most_biased_words = []
         for word, score in zip(words, biases):
-            word_list.append({'word':word, 'score':score}) # add type later!
+            word_score_list.append({'word':word, 'score':score}) # add type later!
             if score > max_score:
                 max_biased = word
                 max_score = score
@@ -268,13 +268,12 @@ def output(sentences):
         results['sentence_results'].append(s_level_results)
     
     # Full article data
-    #print('Length of scaled bias scores:', len(scaled_bias_scores))
     # Sort scaled bias score largest to smallest: 
     scaled_bias_scores.sort(reverse=True)
     upper_bound = int(len(scaled_bias_scores)/4)
     #print('So will take this many:', )
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
-    results['word_list'] = word_list
+    results['word_list'] = word_score_list
     
     return results 
