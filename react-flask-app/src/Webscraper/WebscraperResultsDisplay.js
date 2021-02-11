@@ -41,7 +41,7 @@ export default class WebscraperResultsDisplay extends Component {
                         className='individual-sentence-wrapper'
                         onClick={this.sentenceClickHandler}
                     >
-                        <p name='average'>{Math.round(sentence.bias_score * 100)/100}</p>
+                        <p style={{color: (sentence.bias_score > 6) ? "red" : "green"}} name='average'>{Math.round(sentence.bias_score * 100)/100}</p>
                         <p name='most-biased'>{sentence.max_biased_word}</p>
                         {this.showSentence(sentence)}
                     </div>
@@ -66,7 +66,7 @@ export default class WebscraperResultsDisplay extends Component {
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='article-score'>Article Score</label>
-                        <li name='article-score' className='webscraper-result'>{Math.round(this.props.output.bias_results.article_score * 100)/100}</li>
+                        <li style={{color: (this.props.output.bias_results.article_score > 6) ? "red" : "green"}} name='article-score' className='webscraper-result'>{Math.round(this.props.output.bias_results.article_score * 100)/100}</li>
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='runtime'>Runtime</label>
