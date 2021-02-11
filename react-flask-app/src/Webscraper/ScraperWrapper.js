@@ -28,16 +28,27 @@ export default class ScraperWrapper extends Component {
             });
     }
     render() {
-        return(
-            <div className='scraper-wrapper'>
-                <ScrapeInput 
-                    handleSubmit={this.handleSubmit}
-                />
-                <WebscraperResultsDisplay 
-                    output={this.state.output}
-                />
-            </div>
-        )
+        if(this.state.output.title !== ""){
+            return(
+                <div className='scraper-wrapper'>
+                    <ScrapeInput 
+                        handleSubmit={this.handleSubmit}
+                    />
+                    <WebscraperResultsDisplay 
+                        output={this.state.output}
+                    />
+                </div>
+            )
+        }
+        else {
+            return(
+                <div className='scraper-wrapper'>
+                    <ScrapeInput  
+                        handleSubmit={this.handleSubmit}
+                    />
+                </div>
+            )
+        }
     }
 
 }
