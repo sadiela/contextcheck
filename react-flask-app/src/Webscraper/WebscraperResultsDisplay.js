@@ -16,7 +16,7 @@ export default class WebscraperResultsDisplay extends Component {
         if(this.state.show_sentence){
             return sentence.words.map ((word) => {
                 return (
-                    <p>{word}</p>
+                    <p>{word[0].replace('##', '')} {word[2]}</p>
                 )
             })
         }
@@ -42,7 +42,7 @@ export default class WebscraperResultsDisplay extends Component {
                         onClick={this.sentenceClickHandler}
                     >
                         <p style={{color: (sentence.bias_score > 6) ? "red" : "green"}} name='average'>{Math.round(sentence.bias_score * 100)/100}</p>
-                        <p name='most-biased'>{sentence.max_biased_word}</p>
+                        <p name='most-biased'>{sentence.max_biased_word.replace('##', '')}</p>
                         {this.showSentence(sentence)}
                     </div>
                 );
@@ -70,7 +70,7 @@ export default class WebscraperResultsDisplay extends Component {
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='runtime'>Runtime</label>
-                        <li name='runtime' className='webscraper-result'>{this.props.output.bias_results.runtime.substr(0,5)}</li>
+                        <li name='runtime' className='webscraper-result'>{this.props.output.bias_results.runtime.substr(0,5)} seconds</li>
                     </span>
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='related-articles'>Related Articles (Middle)</label>
