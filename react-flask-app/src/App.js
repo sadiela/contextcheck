@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import './App.css';
 import Form from './Form.js';
-import ScrapeInput from './ScrapeInput.js';
+import ScraperWrapper from './Webscraper/ScraperWrapper';
 //
 //const formReducer = (state, event) => {
 //    return {
@@ -21,7 +21,7 @@ function App() {
         <h1>Team 22 - Media Bias</h1>
       </header>
       <Form/>
-      <ScrapeInput />
+      <ScraperWrapper />
     </div>
   );
 }

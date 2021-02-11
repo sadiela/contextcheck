@@ -23,13 +23,7 @@ export default class ScrapeInput extends Component {
     }
     handleSubmit(event){
         event.preventDefault();
-        const input_url = this.state.input_url;
-        console.log("Input: " + input_url);
-        axios.post("/scrape", {input_url})
-            .then(res => {
-                this.setState({ output: res.data })
-                console.log(res.data);
-            });
+        this.props.handleSubmit(this.state.input_url)
     }
     render(){
         return(

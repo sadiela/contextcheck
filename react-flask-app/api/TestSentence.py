@@ -4,6 +4,8 @@
 import sys
 import time
 import os
+
+sys.path.append('../../ML')
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 sys.path.append('..\..\ML')
@@ -22,7 +24,7 @@ from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention, BertP
 from pytorch_pretrained_bert.tokenization import BertTokenizer
 
 # other user scripts
-from features import FeatureGenerator # might not need this
+from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
 
 CUDA = (torch.cuda.device_count() > 0)

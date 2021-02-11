@@ -31,10 +31,10 @@ def cnnScrape(url): #run time ~.3 seconds
 	title = article.title
 	date = article.publish_date
 	#parseText = article.text.lower()
-	parseText = parseText.replace("\n", " ")
+	parseText = article.text.replace("\n", " ")
 	#feedText = parseText.split(".")
 	date = date.strftime("%m/%d/%Y, %H:%M:%S")
-	data = {"title": title, "author": author, "feedText": feedText, "date": date}
+	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 
 def foxScrape(url): #run time ~.2 seconds
