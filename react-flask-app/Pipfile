@@ -10,6 +10,9 @@ torch = "*"
 pytorch-pretrained-bert = "*"
 sklearn = "*"
 python-dotenv = "*"
+newsapi = "*"
+newspaper3k = "*"
+newsapi-python = "*"
 
 [dev-packages]
 

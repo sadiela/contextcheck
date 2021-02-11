@@ -4,6 +4,8 @@
 import sys
 import time
 import os
+
+sys.path.append('../../ML')
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 sys.path.append('..\..\ML')
@@ -22,7 +24,7 @@ from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention, BertP
 from pytorch_pretrained_bert.tokenization import BertTokenizer
 
 # other user scripts
-from features import FeatureGenerator # might not need this
+from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
 
 CUDA = (torch.cuda.device_count() > 0)
@@ -233,7 +235,7 @@ def output(sentences):
     #print("LENGTHS:", len(word_list), len(bias_list))
 
     scaled_bias_scores = []
-
+    iter = 0
     for words, biases in zip(word_list, bias_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
@@ -257,12 +259,13 @@ def output(sentences):
         scaled_bias_scores.append(bias_score)
 
         #print("max biased and max score:", max_biased, max_score)
-
+        iter = iter + 1
         s_level_results = {
             "words" : outWordsScores,
             "average": "{:.5f}".format(avg_sum/len(words)),
             "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
-            "bias_score":bias_score
+            "bias_score":bias_score,
+            "order":iter
         } 
 
         results['sentence_results'].append(s_level_results)

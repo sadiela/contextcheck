@@ -2,6 +2,7 @@ import sys
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
 sys.path.append('..\\..\\Related_Articles')
+sys.path.append('../../Related_Articles')
 from flask import Flask, request, jsonify
 import json
 import TestSentence
@@ -21,7 +22,7 @@ collection = db.res'''
 
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
-    #nltk.download('punkt')
+    nltk.download('punkt')
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = sentence_tokenizer.tokenize(text)
     #sentences = var.split('. ')
