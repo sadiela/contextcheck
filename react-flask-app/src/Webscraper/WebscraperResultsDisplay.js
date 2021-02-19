@@ -16,7 +16,7 @@ export default class WebscraperResultsDisplay extends Component {
         if(this.state.show_sentence){
             return sentence.words.map ((word) => {
                 return (
-                    <p>{word[0].replace('##', '')} {word[2]}</p>
+                    <p>{word.replace('##', '')}</p>
                 )
             })
         }

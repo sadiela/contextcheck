@@ -12,7 +12,7 @@ import newscraper
 #import pymongo
 #from pymongo import MongoClient
 import nltk.data
-import RelatedArticles #import getarticles
+import RelatedArticles_five_calls #import getarticles
 
 app = Flask(__name__)
 
@@ -71,15 +71,21 @@ def scrape_article():
     url = json.loads(url)
     print(url)
     url = url['input_url']
+    print("PARSING URL")
     res = newscraper.article_parse(url)
+    print(res)
     res_obj = json.loads(res) 
     #print(res_obj)
     # res.title, res.author, res.feedText, res.date, res.meta (?)
     results = analyze_sentences(res_obj['feedText'], start_time)
     res_obj['bias_results'] = results
+
     ####
-    print(res_obj['title']) # remove 'the', 'a', etc in the future
-    related_articles = RelatedArticles.getarticles(res_obj['title'])
+    # function gets keywords from title, looks for frequent words in article itself??
+    separate_words = res_obj['title'].split(' ')
+    ####
+    print(separate_words) # remove 'the', 'a', etc in the future
+    related_articles = RelatedArticles_five_calls.getarticles(separate_words[0])
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res_obj['related'] = related_articles
     ####

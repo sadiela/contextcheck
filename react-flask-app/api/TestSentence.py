@@ -214,7 +214,6 @@ def output(sentences):
         lexicon_feature_bits=1)
 
     # Load model
-    #print("Loading Model")
     saved_model_path = model_save_dir + 'features.ckpt'
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
@@ -278,5 +277,9 @@ def output(sentences):
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
     results['word_list'] = word_score_list
+
+    print(results['article_score'])
+
+    print('DONE IN TEST SENTENCE')
     
     return results 

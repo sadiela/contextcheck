@@ -11,8 +11,8 @@ def getarticles(inp):
     #centerist source call
     url1 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        #'from=2021-01-07&'
-        'sortBy=date&'
+        'from=2021-02-09&'
+        'sortBy=relevancy&'
         'sources=associated-press&'
         'domains= reuters.com,cbsnews.com,abcnews.go.com,bloomburg.com,economist.com,forbes.com,cnbc.com,thehill.com,politico.com$'
         'page = 1&'
@@ -24,8 +24,8 @@ def getarticles(inp):
     #skew left source call
     url2 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        #'from=2021-01-07&'
-        'sortBy=date&'
+        'from=2021-02-09&'
+        'sortBy=relevancy&'
         'sources=cnn&'
         'domains= nytimes.com,theguardian.com,msnbc.com,theatlantic.com,vox.com,washingtonpost.com,huffpost.com,thedailybeast.com&'
         'pageSize=100&'
@@ -38,8 +38,8 @@ def getarticles(inp):
     #partisan left source call
     url3 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        #'from=2021-01-07&'
-        'sortBy=date&'
+        'from=2021-02-09&'
+        'sortBy=relevancy&'
         'domains= slate.com,jacobinmag.com,rawstory.com,progressive.org&'
         'pageSize=100&'
         'page = 1&'
@@ -51,8 +51,8 @@ def getarticles(inp):
     #partisan right source call
     url4 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        #'from=2021-01-07&'
-        'sortBy=date&'
+        'from=2021-02-09&'
+        'sortBy=relevancy&'
         'sources=fox-news&'
         'domains= dailywire.com,dailycaller.com,nationalreview.com&'
         'pageSize=100&'
@@ -65,8 +65,8 @@ def getarticles(inp):
     #skew right source call
     url5 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        #'from=2021-01-07&'
-        'sortBy=date&'
+        'from=2021-02-09&'
+        'sortBy=relevancy&'
         'sources=the-wall-street-journal&'
         'domains= reason.com,quillette.com,realclearpolitics.com,nypost.com,washingtonexaminer.com,rasmussenreports.com,freebeacon.com,zerohedge.com&'
         'pageSize=100&'
@@ -82,7 +82,6 @@ def getarticles(inp):
     sright = ['']
     pleft = ['']
     pright = ['']
-
 
     #all urls being sorted from json files into political catagory arrays
     for x in articles1['articles']:
@@ -100,8 +99,13 @@ def getarticles(inp):
     for x in articles5['articles']:
         sright.append(x['url'])
 
+    # print("PARTISAN LEFT: ", pleft)
+    # print("SKEWS LEFT: ", sleft)
+    # print("MIDDLE: ", middle)
+    # print("SKEWS RIGHT: ", sright)
+    # print("PARTISAN RIGHT: ", pright)
+
     #this removes the blank space placeholder for each array
-    related = []
     if len(pleft) > 1:
         pleft.remove('')
     if len(sleft) > 1:
@@ -114,11 +118,17 @@ def getarticles(inp):
         pright.remove('')
 
     #random selection for each political catagory
-    related.append(random.choice(pleft))
-    related.append(random.choice(sleft))
-    related.append(random.choice(middle))
-    related.append(random.choice(sright))
-    related.append(random.choice(pright))
+    related = {}
+    related['partisan_left'] = random.choice(pleft)
+    related['skews_left'] = random.choice(sleft)
+    related['middle'] = random.choice(middle)
+    related['skews_right'] = random.choice(sright)
+    related['partisan_right'] = random.choice(pright)
+
+    print(related)
 
     #returns array of articles, elements 0-4 is partisan left to partisan right respectively
     return related
+
+# print("STARTING")
+# getarticles('trump impeachment')
