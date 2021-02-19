@@ -43,6 +43,9 @@ def analyze_sentences(text, start_time):
     print('SENTENCE RESULTS!', results['sentence_results'])
     results['runtime'] = str(time.time() - start_time) + " seconds\n"
     #return_res = results['sentence_results']
+
+    # REMERGE TOKENIZED WORDS (BID ##EN = BIDEN)
+    # Make sure sentence parsing is working?!?!?
     return results
 
 @app.route('/result', methods=['POST'])

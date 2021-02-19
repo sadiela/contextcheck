@@ -79,17 +79,17 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article.parse()
 	huff_soup = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	huff_text = BeautifulSoup(huff_soup.text, 'html.parser')
-	author = huff_text.find("div", {"class":"author-list"}).text
+	author = "me"#huff_text.find("div", {"class":"author-list"}).text
 	title = article.title
 	date = article.publish_date
 	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
-	#parseText = article.text.lower()
+	parseText = article.text
 	parseText = parseText.replace("\n", " ")
 	#feedText = parseText.split(".")
 	date = date.strftime("%m/%d/%Y, %H:%M:%S")
-	data = {"title": title, "author": author, "feedText": feedText, "date": date}
+	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 	
 def genScrape(url):
@@ -105,7 +105,7 @@ def genScrape(url):
     title = article.title
     date = article.publish_date
     date = date.strftime("%m/%d/%Y, %H:%M:%S")
-    data = {"title": title, "author": author, "text": parseText, "date": date}
+    data = {"title": title, "author": author, "feedText": parseText, "date": date}
     return json.dumps(data)
 '''
 def tweetScrape(url): #runtime sub .4 seconds
