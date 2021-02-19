@@ -14,10 +14,9 @@ def article_parse(url):
 		return foxScrape(url)
 	elif "huffpost.com" in url:
 		return huffScrape(url)
-	elif "twitter.com" in url:
-		return tweetScrape(url)
 	else:
-		return "Invalid or unsupported URL"
+		return genScrape(url)
+	#works for AP news, progressive.org, NYpost and maybe more
 	
 def cnnScrape(url): #run time ~.3 seconds
 	article = Article(url)	
@@ -50,7 +49,14 @@ def foxScrape(url): #run time ~.2 seconds
 	date = article.publish_date
 	title = article.title
 	#parseText = article.text.lower()
-	parseText = article.text.replace("\n", " ")
+	parseText = article.text.replace("\n", " ") #ads scrubbing!
+	parseText2 = ""
+	textList = parseText.split()
+	for word in textList:
+		if word.isupper():
+			word = ""
+		parseText2 = parseText2 + word + " "
+     
 	#feedText = parseText.split(".")
 	#for word in feedText:
 	#	if word.isupper():
@@ -60,9 +66,9 @@ def foxScrape(url): #run time ~.2 seconds
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
 	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
 	meta = meta.replace(',', " ")
-	data = {"title": title, "author": author, "feedText": parseText, "date": date, "meta": meta}
+	data = {"title": title, "author": author, "feedText": parseText2, "date": date, "meta": meta}
 	return json.dumps(data)
-
+	
 def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article = Article(url)	
 	try:
@@ -85,6 +91,22 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	data = {"title": title, "author": author, "feedText": feedText, "date": date}
 	return json.dumps(data)
+	
+def genScrape(url):
+    article = Article(url)
+    try:
+        article.download()
+    except:
+        print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
+        return "Error"
+    article.parse()
+    parseText = article.text.replace("\n", "")
+    author = article.authors
+    title = article.title
+    date = article.publish_date
+    date = date.strftime("%m/%d/%Y, %H:%M:%S")
+    data = {"title": title, "author": author, "text": parseText, "date": date}
+    return json.dumps(data)
 '''
 def tweetScrape(url): #runtime sub .4 seconds
 	bearer_token = 'AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAsqkxgA%2FtgFF8xw1E1dmhnSc6ZfI%3D7s9HOywA3Oc7MPj4pNFRBJfTWtUXFlidRAggTVYmRdWQChjAOd'
