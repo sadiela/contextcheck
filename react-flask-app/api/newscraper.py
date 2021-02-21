@@ -79,7 +79,12 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	article.parse()
 	huff_soup = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
 	huff_text = BeautifulSoup(huff_soup.text, 'html.parser')
-	author = "me"#huff_text.find("div", {"class":"author-list"}).text
+	try:
+        	author = huff_text.find("div", {"class":"author-card"}).text
+        	author = author.replace("\n", "")
+	except:
+		author = huff_text.find("div", {"class":"wire-partner-component"}).text
+		author = author.replace("\n", "")
 	title = article.title
 	date = article.publish_date
 	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
