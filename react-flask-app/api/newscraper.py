@@ -101,6 +101,7 @@ def genScrape(url):
     article = Article(url)
     try:
         article.download()
+	article.parse()
     except:
         print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
         return "Error"
