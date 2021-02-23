@@ -18,9 +18,9 @@ export default class WebscraperResultsDisplay extends Component {
         })
     }
     handleWord = word => {
-        const word_and_score = word.split(":");
-        var the_word = word_and_score[0];
-        const score_float = parseFloat(word_and_score[1]);
+        //const word_and_score = word.split(":");
+        var the_word = word[0];
+        const score_float = parseFloat(word[1]);
         the_word = the_word.replace("##", "");
         return(
             <span className='word-wrapper'>

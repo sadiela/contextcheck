@@ -26,7 +26,7 @@ def analyze_sentences(text, start_time):
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = sentence_tokenizer.tokenize(text)
     #sentences = var.split('. ')
-    print(sentences)
+    #print(sentences)
 
     # Run through algorithm 
     results = TestSentence.output(sentences)
@@ -40,7 +40,7 @@ def analyze_sentences(text, start_time):
     collection.insert_one(db_entry)
     print("INSERTED TO DB!")'''
 
-    print('SENTENCE RESULTS!', results['sentence_results'])
+    #print('SENTENCE RESULTS!', results['sentence_results'])
     results['runtime'] = str(time.time() - start_time) + " seconds\n"
     #return_res = results['sentence_results']
 
@@ -76,7 +76,7 @@ def scrape_article():
     url = url['input_url']
     print("PARSING URL")
     res = newscraper.article_parse(url)
-    print(res)
+    #print(res)
     res_obj = json.loads(res) 
     #print(res_obj)
     # res.title, res.author, res.feedText, res.date, res.meta (?)
@@ -87,8 +87,9 @@ def scrape_article():
     # function gets keywords from title, looks for frequent words in article itself??
     separate_words = res_obj['title'].split(' ')
     ####
-    print(separate_words) # remove 'the', 'a', etc in the future
-    related_articles = RelatedArticles_five_calls.getarticles(separate_words[0])
+    #print(separate_words) # remove 'the', 'a', etc in the future
+    filtered_separate_words = [i for i in separate_words if i != "the" and i != "a" and i != "in" and i != "to" and i != "his" and i != "her" and i != "and" and i != "on" and i != "with"]
+    related_articles = RelatedArticles_five_calls.getarticles(" ".join(filtered_separate_words[:3]))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res_obj['related'] = related_articles
     ####

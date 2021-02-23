@@ -196,6 +196,8 @@ def changeRange(old_range, new_range, value):
 def output(sentences):
     results = {}
     word_score_list = []
+    preformatted_words = []
+    preformatted_scores = []
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -234,7 +236,7 @@ def output(sentences):
     #print("LENGTHS:", len(word_list), len(bias_list))
 
     scaled_bias_scores = []
-    iter = 0
+    num = 0
     for words, biases in zip(word_list, bias_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
@@ -244,36 +246,62 @@ def output(sentences):
         max_score = biases[0]   
         most_biased_words = []
         for word, score in zip(words, biases):
-            word_score_list.append({'word':word, 'score':score}) # add type later!
+            preformatted_words.append(word)
+            preformatted_scores.append(score)
             if score > max_score:
                 max_biased = word
                 max_score = score
             avg_sum += score
-            outWordsScores.append(word + ": " + "{:.5f}".format(score) + " ")
+            if len(word) >= 3 and word[:2] == "##":
+                # stuff
+                last_word_score = outWordsScores[-1]
+                print(last_word_score, word, score)
+                outWordsScores[-1][0] = last_word_score[0] + word[2:]
+                outWordsScores[-1][1] = (last_word_score[1] + score)/2
+            else:
+                outWordsScores.append([word, score])
             if score >= 0.45:
                 most_biased_words.append(word)
         
         # one of these per sentence
         bias_score = changeRange([0,1], [0,10], max_score)
         scaled_bias_scores.append(bias_score)
+        print("Scaled bias scores: ", scaled_bias_scores)
 
         #print("max biased and max score:", max_biased, max_score)
-        iter = iter + 1
+        num = num + 1
         s_level_results = {
             "words" : outWordsScores,
             "average": "{:.5f}".format(avg_sum/len(words)),
             "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
             "bias_score":bias_score,
-            "order":iter
+            "order":num
         } 
 
         results['sentence_results'].append(s_level_results)
     
+    formatted_words = []
+    formatted_scores = []
+    for word, score in zip(preformatted_words, preformatted_scores):
+        if len(word) >= 3 and word[:2] == "##":
+            # stuff
+            last_word = formatted_words[-1]
+            formatted_words[-1] = last_word + word[2:]
+            last_score = formatted_scores[-1]
+            formatted_scores[-1] = (last_score + score)/2
+        else:
+            formatted_words.append(word)
+            formatted_scores.append(score)
+
+    print(len(formatted_scores), len(formatted_words))
+    for word, score in zip(formatted_words, formatted_scores): 
+        word_score_list.append({'word':word, 'score':score}) # add type later!
+
     # Full article data
     # Sort scaled bias score largest to smallest: 
     scaled_bias_scores.sort(reverse=True)
-    upper_bound = int(len(scaled_bias_scores)/4)
-    #print('So will take this many:', )
+    upper_bound = int(len(scaled_bias_scores)/2)
+
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
     results['word_list'] = word_score_list
