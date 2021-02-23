@@ -4,7 +4,9 @@ import random
 import requests
 
 # Init
-newsapi = NewsApiClient(api_key='c1ff125522de4c749e615dca5cba6eb5')
+api_key_2 = 'b6a1f64d144b43c1bba5370b62d879e0'
+# Old one:  c1ff125522de4c749e615dca5cba6eb5
+newsapi = NewsApiClient(api_key='b6a1f64d144b43c1bba5370b62d879e0')
     
 def getarticles(inp):
     
@@ -16,7 +18,7 @@ def getarticles(inp):
         'sources=associated-press&'
         'domains= reuters.com,cbsnews.com,abcnews.go.com,bloomburg.com,economist.com,forbes.com,cnbc.com,thehill.com,politico.com$'
         'page = 1&'
-        'apiKey=c1ff125522de4c749e615dca5cba6eb5')
+        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
 
     response1 = requests.get(url1)
     articles1 = response1.json()
@@ -30,7 +32,7 @@ def getarticles(inp):
         'domains= nytimes.com,theguardian.com,msnbc.com,theatlantic.com,vox.com,washingtonpost.com,huffpost.com,thedailybeast.com&'
         'pageSize=100&'
         'page = 1&'
-        'apiKey=c1ff125522de4c749e615dca5cba6eb5')
+        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
 
     response2 = requests.get(url2)
     articles2 = response2.json()
@@ -43,7 +45,7 @@ def getarticles(inp):
         'domains= slate.com,jacobinmag.com,rawstory.com,progressive.org&'
         'pageSize=100&'
         'page = 1&'
-        'apiKey=c1ff125522de4c749e615dca5cba6eb5')
+        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
 
     response3 = requests.get(url3)
     articles3 = response3.json()
@@ -57,7 +59,7 @@ def getarticles(inp):
         'domains= dailywire.com,dailycaller.com,nationalreview.com&'
         'pageSize=100&'
         'page = 1&'
-        'apiKey=c1ff125522de4c749e615dca5cba6eb5')
+        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
 
     response4 = requests.get(url4)
     articles4 = response4.json()
@@ -71,7 +73,7 @@ def getarticles(inp):
         'domains= reason.com,quillette.com,realclearpolitics.com,nypost.com,washingtonexaminer.com,rasmussenreports.com,freebeacon.com,zerohedge.com&'
         'pageSize=100&'
         'page = 1&'
-        'apiKey=c1ff125522de4c749e615dca5cba6eb5')
+        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
 
     response5 = requests.get(url5)
     articles5 = response5.json()

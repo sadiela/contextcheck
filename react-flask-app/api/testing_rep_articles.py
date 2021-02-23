@@ -14,6 +14,11 @@ import string
 import nltk.data
 #import RelatedArticles_five_calls #import getarticles
 
+# Incorporate web scrape 
+
+# Take list of URLS
+# Return list of bias scores
+
 
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
@@ -42,3 +47,6 @@ sentences = sentence_tokenizer.tokenize(text)
 
 # Run through algorithm 
 results = TestSentence.output(sentences)
+
+# Save to file? 
+print(results['article_score'])

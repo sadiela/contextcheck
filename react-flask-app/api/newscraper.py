@@ -34,7 +34,10 @@ def cnnScrape(url): #run time ~.3 seconds
 	#parseText = article.text.lower()
 	parseText = article.text.replace("\n", " ")
 	#feedText = parseText.split(".")
-	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 
@@ -95,7 +98,10 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	parseText = article.text
 	parseText = parseText.replace("\n", " ")
 	#feedText = parseText.split(".")
-	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 def nypScrape(url): #runtime ~1.2-1.4 seconds
@@ -121,7 +127,10 @@ def nypScrape(url): #runtime ~1.2-1.4 seconds
 	parseText = article.text
 	parseText = parseText.replace("\n", " ")
 	#feedText = parseText.split(".")
-	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 def genScrape(url):
@@ -137,7 +146,10 @@ def genScrape(url):
 	author = article.authors
 	title = article.title
 	date = article.publish_date
-	date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
 '''
