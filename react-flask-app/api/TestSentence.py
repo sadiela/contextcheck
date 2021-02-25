@@ -302,6 +302,9 @@ def output(sentences):
     scaled_bias_scores.sort(reverse=True)
     upper_bound = int(len(scaled_bias_scores)/2)
 
+    if upper_bound == 0:
+        upper_bound = 1
+
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
     results['word_list'] = word_score_list

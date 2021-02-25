@@ -17,6 +17,10 @@ import nltk.data
 # Incorporate web scrape 
 
 # Take list of URLS --> if web scraper working
+# Assume single text file with urls separated by newlines
+url_filename = "../../testing/urls.txt" # include directory
+#with 
+
 # OR
 # Take directory with text files
 # Return list of bias scores
