@@ -280,7 +280,7 @@ def output(sentences):
 
         results['sentence_results'].append(s_level_results)
     
-    formatted_words = []
+    '''formatted_words = []
     formatted_scores = []
     for word, score in zip(preformatted_words, preformatted_scores):
         if len(word) >= 3 and word[:2] == "##":
@@ -296,6 +296,7 @@ def output(sentences):
     print(len(formatted_scores), len(formatted_words))
     for word, score in zip(formatted_words, formatted_scores): 
         word_score_list.append({'word':word, 'score':score}) # add type later!
+    results['word_list'] = word_score_list'''
 
     # Full article data
     # Sort scaled bias score largest to smallest: 
@@ -307,7 +308,6 @@ def output(sentences):
 
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
-    results['word_list'] = word_score_list
 
     print(results['article_score'])
 
