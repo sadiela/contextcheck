@@ -175,8 +175,6 @@ def run_inference(model, ids): #, tokenizer):
 
 def test_sentence(model, s): 
     tokens = tokenizer.tokenize(s)
-    print(tokens)
-    input("Continue...")
     length = len(tokens)
     
     # get tokens from BERT
