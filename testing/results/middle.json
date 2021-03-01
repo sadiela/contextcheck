@@ -1,0 +1,46 @@
+[
+    {
+        "filename": "Biden_routine_hill.txt",
+        "article_score": 3.0453013877073922
+    },
+    {
+        "filename": "Chis_Cuomo_cnbc.txt",
+        "article_score": 7.542223898988021
+    },
+    {
+        "filename": "CPAC_abc.txt",
+        "article_score": 6.277684982527386
+    },
+    {
+        "filename": "Immigration_nbc.txt",
+        "article_score": 3.374799837668737
+    },
+    {
+        "filename": "Minwage_bloomburg.txt",
+        "article_score": 4.2244220856163235
+    },
+    {
+        "filename": "Minwage_cbs.txt",
+        "article_score": 6.526789177547801
+    },
+    {
+        "filename": "Rush_cbs.txt",
+        "article_score": 6.063379858221326
+    },
+    {
+        "filename": "Rush_Forbes.txt",
+        "article_score": 5.934120565652847
+    },
+    {
+        "filename": "Schools_ap.txt",
+        "article_score": 6.067325168329736
+    },
+    {
+        "filename": "Stimulous_hill.txt",
+        "article_score": 7.210610806941986
+    },
+    {
+        "filename": "Syria_Reuters.txt",
+        "article_score": 4.9525099992752075
+    }
+]

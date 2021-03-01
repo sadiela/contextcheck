@@ -175,6 +175,8 @@ def run_inference(model, ids): #, tokenizer):
 
 def test_sentence(model, s): 
     tokens = tokenizer.tokenize(s)
+    print(tokens)
+    input("Continue...")
     length = len(tokens)
     
     # get tokens from BERT
@@ -255,9 +257,9 @@ def output(sentences):
             if len(word) >= 3 and word[:2] == "##":
                 # stuff
                 last_word_score = outWordsScores[-1]
-                print(last_word_score, word, score)
+                #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
-                outWordsScores[-1][1] = (last_word_score[1] + score)/2
+                outWordsScores[-1][1] = max(last_word_score[1], score)
             else:
                 outWordsScores.append([word, score])
             if score >= 0.45:
@@ -266,7 +268,7 @@ def output(sentences):
         # one of these per sentence
         bias_score = changeRange([0,1], [0,10], max_score)
         scaled_bias_scores.append(bias_score)
-        print("Scaled bias scores: ", scaled_bias_scores)
+        #print("Scaled bias scores: ", scaled_bias_scores)
 
         #print("max biased and max score:", max_biased, max_score)
         num = num + 1
@@ -280,7 +282,7 @@ def output(sentences):
 
         results['sentence_results'].append(s_level_results)
     
-    formatted_words = []
+    '''formatted_words = []
     formatted_scores = []
     for word, score in zip(preformatted_words, preformatted_scores):
         if len(word) >= 3 and word[:2] == "##":
@@ -296,6 +298,8 @@ def output(sentences):
     print(len(formatted_scores), len(formatted_words))
     for word, score in zip(formatted_words, formatted_scores): 
         word_score_list.append({'word':word, 'score':score}) # add type later!
+    results['article_score'] = statistics.mean(top_twenty_fifth)'''
+
 
     # Full article data
     # Sort scaled bias score largest to smallest: 
@@ -306,11 +310,12 @@ def output(sentences):
         upper_bound = 1
 
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
-    results['article_score'] = statistics.mean(top_twenty_fifth)
     results['word_list'] = word_score_list
+    results['article_score'] = statistics.mean(top_twenty_fifth)
 
-    print(results['article_score'])
 
-    print('DONE IN TEST SENTENCE')
+    #print(results['article_score'])
+
+    #print('DONE IN TEST SENTENCE')
     
     return results 
