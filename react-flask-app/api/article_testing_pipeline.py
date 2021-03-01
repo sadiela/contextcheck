@@ -21,8 +21,6 @@ from copy import copy
 def analyze_sentences(text):
     sentences = sentence_tokenizer.tokenize(text)
 
-    print(len(sentences)) 
-    input("Continue...")
     # Run through algorithm 
     results = TestSentence.output(sentences)
 
