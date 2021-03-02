@@ -313,7 +313,6 @@ def output(sentences):
 
 
     #print(results['article_score'])
-
     #print('DONE IN TEST SENTENCE')
     
     return results 
