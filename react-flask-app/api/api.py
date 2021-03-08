@@ -89,7 +89,7 @@ def scrape_article():
     ####
     #print(separate_words) # remove 'the', 'a', etc in the future
     filtered_separate_words = [i for i in separate_words if i != "the" and i != "a" and i != "in" and i != "to" and i != "his" and i != "her" and i != "and" and i != "on" and i != "with"]
-    related_articles = RelatedArticles_five_calls.getarticles(" ".join(filtered_separate_words[:3]))
+    related_articles = ''#RelatedArticles_five_calls.getarticles(" ".join(filtered_separate_words[:3]))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res_obj['related'] = related_articles
     ####

@@ -104,6 +104,7 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
+
 def nypScrape(url): #runtime ~1.2-1.4 seconds
 	article = Article(url)
 	try:
@@ -133,6 +134,7 @@ def nypScrape(url): #runtime ~1.2-1.4 seconds
 		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
+	
 def genScrape(url):
 	article = Article(url)
 	try:
@@ -152,40 +154,4 @@ def genScrape(url):
 		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
-'''
-def tweetScrape(url): #runtime sub .4 seconds
-	bearer_token = 'AAAAAAAAAAAAAAAAAAAAAJFHKgEAAAAAsqkxgA%2FtgFF8xw1E1dmhnSc6ZfI%3D7s9HOywA3Oc7MPj4pNFRBJfTWtUXFlidRAggTVYmRdWQChjAOd'
-	t_id = re.split("/status/", url)[1]
-	ids = "ids="+t_id
-	tweet_fields = "tweet.fields=lang,author_id"
-	auth = "expansions=author_id"
-	url = "https://api.twitter.com/2/tweets?{}&{}&{}".format(ids, tweet_fields, auth)
-	headers = {"Authorization": "Bearer {}".format(bearer_token)}
-	response = requests.request("GET", url, headers = headers)
-	twext = response.json()['data'][0]['text']
-	atext = response.json()['includes']['users'][0]['username']
-	return twext, atext
-	
-def main():
-	tic = time.perf_counter()
-	url = 'https://www.huffpost.com/entry/covid-19-eviction-crisis-women_n_5fca8af3c5b626e08a29de11'
-	url5 = 'https://www.huffpost.com/entry/why-amazon-insisted-on-an-in-person-union-election-during-a-pandemic_n_601da0dec5b66c385ef94bc9?guccounter=1'
-	url2 = 'https://twitter.com/Twitter/status/1339350208942125066'
-	url3 = 'https://www.foxnews.com/politics/ilhan-omar-slams-lawmakers-vaccine'
-	url4 = 'https://www.cnn.com/2020/12/21/politics/bidens-coronavirus-vaccination/index.html'
-	#author, feedText, title =  article_parse(url)
-	title, author, text, date, meta = article_parse(url3)
-	print(title)
-	print(author)
-	print(text)
-	print(date)
-	print(meta)
-	
-	toc = time.perf_counter()
-	print(f"\nRuntime = {toc - tic:0.4f} seconds") 
 
-if __name__ == "__main__":
-	main()
-'''
-
-	
