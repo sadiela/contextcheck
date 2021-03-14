@@ -13,7 +13,6 @@ from copy import copy
 import newscraper
 import argparse
 
-
 def get_free_filename(stub, directory, suffix=''):
     counter = 0
     while True:
@@ -78,8 +77,6 @@ def get_url_results(filepath, results_folder, results_filename="url"):
         json.dump(url_results, fp, indent=4)
     with open(full_url_result_path, 'w') as fp:
         json.dump(full_url_results, fp, indent=4)
-    print("DONE")
-
 
     
 # OR
@@ -114,8 +111,8 @@ def get_text_results(directory, results_folder, results_filename="text"):
         with open(full_dir_results_path, 'w') as fp:
             json.dump(full_dir_results, fp, indent=4)
 
+
 if __name__ == "__main__":
-    
     parser = argparse.ArgumentParser()
     results_folder = "../../testing/results/"
     default_directory_name = "../../testing/Article_Txt_Files/"
