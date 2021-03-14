@@ -198,9 +198,6 @@ def changeRange(old_range, new_range, value):
 
 def output(sentences):
     results = {}
-    word_score_list = []
-    preformatted_words = []
-    preformatted_scores = []
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -281,6 +278,7 @@ def output(sentences):
 
         results['sentence_results'].append(s_level_results)
 
+
     # out of for loop...
     # Full article data
     # Sort scaled bias score largest to smallest: 
@@ -291,8 +289,6 @@ def output(sentences):
         upper_bound = 1
 
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
-    results['word_list'] = word_score_list
     results['article_score'] = statistics.mean(top_twenty_fifth)
-
     
     return results 
