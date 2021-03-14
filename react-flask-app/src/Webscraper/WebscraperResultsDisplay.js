@@ -25,7 +25,7 @@ export default class WebscraperResultsDisplay extends Component {
         return(
             <span className='word-wrapper'>
                 <p>{the_word}</p>
-                <p style={{color: (score_float > .6) ? "red" : "green"}}>{Math.round(score_float*1000)/1000}</p>
+                <p style={{color: (score_float > 6) ? "red" : "green"}}>{Math.round(score_float*1000)/1000}</p>
             </span>
         )
     }
@@ -56,7 +56,7 @@ export default class WebscraperResultsDisplay extends Component {
                     <div className='sentence-wrapper'>
                         <div className='individual-sentence-wrapper' onClick={() => this.sentenceClickHandler(sentence)}>
                             <p className='sentence-score' style={{background: (sentence.bias_score > 6) ? "rgb(255, 208, 208)" : "rgb(208, 255, 210)"}} name='average'>{Math.round(sentence.bias_score * 100)/100}</p>
-                            <p name='most-biased'>{sentence.max_biased_word.replace('##', '')}</p>
+                            <p name='most-biased'>{sentence.max_biased_word}</p>
                         </div>
                             <span className='expanded-sentence-wrapper'>{this.showSentence(sentence)}</span>
                     </div> 
@@ -96,11 +96,11 @@ export default class WebscraperResultsDisplay extends Component {
                     <span className='webscraper-result-wrapper'>
                         <label className='webscraper-result-label' htmlFor='related-articles'>Related Articles</label>
                         <span name='related-articles' className='webscraper-result'>
-                            <p className='related-article-link'>{this.props.output.related.partisan_left}</p>
-                            <p className='related-article-link'>{this.props.output.related.skews_left}</p>
-                            <p className='related-article-link'>{this.props.output.related.middle}</p>
-                            <p className='related-article-link'>{this.props.output.related.skews_right}</p>
-                            <p className='related-article-link'>{this.props.output.related.partisan_right}</p>
+                            <p className='related-article-link'>{this.props.output.related[0]}</p>
+                            <p className='related-article-link'>{this.props.output.related[1]}</p>
+                            <p className='related-article-link'>{this.props.output.related[2]}</p>
+                            <p className='related-article-link'>{this.props.output.related[3]}</p>
+                            <p className='related-article-link'>{this.props.output.related[4]}</p>
                         </span>
                     </span>
                     <span className='webscraper-result-wrapper'>
