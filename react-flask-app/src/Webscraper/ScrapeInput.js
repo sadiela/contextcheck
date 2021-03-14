@@ -17,6 +17,7 @@ export default class ScrapeInput extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.reset = this.reset.bind(this)
     }
     handleChange(event){
         this.setState({input_url: event.target.value})
@@ -25,11 +26,16 @@ export default class ScrapeInput extends Component {
         event.preventDefault();
         this.props.handleSubmit(this.state.input_url)
     }
+    reset(){
+        this.setState({input_url: ""})
+    }
+
     render(){
         return(
             <div className='url-input-wrapper'>
-                <input type='text' onChange={this.handleChange} value={this.state.input_url} placeholder='enter url'></input>
+                <input type='text' id='input' onChange={this.handleChange} value={this.state.input_url} placeholder='enter url'></input>
                 <button type='submit' onClick={this.handleSubmit}>Submit</button>
+                <button type ='submit' onClick={this.reset}>Clear</button>
             </div>
         );
     }
