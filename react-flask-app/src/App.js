@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import './App.css';
-import Form from './Form.js';
+import PTWrapper from './Plaintextscraper/PTWrapper';
 import ScraperWrapper from './Webscraper/ScraperWrapper';
 import logo from './logoContext.png'
 function App() {
@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <img src={logo} alt="ContextCheck"></img>
       </header>
-      <Form/>
+      <PTWrapper />
       <ScraperWrapper />
     </div>
   );

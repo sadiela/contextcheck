@@ -1,0 +1,69 @@
+Jimmy Vielkind covers New York Gov. Andrew Cuomo for the Wall Street Journal, and for the past year, he has been showing up to the state capitol in Albany for the governor’s press conferences. For the first half of the pandemic, these junkets would happen every day. Ostensibly, the governor was there to give an update on the state’s coronavirus response. But he would also dole out dad jokes and show off his penchant for graphic design—he reportedly makes his own PowerPoint slides. One day, the governor rolled out a giant Styrofoam mountain range his staff had crafted, a visual metaphor for the coronavirus surge in the state. “People not just in New York but around the world got to see some of the quirks of Andrew Cuomo,” says Vielkind.
+
+This quirkiness became part of a lovable public persona for the governor, during a time of crisis. But Vielkind says there is this other side to the governor—a side that has not been on display quite as publicly over the past year. “Cuomo’s aides have previously said that he can be a bully, but he gets stuff done,” Vielkind says. “One of the governor’s longtime confidants, a guy named Steve Cohen, said during his 2018 reelection campaign: ‘Your bully is my champion.’ ”
+
+The governor’s bullying side started creeping back into view as the year wore on. Democrats in New York had been congratulating Cuomo, calling him a pandemic hero. Now, they are calling the governor out. On Monday’s episode of What Next, I spoke with Vielkind about how Cuomo’s fortunes changed so drastically. Our conversation has been edited and condensed for clarity.
+
+Mary Harris: It is criticism of New York State’s coronavirus response that has irritated Cuomo to the point of lashing out. Specifically, criticism of how the governor’s office has been counting the deaths of COVID patients in nursing homes. Take me back and explain how a simple data error could lead the governor to reveal a less savory side of his personality, a side of himself he’s managed to keep under wraps, at least for the last few months. 
+
+Jimmy Vielkind: You have to start in the first weeks of March, where there were really lots of unknowns. Gov. Cuomo had just presided over a slow glide shutdown of the state, which finally came to pass on March 20.
+
+It took him a while to make the decision.
+
+There was a week of incremental closures. Different people have debated whether he could have or should have acted faster, but that was his decision point No. 1. Decision point No. 2 was concern about hospital capacity. Cuomo talked time and time again about images that he saw from Italy, where hospitals were overrun, where patients were outside on gurneys or stuffed into hallways, and people were essentially being turned away. And he said so often that that was his biggest fear.
+
+So in that environment, hospital executives talked to the governor’s team and said, “We have a problem. We have patients who no longer need to be hospitalized, but they’re sitting in our beds because we have no place to discharge them.” They normally would get discharged to nursing homes. But the nursing homes were saying, “We’re really scared. We don’t want these COVID-positive patients.” You have this tension between nursing homes and hospitals. And what New York state did was it listened to the concerns of hospitals. So on March 25, the state health department issued a directive saying that a nursing home could not refuse to admit a patient it would otherwise be able to care for solely on the basis of being positive for COVID-19. Now, nursing home operators said this was effectively an order to take these patients in; some of them immediately objected. They immediately said, “Hey, we’re concerned this is going to exacerbate the spread of COVID-19 in our facilities.” But the order stood.
+
+Was there evidence that it did exacerbate the spread of their facilities?
+
+This is where it gets tricky. We know that thousands of patients were transferred from hospitals into nursing homes around the state between March 25 and May 10, when this health department directive was modified/rescinded/reversed. The question is: Did the coronavirus come to nursing homes as a result of this? In July, the state health department put out a report, which looked at the dates of death and the dates of first positive cases in nursing homes around the state. Its conclusion was that in most nursing homes, the first introduction of coronavirus happened before any of these patients were transferred, before the directive was issued on March 25
+
+It was staffers bringing it in.
+
+They concluded that it was staff-created because the infection rates in nursing homes correlated with the surrounding community. Obviously, a nursing home doesn’t exist in a bubble. People who work there have somewhere else to live, and the health department said this was actually the factor, even though nursing home operators said from the beginning, “Hey, this order is not helping; it’s only hurting.” And to this day, there are operators who say that they believe it contributed to the spread, if not, in some instances, was the primary cause of the spread.
+
+It’s unclear even now whether this policy forcing nursing homes to take in COVID-positive patients affected New York’s total death toll. That’s because of a rather grim calculus: It’s possible that additional deaths in nursing homes were actually offset … because freeing up hospital beds allowed more coronavirus patients to be treated. What we do know—now at least—is that COVID deaths in nursing homes weren’t being tallied correctly. That’s because, if a patient became so sick they were transferred back to a hospital, that death was counted as a “hospital death,” making it nearly impossible to understand just how much the virus was ravaging long-term care facilities. Tell us about that.
+
+This kind of thing doesn’t come up in the regular course of life. Not until there was a pandemic did the state think about reporting causes of death and cross-referencing records with hospitals to figure out who died from what and who lived where initially. They just wanted to know who was dying. And so the easiest way to do that was: Where did this person die? And that basically came down to hospitals and nursing homes. Instead of trying to reconcile those data sets at the outset, when little was known and when they were building these reporting systems on the fly, state officials said, “Look, this is the quickest, easiest way to do this.”
+
+But this data just didn’t make sense to a lot of people. Lawmakers in Albany asked to take a look and so did a public policy shop called the Empire Center, which filed a freedom of information request. The governor’s office kept those requests at bay. But meanwhile, New York’s attorney general, Letitia James, was investigating too. 
+
+By the end of the year, you have the Cuomo administration in this pattern where they’ve refused the request from lawmakers, they’ve refused public records requests from the Empire Center and others, and they’re just in this holding pattern at the same time as a larger chorus of people is calling for these data to be released. And the attorney general is wrapping up her report.
+
+Things really start moving again on Jan. 28, when Attorney General Letitia James issued a report that says, “We think that your official recorded tally of nursing home deaths is about 50 percent low.” So that prompted the health department to finally release these data that people have been asking for for months. And the result was that it was between 45 to 50 percent low and that close to 4,000 people died in hospitals or out of facilities after they were found to have COVID-19 and transferred out of a long-term care facility.
+
+
+What was the governor’s reaction as this report came out from the attorney general?
+
+He at first said that this confirmed his figures were true. He said that the number of deaths was always accurate. It’s just how they were reported and where they were attributed to. His point was that whether someone’s death was recorded as happening in a hospital or whether it was recorded and attributed to a nursing home didn’t matter. He said, “Who cares? They died.” A lot of people really reacted negatively to his tone and what some describe to me as the dismissiveness and flippancy. And it only seemed to steel his critics.
+
+So flash-forward two weeks and legislators who had requested that data finally got a meeting with some top aides to the governor—including Dr. Howard Zucker, the health commissioner, and Melissa DeRosa, who is essentially the governor’s chief of staff. And in that meeting, she told lawmakers that the Cuomo administration didn’t release the data that they were looking for because they were busy responding to the federal probe. And also they were concerned that if they put out the data that it would be politicized by Donald Trump, who had been attacking the governor and other Democratic governors in tweets in August, and they didn’t want to give him fuel for his fire.
+
+After that reporting came out that Como’s chief of staff had basically said there were political reasons for this decision, it seems like the governor changed his tone a little bit. Is that fair?
+
+Yes, the reaction to that was big. But on Feb. 15, the governor didn’t apologize. He said that the data should have been released sooner. And he also said that everybody involved in the response had done the best that they could, that they were all working hard and they were all in uncharted territory.
+
+I’m glad you said he didn’t apologize.
+
+He didn’t apologize, and he was even asked point blank, “Do you have anything to apologize for?” And he said, “Apologize?” People who know Cuomo, including some of his critics, say he’s just not ever going to say anything like that. He’s sort of constitutionally incapable of making a statement like that.
+
+What we’ve seen in the past few days is continued questions about why this data was not released earlier. And we’ve also seen tactics that the Cuomo administration has used since Cuomo took office in 2011 bursting into public view. Assemblyman Ron Kim, one of the leading critics here, recounted a phone call that he had with Cuomo in which, according to Kim, the governor threatened to ruin his political career. According to Cuomo, those threats were not made, but the governor did say that he had talked to him about issuing a statement about what happened in that private meeting with Melissa DeRosa.
+
+I mean Ron Kim called Cuomo a bully.
+
+He called him an abuser on The View. And that’s not new. That has been sort of true in New York politics for a long time. But the world is changing. This kind of behavior in all kinds of different forms is not as easily excused as it once was. So Republicans started talking about possibly impeaching the governor. Members of the Democratic Party were talking about stripping away some of the authority they delegated to Cuomo in March to handle the pandemic, and it sounds like Democrats who control the state Senate are going to act coming up this week.
+
+How would the governor losing his emergency powers affect New York’s coronavirus response moving forward?
+
+That’s an open question. At this point, the days of commanding schools to shut down with 48 hours’ notice and, you know, closing bars and bowling alleys, those are generally behind us. It seems that this action is largely symbolic. People close to the governor and others have noted that the nursing home situation had nothing to do with his emergency powers.
+
+I’m trying to figure out, looking at how this has played out, how much of what’s going on is a PR problem for the governor and how much of it is a real problem for constituents? The number of deaths in nursing homes in New York, is it notable? Does New York stand out among other states?
+
+Cuomo talks about the share of pandemic deaths in nursing homes versus other facilities and how New York’s share is actually lower than some other states. Of course, that statistic is of no comfort to someone whose loved one passed away. What some political observers have said is that the cover-up is worse than the underlying action. And so the fact that Cuomo and the state delayed the release of this data for so long, that they had to be forced to release the data, and that their explanations for the delay changed over time has led people to conclude, in the words of the Republican leader in the state Assembly, that the governor put public relations ahead of public health. And I think that is why this is coming to the fore now in a very significant way.
+
+
+That’s a good question. What’s happening is the bloom is coming off the rose in the eyes of voters and in the eyes of officials and lawmakers about his pandemic response.
+
+Do you think Cuomo is going to be remembered as a successful executive when it comes to COVID?
+
+I think it’s far too early to say. We already saw one preliminary poll, which showed that Andrew Cuomo’s job approval had slipped since January. We’ll have to see what happens in the next poll now that there’s been more information. But he’s not going to face voters until a primary election in June of 2022. A lot can happen, and we all know that voters’ memories are short.

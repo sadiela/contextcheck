@@ -1,6 +1,9 @@
 #################
 #### Imports ####
 #################
+
+# C:\Users\sadie\AppData\Roaming\Python\Python38\Scripts\pipenv shell
+
 import sys
 import time
 import os
@@ -195,9 +198,6 @@ def changeRange(old_range, new_range, value):
 
 def output(sentences):
     results = {}
-    word_score_list = []
-    preformatted_words = []
-    preformatted_scores = []
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -242,62 +242,44 @@ def output(sentences):
         # starts as python dictionary which we will convert to a json string
         outWordsScores = []
         avg_sum = 0
-        max_biased = words[0]
-        max_score = biases[0]   
-        most_biased_words = []
+        #max_biased = words[0]
         for word, score in zip(words, biases):
-            preformatted_words.append(word)
-            preformatted_scores.append(score)
-            if score > max_score:
-                max_biased = word
-                max_score = score
-            avg_sum += score
+            bias_score = score*10 #changeRange([0,1], [0,10], score)
+            avg_sum += bias_score
             if len(word) >= 3 and word[:2] == "##":
                 # stuff
                 last_word_score = outWordsScores[-1]
-                print(last_word_score, word, score)
+                #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
-                outWordsScores[-1][1] = (last_word_score[1] + score)/2
+                outWordsScores[-1][1] = max(last_word_score[1], bias_score)
             else:
-                outWordsScores.append([word, score])
-            if score >= 0.45:
-                most_biased_words.append(word)
+                outWordsScores.append([word, bias_score])
         
+        max_biased = outWordsScores[0]
+
+        for elem in outWordsScores:
+            if elem[1] > max_biased[1]:
+                max_biased = elem
         # one of these per sentence
-        bias_score = changeRange([0,1], [0,10], max_score)
-        scaled_bias_scores.append(bias_score)
-        print("Scaled bias scores: ", scaled_bias_scores)
+        
+        scaled_bias_scores.append(max_biased[1])
+        #print("Scaled bias scores: ", scaled_bias_scores)
+
 
         #print("max biased and max score:", max_biased, max_score)
         num = num + 1
         s_level_results = {
             "words" : outWordsScores,
             "average": "{:.5f}".format(avg_sum/len(words)),
-            "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
-            "bias_score":bias_score,
+            "max_biased_word": max_biased[0] + ": " + "{:.5f}".format(max_biased[1]),
+            "bias_score":max_biased[1],
             "order":num
         } 
 
         results['sentence_results'].append(s_level_results)
-    
-    '''formatted_words = []
-    formatted_scores = []
-    for word, score in zip(preformatted_words, preformatted_scores):
-        if len(word) >= 3 and word[:2] == "##":
-            # stuff
-            last_word = formatted_words[-1]
-            formatted_words[-1] = last_word + word[2:]
-            last_score = formatted_scores[-1]
-            formatted_scores[-1] = (last_score + score)/2
-        else:
-            formatted_words.append(word)
-            formatted_scores.append(score)
 
-    print(len(formatted_scores), len(formatted_words))
-    for word, score in zip(formatted_words, formatted_scores): 
-        word_score_list.append({'word':word, 'score':score}) # add type later!
-    results['word_list'] = word_score_list'''
 
+    # out of for loop...
     # Full article data
     # Sort scaled bias score largest to smallest: 
     scaled_bias_scores.sort(reverse=True)
@@ -308,9 +290,5 @@ def output(sentences):
 
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
-
-    print(results['article_score'])
-
-    print('DONE IN TEST SENTENCE')
     
     return results 

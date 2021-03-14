@@ -3,22 +3,25 @@ import json
 import random
 import requests
 
-# Init
-api_key_2 = 'b6a1f64d144b43c1bba5370b62d879e0'
-# Old one:  c1ff125522de4c749e615dca5cba6eb5
-newsapi = NewsApiClient(api_key='b6a1f64d144b43c1bba5370b62d879e0')
+
+def getarticles(inp,date="03-02-2021"):
+    api_key='c1ff125522de4c749e615dca5cba6eb5'
+    # Init
+    newsapi = NewsApiClient(api_key)
     
-def getarticles(inp):
-    
+    pagesize = '50'
+    sort='relavency'
+
     #centerist source call
     url1 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        'from=2021-02-09&'
-        'sortBy=relevancy&'
+        f'from={date}&'
+        f'sortBy={sort}&'
         'sources=associated-press&'
         'domains= reuters.com,cbsnews.com,abcnews.go.com,bloomburg.com,economist.com,forbes.com,cnbc.com,thehill.com,politico.com$'
+        f'pageSize={pagesize}&'
         'page = 1&'
-        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
+        f'apiKey={api_key}')
 
     response1 = requests.get(url1)
     articles1 = response1.json()
@@ -26,13 +29,13 @@ def getarticles(inp):
     #skew left source call
     url2 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        'from=2021-02-09&'
-        'sortBy=relevancy&'
+        f'from={date}&'
+        f'sortBy={sort}&'
         'sources=cnn&'
         'domains= nytimes.com,theguardian.com,msnbc.com,theatlantic.com,vox.com,washingtonpost.com,huffpost.com,thedailybeast.com&'
-        'pageSize=100&'
+        f'pageSize={pagesize}&'
         'page = 1&'
-        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
+        f'apiKey={api_key}')
 
     response2 = requests.get(url2)
     articles2 = response2.json()
@@ -40,12 +43,12 @@ def getarticles(inp):
     #partisan left source call
     url3 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        'from=2021-02-09&'
-        'sortBy=relevancy&'
+        f'from={date}&'
+        f'sortBy={sort}&'
         'domains= slate.com,jacobinmag.com,rawstory.com,progressive.org&'
-        'pageSize=100&'
+        f'pageSize={pagesize}&'
         'page = 1&'
-        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
+        f'apiKey={api_key}')
 
     response3 = requests.get(url3)
     articles3 = response3.json()
@@ -53,13 +56,13 @@ def getarticles(inp):
     #partisan right source call
     url4 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        'from=2021-02-09&'
-        'sortBy=relevancy&'
+        f'from={date}&'
+        f'sortBy={sort}&'
         'sources=fox-news&'
         'domains= dailywire.com,dailycaller.com,nationalreview.com&'
-        'pageSize=100&'
+        f'pageSize={pagesize}&'
         'page = 1&'
-        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
+        f'apiKey={api_key}')
 
     response4 = requests.get(url4)
     articles4 = response4.json()
@@ -67,13 +70,13 @@ def getarticles(inp):
     #skew right source call
     url5 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        'from=2021-02-09&'
-        'sortBy=relevancy&'
+        f'from={date}&'
+        f'sortBy={sort}&'
         'sources=the-wall-street-journal&'
         'domains= reason.com,quillette.com,realclearpolitics.com,nypost.com,washingtonexaminer.com,rasmussenreports.com,freebeacon.com,zerohedge.com&'
-        'pageSize=100&'
+        f'pageSize={pagesize}&'
         'page = 1&'
-        'apiKey=b6a1f64d144b43c1bba5370b62d879e0')
+        f'apiKey={api_key}')
 
     response5 = requests.get(url5)
     articles5 = response5.json()
@@ -84,6 +87,7 @@ def getarticles(inp):
     sright = ['']
     pleft = ['']
     pright = ['']
+
 
     #all urls being sorted from json files into political catagory arrays
     for x in articles1['articles']:
@@ -101,36 +105,32 @@ def getarticles(inp):
     for x in articles5['articles']:
         sright.append(x['url'])
 
-    # print("PARTISAN LEFT: ", pleft)
-    # print("SKEWS LEFT: ", sleft)
-    # print("MIDDLE: ", middle)
-    # print("SKEWS RIGHT: ", sright)
-    # print("PARTISAN RIGHT: ", pright)
-
-    #this removes the blank space placeholder for each array
+    # print("pleft:", pleft)
+    # print("sleft:", sleft)
+    # print("middle:", middle)
+    # print("sright:", sright)
+    # print("pright:", pright)
+    # #this removes the blank space placeholder for each array
+    related = []
     if len(pleft) > 1:
-        pleft.remove('')
+         pleft.remove('')
     if len(sleft) > 1:
         sleft.remove('')
     if len(middle) > 1:
         middle.remove('')
     if len(sright) > 1:
-        sright.remove('')
+         sright.remove('')
     if len(pright) > 1:
         pright.remove('')
 
-    #random selection for each political catagory
-    related = {}
-    related['partisan_left'] = random.choice(pleft)
-    related['skews_left'] = random.choice(sleft)
-    related['middle'] = random.choice(middle)
-    related['skews_right'] = random.choice(sright)
-    related['partisan_right'] = random.choice(pright)
-
-    print(related)
+     #random selection for each political catagory
+    related.append(random.choice(pleft))
+    related.append(random.choice(sleft))
+    related.append(random.choice(middle))
+    related.append(random.choice(sright))
+    related.append(random.choice(pright))
 
     #returns array of articles, elements 0-4 is partisan left to partisan right respectively
     return related
 
-# print("STARTING")
-# getarticles('trump impeachment')
+#print(getarticles('immigration','02-01-2021'))
