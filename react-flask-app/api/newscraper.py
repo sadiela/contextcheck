@@ -21,8 +21,10 @@ def article_parse(url):
 	#works for AP news, progressive.org, NYpost and maybe more
 	
 def cnnScrape(url): #run time ~.3 seconds
-	article = Article(url)	
-	try:
+	try:	
+		articleReq = requests.get(url)
+		cnnArticle = lxml.html.fromstring(article.content)
+		article = Article(url)	
 		article.download()	
 	except:
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
@@ -31,14 +33,18 @@ def cnnScrape(url): #run time ~.3 seconds
 	author = article.authors
 	title = article.title
 	date = article.publish_date
-	#parseText = article.text.lower()
+
 	parseText = article.text.replace("\n", " ")
-	#feedText = parseText.split(".")
+	
+	cnnArticle = lxml.html.fromstring(article.content)
+	sourceType = cnnArticle.cssselect('meta[name="section"]')[0].get('content')
+	
+
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	except:
 		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
+	data = {"title": title, "author": author, "feedText": parseText, "date": date, "source": sourceType}
 	return json.dumps(data)
 
 def foxScrape(url): #run time ~.2 seconds
