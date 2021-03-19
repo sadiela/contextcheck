@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from './Header/HeaderWrapper';
 import IOWrapper from './IOWrap/IOWrapper';
+import Results from './Results/ResultsWrapper';
 import axios from 'axios';
 
 export default class Homepage extends Component {
@@ -15,7 +16,9 @@ export default class Homepage extends Component {
                 feedText: "",
                 related: {},
                 title: ""
-            }
+            },
+            results: false,
+            input_type: '',
         }
         this.handlePTSubmit = this.handlePTSubmit.bind(this);
         this.handleURLSubmit = this.handleURLSubmit.bind(this);
@@ -25,8 +28,10 @@ export default class Homepage extends Component {
         this.setState({loading: true});
         axios.post("/result", {myText})
             .then(res => {
+                this.setState({input_type: 'plaintext'})
                 this.setState({ output: res.data })
                 this.setState({ loading: false })
+                this.setState({results: true})
                 console.log(res.data);
             });
     }
@@ -35,8 +40,10 @@ export default class Homepage extends Component {
         this.setState({loading: true});
         axios.post("/scrape", {input_url})
             .then(res => {
+                this.setState({input_type: 'url'})
                 this.setState({ output: res.data })
                 this.setState({ loading: false })
+                this.setState({results: true})
                 console.log(res.data);
             });
         console.log(this.state.output);
@@ -49,6 +56,11 @@ export default class Homepage extends Component {
                     handleURLSubmit={this.handleURLSubmit}
                     handlePTSubmit={this.handlePTSubmit}
                     loading={this.state.loading}
+                />
+                <Results 
+                    results={this.state.output}
+                    is_populated={this.state.results}
+                    input_type={this.state.input_type}
                 />
             </div>
         )

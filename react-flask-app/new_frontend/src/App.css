@@ -75,4 +75,28 @@
   margin-top: 5px;
 }
 
+.sentences-list {
+  list-style-type: none;
+  text-align: left;
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.sentence-list-wrapper {
+  border-top: 1px solid black;
+  width: 50vw;
+  margin: auto;
+}
+
+.sentence-word-wrapper {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto;
+}
+
+.word-level {
+  width: auto;
+}
+
 
