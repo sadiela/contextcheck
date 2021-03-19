@@ -7,7 +7,7 @@ export default class TextPane extends Component {
         return(
             sentence.words.map(word => {
                 const score = Math.round(word[1] * 100) / 100;
-                const threshold = parseInt(this.props.threshold);
+                const threshold = parseFloat(this.props.threshold);
                 if(word[1] > threshold){
                     return (
                         <OverlayTrigger

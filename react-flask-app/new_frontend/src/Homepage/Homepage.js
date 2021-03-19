@@ -24,11 +24,14 @@ export default class Homepage extends Component {
         this.handleURLSubmit = this.handleURLSubmit.bind(this);
     }
     handlePTSubmit = (myText) => {
+        this.setState({
+            input_type: 'plaintext',
+            loading: true,
+            results: false,
+        })
         console.log("Input: " + myText);
-        this.setState({loading: true});
         axios.post("/result", {myText})
             .then(res => {
-                this.setState({input_type: 'plaintext'})
                 this.setState({ output: res.data })
                 this.setState({ loading: false })
                 this.setState({results: true})
@@ -36,11 +39,14 @@ export default class Homepage extends Component {
             });
     }
     handleURLSubmit = (input_url) => {
+        this.setState({
+            input_type: 'url',
+            loading: true,
+            results: false,
+        })
         console.log("Input: " + input_url);
-        this.setState({loading: true});
         axios.post("/scrape", {input_url})
             .then(res => {
-                this.setState({input_type: 'url'})
                 this.setState({ output: res.data })
                 this.setState({ loading: false })
                 this.setState({results: true})
