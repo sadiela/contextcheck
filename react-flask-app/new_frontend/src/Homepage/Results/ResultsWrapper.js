@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import BiasIndicator from './BiasIndicator';
 import Jubmotron from 'react-bootstrap/Jumbotron';
 import TextPane from './TextPane';
+import MetaWrapper from './MetaWrapper';
 
 export default class ResultsWrapper extends Component {
     render() {
@@ -24,6 +25,12 @@ export default class ResultsWrapper extends Component {
                     <BiasIndicator 
                         bias_score={Math.round(this.props.results.bias_results.article_score * 100) / 100}
                         runtime={this.props.results.bias_results.runtime.slice(0,5)}
+                    />
+                    <MetaWrapper 
+                        author={this.props.results.author}
+                        related={this.props.results.related}
+                        title={this.props.results.title}
+                        date={this.props.results.date}
                     />
                     <TextPane
                         text={this.props.results.bias_results.sentence_results}

@@ -86,17 +86,27 @@
 
 .sentence-list-wrapper {
   border-top: 1px solid black;
-  width: 50vw;
+  width: 80vw;
   margin: auto;
 }
 
 .sentence-word-wrapper {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto;
 }
 
 .word-level {
   width: auto;
+  margin: auto;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.meta-wrapper {
+  width: 80vw;
+  margin: auto;
+  border: 2px solid black;
+  margin-bottom: 10px;
 }
 
 
