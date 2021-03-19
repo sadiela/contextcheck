@@ -6,19 +6,16 @@ export default class HowToWrapper extends Component {
         return (
             <span className='how-to-use-steps'>
                 <HowToCard 
-                    step="Step One"
-                    subtitle="User Input"
+                    subtitle="1: Input Text / URL"
                     body="You can enter an article link or your own text."
                 />
                 <HowToCard 
-                    step="Step Two"
-                    subtitle="Analyze Results"
+                    subtitle="2: Analyze Results"
                     body="After hitting submit, wait for your results to load then see what we discovered."
                 />
                 <HowToCard 
-                    step="Step Three"
-                    subtitle="Learn More"
-                    body="ContextCheck is meant to be a tool for you to come up with your own conclusion. Once you read through the results, check out the Learn More section."
+                    subtitle="3: Think"
+                    body="Use ContextCheck as a tool for you to discover your own bias-interpretation. Check the Learn More section!"
                 />
             </span>
         )

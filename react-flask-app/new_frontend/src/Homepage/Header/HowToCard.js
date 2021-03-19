@@ -13,13 +13,10 @@ export default class HowToCard extends Component {
     render() {
         return (
             <div>
-                <Card style={{ width: '18rem', margin: 'auto', height: '13rem' }} bg='info'>
-                    <Card.Body>
-                        <Card.Title style={{ color: '#FFFFFF' }}><strong>{this.state.step}</strong></Card.Title>
-                        <Card.Subtitle style={{ color: '#FFFFFF' }}>{this.state.subtitle}</Card.Subtitle>
-                        <Card.Text>{this.state.body}</Card.Text>
-                    </Card.Body>
-                </Card>
+                <span className='card-how-to'>
+                    <h4>{this.state.subtitle}</h4>
+                    <p>{this.state.body}</p>
+                </span>
                 <br />
             </div>
             

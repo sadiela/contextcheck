@@ -27,10 +27,21 @@
 }
 
 .how-to-use-steps {
-  padding-top: 20px;
   display: grid;
   grid-template-columns: 33vw 33vw 33vw;
-  background-color: #343a40;
+  margin: auto;
+  background-color: #343A40;
+}
+
+.card-how-to {
+  background-color: #D1ECF1;
+  border-radius: 12px;
+  width: 80%;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  margin: auto;
+  margin-top: 10px;
+  height: 80%;
 }
 
 .input-step {
