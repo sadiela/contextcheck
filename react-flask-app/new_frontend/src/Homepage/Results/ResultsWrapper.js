@@ -8,11 +8,13 @@ export default class ResultsWrapper extends Component {
     render() {
         if(this.props.is_populated && this.props.input_type === 'plaintext'){
             return(
-                <Jubmotron>
+                <Jubmotron fluid>
                     <BiasIndicator 
                         bias_score={Math.round(this.props.results.article_score * 100) / 100}
                         runtime={this.props.results.runtime.slice(0,5)}
                     />
+                    <h3><strong>Sentences</strong></h3>
+                    <h6>Words in red may be biased, hover over them to see why.</h6>
                     <TextPane
                         text={this.props.results.sentence_results}
                         threshold='0.7'
@@ -21,7 +23,7 @@ export default class ResultsWrapper extends Component {
             )
         } else if (this.props.is_populated && this.props.input_type === 'url') {
             return(
-                <Jubmotron>
+                <Jubmotron fluid>
                     <BiasIndicator 
                         bias_score={Math.round(this.props.results.bias_results.article_score * 100) / 100}
                         runtime={this.props.results.bias_results.runtime.slice(0,5)}
@@ -32,6 +34,8 @@ export default class ResultsWrapper extends Component {
                         title={this.props.results.title}
                         date={this.props.results.date}
                     />
+                    <h3><strong>Sentences</strong></h3>
+                    <h6>Words in red may be biased, hover over them to see why.</h6>
                     <TextPane
                         text={this.props.results.bias_results.sentence_results}
                         threshold='6'

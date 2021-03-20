@@ -8,7 +8,7 @@ export default class MetaWrapper extends Component {
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Title</th>
+                            <th>Article Title</th>
                             <th>Author</th>
                             <th>Date</th>
                         </tr>
