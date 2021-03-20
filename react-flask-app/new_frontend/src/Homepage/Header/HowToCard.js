@@ -14,7 +14,7 @@ export default class HowToCard extends Component {
         return (
             <div>
                 <span className='card-how-to'>
-                    <h4>{this.state.subtitle}</h4>
+                    <h4 className='step-title'>{this.state.subtitle}</h4>
                     <p>{this.state.body}</p>
                 </span>
                 <br />

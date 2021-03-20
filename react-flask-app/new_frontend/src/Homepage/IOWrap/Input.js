@@ -47,6 +47,7 @@ export default class Input extends Component {
             }
         }
     }
+    // Need a dropdown for URL input containing all supported articles
     render() {
         return (
             <div className='input-step'>
