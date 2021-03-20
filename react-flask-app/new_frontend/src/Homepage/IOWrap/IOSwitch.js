@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import FormControl from '@material-ui/core/FormControl';
+
 
 export default class IOSwitch extends Component {
     constructor(props){
@@ -38,12 +40,16 @@ export default class IOSwitch extends Component {
             <div className='input-step'>
                 <Alert variant='info'>Would you like to submit an article link or plain text?</Alert>
                 <form onSubmit={this.submit}>
-                    <div onChange={this.handleChange}>
-                        <input type="radio" id="url" name="input-type" value="url"/>
-                        <label htmlFor="url">URL</label><br />
-                        <input type="radio" id="plaintext" name="input-type" value="plaintext"/>
-                        <label htmlFor="plaintext">Plain Text</label><br />
-                    </div>
+                    <span className='radio-group' onChange={this.handleChange}>
+                        <span>
+                            <input type="radio" id="url" name="input-type" value="url"/>
+                            <label className='radio-label' htmlFor="url">URL</label><br />
+                        </span>
+                        <span>
+                            <input type="radio" id="plaintext" name="input-type" value="plaintext"/>
+                            <label className='radio-label' htmlFor="plaintext">Plain Text</label><br />
+                        </span>
+                    </span>
                     <input className='next-button' type='submit' value="Next"></input>
                 </form>
                 {this.getError()}
