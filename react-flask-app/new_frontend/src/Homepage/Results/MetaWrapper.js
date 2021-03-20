@@ -21,36 +21,6 @@ export default class MetaWrapper extends Component {
                         </tr>
                     </tbody>
                 </Table>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>Related Article Source</th>
-                            <th>Related Article Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Article Source</td>
-                            <td><a href={this.props.related[0]}>Link</a></td>
-                        </tr>
-                        <tr>
-                            <td>Article Source</td>
-                            <td><a href={this.props.related[0]}>Link</a></td>
-                        </tr>
-                        <tr>
-                            <td>Article Source</td>
-                            <td><a href={this.props.related[0]}>Link</a></td>
-                        </tr>
-                        <tr>
-                            <td>Article Source</td>
-                            <td><a href={this.props.related[0]}>Link</a></td>
-                        </tr>
-                        <tr>
-                            <td>Article Source</td>
-                            <td><a href={this.props.related[0]}>Link</a></td>
-                        </tr>
-                    </tbody>
-                </Table>
             </div>
         )
     }
