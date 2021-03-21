@@ -34,11 +34,7 @@ def cnnScrape(url): #run time ~.3 seconds
 	title = article.title
 	date = article.publish_date
 
-	parseText = article.text.replace("\n", " ")
-	
-	cnnArticle = lxml.html.fromstring(article.content)
 	sourceType = cnnArticle.cssselect('meta[name="section"]')[0].get('content')
-	
 
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
@@ -59,31 +55,27 @@ def foxScrape(url): #run time ~.2 seconds
 	author = author[0]
 	date = article.publish_date
 	title = article.title
-	#parseText = article.text.lower()
-	parseText = article.text.replace("\n", " ") #ads scrubbing!
+
 	parseText2 = ""
 	textList = parseText.split()
 	for word in textList:
 		if word.isupper():
 			word = ""
 		parseText2 = parseText2 + word + " "
-     
-	#feedText = parseText.split(".")
-	#for word in feedText:
-	#	if word.isupper():
-	#		feedText.remove(word)
 
 	re = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
 	fox_soup = BeautifulSoup(re.text, 'html.parser')
-	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
-	meta = meta.replace(',', " ")
-	data = {"title": title, "author": author, "feedText": parseText2, "date": date, "meta": meta}
+	sourceType = fox_soup.find("meta", {"name":"classification-isa"})['content']
+	sourceType = sourceType.replace(',', " ")
+	data = {"title": title, "author": author, "feedText": parseText2, "date": date, "source": sourceType}
 	return json.dumps(data)
 	
 def huffScrape(url): #runtime ~1.2-1.4 seconds
-	article = Article(url)	
+	
 	try:
-		article.download()	
+		article = Article(url)	
+		article.download()
+		
 	except:
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
 		return "Error"
@@ -102,13 +94,16 @@ def huffScrape(url): #runtime ~1.2-1.4 seconds
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
 	parseText = article.text
-	parseText = parseText.replace("\n", " ")
-	#feedText = parseText.split(".")
+	huffArticle = lxml.html.fromstring(response.content)	
+	sourceType = huffArticle.cssselect('meta[property="article:section"]')[0].get('content')
+	#print(sourceType)
+	
+
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	except:
 		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
+	data = {"title": title, "author": author, "feedText": parseText, "date": date, "sourceType":sourceType}
 	return json.dumps(data)
 
 def nypScrape(url): #runtime ~1.2-1.4 seconds
@@ -132,7 +127,6 @@ def nypScrape(url): #runtime ~1.2-1.4 seconds
 	if response.status_code != 200:
 		return "FAIL TO GET URL"
 	parseText = article.text
-	parseText = parseText.replace("\n", " ")
 	#feedText = parseText.split(".")
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
@@ -150,7 +144,7 @@ def genScrape(url):
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
 		return "Error"
 	article.parse()
-	parseText = article.text.replace("\n", "")
+
 	author = article.authors
 	title = article.title
 	date = article.publish_date
@@ -160,4 +154,11 @@ def genScrape(url):
 		date = "NOT FOUND"
 	data = {"title": title, "author": author, "feedText": parseText, "date": date}
 	return json.dumps(data)
+
+def main():
+	article_parse("https://www.huffpost.com/entry/american-rescue-plan-covid-relief-permanent-politi_n_60562e68c5b66a80f4e7e510")
+
+if __name__ == "__main__":
+	main()
+
 
