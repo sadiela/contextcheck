@@ -105,11 +105,11 @@
   border-top: 1px solid black;
   width: 80vw;
   margin: auto;
+  overflow-wrap: break-word;
 }
 
 .sentence-word-wrapper {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
+  overflow:scroll;
 }
 
 .word-level {

@@ -19,12 +19,12 @@ export default class TextPane extends Component {
                                 </Tooltip>
                             }                        
                         >
-                        <p style={{color: 'red'}} className='word-level'>{word[0]}</p>
+                        <span style={{color: 'red'}} className='word-level'>{word[0]}</span>
                         </OverlayTrigger>
                     )
                 } else {
                     return (
-                        <p className='word-level'>{word[0]}</p>
+                        <span className='word-level'>{word[0]}</span>
                     )
                 }
             })

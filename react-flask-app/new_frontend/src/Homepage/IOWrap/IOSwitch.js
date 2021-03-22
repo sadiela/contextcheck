@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Alert from 'react-bootstrap/Alert';
-import FormControl from '@material-ui/core/FormControl';
 
 
 export default class IOSwitch extends Component {

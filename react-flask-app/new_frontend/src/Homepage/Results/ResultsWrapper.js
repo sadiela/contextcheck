@@ -10,7 +10,6 @@ export default class ResultsWrapper extends Component {
     render() {
         if(this.props.is_populated && this.props.input_type === 'plaintext'){
             return(
-                <Jubmotron>
                     <div className='result-wrapper'>
                         <BiasIndicator 
                             bias_score={Math.round(this.props.results.article_score * 100) / 100}
@@ -23,7 +22,6 @@ export default class ResultsWrapper extends Component {
                             threshold='0.7'
                         />
                     </div>
-                </Jubmotron>
             )
         } else if (this.props.is_populated && this.props.input_type === 'url') {
             const score = Math.round(this.props.results.bias_results.article_score * 100) / 100;
