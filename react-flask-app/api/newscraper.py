@@ -161,29 +161,40 @@ def nypScrape(url):
 	return json.dumps(data)
 
 def genScrape(url):
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#download and parse article
 	article = Article(url)
+	article.download()
 	try:
-		article.download()
 		article.parse()
 	except:
-		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
-		return "Error"
-	article.parse()
-
-	author = article.authors
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+		author = article.authors
+	if len(author) == 0:
+		author = "NOT FOUND"
+	text = article.text
 	title = article.title
 	date = article.publish_date
+    
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	except:
 		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
+    
+	try:
+		if article_H.cssselect('meta[property="article:opinion"]')[0].get('content') == "true":
+			sourceType = "Opinion"
+		else:
+			sourceType = "Non-Opinion"
+	except:
+		sourceType = "Not found"
+    
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
 	return json.dumps(data)
-'''
-def main():
-	article_parse("https://www.foxnews.com/world/iran-threatens-us-army-base-and-top-general")
-
-if __name__ == "__main__":
-	main()
-
-'''
