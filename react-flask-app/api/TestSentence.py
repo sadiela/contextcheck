@@ -155,7 +155,7 @@ def to_probs(logits, lens):
     return out
 
 # Take one sentence ... 
-def run_inference(model, ids, pos): #, tokenizer):
+def run_inference(model, ids, pos_ids): #, tokenizer):
     #global ARGS
     # we will pass in one sentence, no post_toks, 
 
@@ -166,11 +166,6 @@ def run_inference(model, ids, pos): #, tokenizer):
     }
 
     pre_len = len(ids)
-
-    #pos_ids = [POS2ID[i] for i in pos]
-    #pos_ids = 
-    pos_ids = pad([POS2ID.get(x, POS2ID['<UNK>']) for x in pos], 0)
-    #print(pos_ids)
 
     with torch.no_grad():
         _, tok_logits = model(ids, attention_mask=None,
@@ -184,18 +179,16 @@ def run_inference(model, ids, pos): #, tokenizer):
 
     return out
 
-def test_sentence(model, s, pos): 
-    tokens = tokenizer.tokenize(s)
-    length = len(tokens)
-    
-    # get tokens from BERT
+def test_sentence(model, tokens, pos): 
+    # get tokens ids from BERT
     ids = pad([tok2id.get(x, 0) for x in tokens], 0)
     ids = torch.LongTensor(ids)
     ids = ids.unsqueeze(0)
-    
+    pos_ids = pad([POS2ID.get(x, POS2ID['<UNK>']) for x in pos], 0)
+
     model.eval() # constant random seed
-    output = run_inference(model, ids, pos) #, tokenizer)
-    return output, length
+    output = run_inference(model, ids, pos_ids) #, tokenizer)
+    return output
 
 def changeRange(old_range, new_range, value):
     # given an old range, new range, and value in the old range, 
@@ -230,34 +223,39 @@ def output(sentences):
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     word_list = []
+    pos_list = []
     bias_list = []
     for sentence in sentences:
         sentence_dat = nlp(sentence)
         sentence_pos = [i.pos_ for i in sentence_dat]
-        #print(sentence_pos)
-        #input("continue...")
-        sentence=sentence.lower() 
+        sentence_tokens = [i.text.lower() for i in sentence_dat]
+        final_tokens = []
+        final_pos = [] 
+        for word, pos in zip(sentence_tokens, sentence_pos):
+            cur_tok = tokenizer.tokenize(word)
+            for c in cur_tok:
+                final_tokens.append(c)
+                final_pos.append(pos)
         #print(sentence)
-        out, length = test_sentence(model, sentence, sentence_pos) 
+        out = test_sentence(model, final_tokens, final_pos) 
         #print("Results:")
 
-        bias_val = out['tok_probs'][0][:length]
+        bias_val = out['tok_probs'][0][:len(final_pos)]
         prob_bias = [b[1] for b in bias_val]
 
-        word_list.append(out['input_toks'][0][:length])
+        word_list.append(out['input_toks'][0][:len(final_pos)])
+        pos_list.append(final_pos)
         bias_list.append(prob_bias)
-
-    #print("LENGTHS:", len(word_list), len(bias_list))
 
     scaled_bias_scores = []
     num = 0
-    for words, biases in zip(word_list, bias_list):
+    for words, biases, pos in zip(word_list, bias_list, pos_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
         outWordsScores = []
         avg_sum = 0
-        #max_biased = words[0]
-        for word, score in zip(words, biases):
+
+        for word, score, cur_pos in zip(words, biases, pos):
             bias_score = score*10 #changeRange([0,1], [0,10], score)
             avg_sum += bias_score
             if len(word) >= 3 and word[:2] == "##":
@@ -266,6 +264,7 @@ def output(sentences):
                 #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
                 outWordsScores[-1][1] = max(last_word_score[1], bias_score)
+                # won't have to change/add POS!
             else:
                 outWordsScores.append([word, bias_score, cur_pos])
         
@@ -279,7 +278,6 @@ def output(sentences):
         scaled_bias_scores.append(max_biased[1])
         #print("Scaled bias scores: ", scaled_bias_scores)
 
-
         #print("max biased and max score:", max_biased, max_score)
         num = num + 1
         s_level_results = {
@@ -291,7 +289,6 @@ def output(sentences):
         } 
 
         results['sentence_results'].append(s_level_results)
-
 
     # out of for loop...
     # Full article data

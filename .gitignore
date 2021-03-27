@@ -7,3 +7,4 @@ pickle_dir/
 /react-flask-app/api/venv/
 .DS_Store
 /ML/.DS_Store
+__pycache__/
