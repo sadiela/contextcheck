@@ -50,9 +50,16 @@ def foxScrape(url): #run time ~.2 seconds
 		return "Error"
 	article.parse()
 	author = article.authors
-	author = author[0]
-	date = article.publish_date
-	title = article.title
+	try:
+		print("AUTHOR:", author)
+		author = author[0]
+		date = article.publish_date
+		title = article.title
+	except: 
+		print("Metadata issue")
+		author = ""
+		date = ""
+		title = ""
 	#parseText = article.text.lower()
 	parseText = article.text.replace("\n", " ") #ads scrubbing!
 	parseText2 = ""

@@ -15,6 +15,7 @@ sys.path.append('..\..\ML')
 
 import numpy as np
 import statistics
+import spacy
 
 # torch imports
 import torch
@@ -29,6 +30,8 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 # other user scripts
 from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
+
+nlp = spacy.load("en_core_web_sm")
 
 CUDA = (torch.cuda.device_count() > 0)
 if CUDA:
@@ -152,7 +155,7 @@ def to_probs(logits, lens):
     return out
 
 # Take one sentence ... 
-def run_inference(model, ids): #, tokenizer):
+def run_inference(model, ids, pos): #, tokenizer):
     #global ARGS
     # we will pass in one sentence, no post_toks, 
 
@@ -164,9 +167,14 @@ def run_inference(model, ids): #, tokenizer):
 
     pre_len = len(ids)
 
+    #pos_ids = [POS2ID[i] for i in pos]
+    #pos_ids = 
+    pos_ids = pad([POS2ID.get(x, POS2ID['<UNK>']) for x in pos], 0)
+    #print(pos_ids)
+
     with torch.no_grad():
         _, tok_logits = model(ids, attention_mask=None,
-            rel_ids=None, pos_ids=None, categories=None,
+            rel_ids=None, pos_ids=pos_ids, categories=None,
             pre_len=None) # maybe pre_len
     
     out['input_toks'] += [tokenizer.convert_ids_to_tokens(seq) for seq in ids.cpu().numpy()]
@@ -176,7 +184,7 @@ def run_inference(model, ids): #, tokenizer):
 
     return out
 
-def test_sentence(model, s): 
+def test_sentence(model, s, pos): 
     tokens = tokenizer.tokenize(s)
     length = len(tokens)
     
@@ -186,7 +194,7 @@ def test_sentence(model, s):
     ids = ids.unsqueeze(0)
     
     model.eval() # constant random seed
-    output = run_inference(model, ids) #, tokenizer)
+    output = run_inference(model, ids, pos) #, tokenizer)
     return output, length
 
 def changeRange(old_range, new_range, value):
@@ -197,6 +205,7 @@ def changeRange(old_range, new_range, value):
     return  new_min + ((value - old_min) * (new_max - new_min) / (old_max - old_min))
 
 def output(sentences):
+    print("BIAS START")
     results = {}
     results['sentence_results'] = []
     #print('sentences:', sentences)
@@ -208,6 +217,7 @@ def output(sentences):
     #       bias_list = [[0.1,0.33, ... 0.02], . . .[0.9, 0.002, ... 0.5]]
 
     # using new models with linguistic features
+
     model = BertForMultitaskWithFeatures.from_pretrained(
         config, LEXICON_DIRECTORY,
         cls_num_labels=cls_num_labels,
@@ -222,9 +232,13 @@ def output(sentences):
     word_list = []
     bias_list = []
     for sentence in sentences:
+        sentence_dat = nlp(sentence)
+        sentence_pos = [i.pos_ for i in sentence_dat]
+        #print(sentence_pos)
+        #input("continue...")
         sentence=sentence.lower() 
         #print(sentence)
-        out, length = test_sentence(model, sentence) 
+        out, length = test_sentence(model, sentence, sentence_pos) 
         #print("Results:")
 
         bias_val = out['tok_probs'][0][:length]
@@ -253,7 +267,7 @@ def output(sentences):
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
                 outWordsScores[-1][1] = max(last_word_score[1], bias_score)
             else:
-                outWordsScores.append([word, bias_score])
+                outWordsScores.append([word, bias_score, cur_pos])
         
         max_biased = outWordsScores[0]
 

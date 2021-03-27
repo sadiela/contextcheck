@@ -78,6 +78,7 @@ def scrape_article():
     res_obj = json.loads(res) 
     #print(res_obj)
     # res.title, res.author, res.feedText, res.date, res.meta (?)
+    print("DONE SCRAPING")
     results = analyze_sentences(res_obj['feedText'], start_time)
     res_obj['bias_results'] = results
 
