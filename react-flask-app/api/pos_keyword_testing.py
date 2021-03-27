@@ -19,12 +19,22 @@ import spacy
 import newscraper
 import TestSentence
 import json
+from monkeylearn import MonkeyLearn
+
 import nltk.data
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+from nltk import tokenize
+from operator import itemgetter
+import math
 
 # torch imports
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
+import newscraper
 
 # pretrained BERT imports
 import pytorch_pretrained_bert.modeling as modeling
@@ -34,6 +44,8 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 # other user scripts
 from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
+
+import keyword_detection
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -117,7 +129,7 @@ tokenizer = BertTokenizer.from_pretrained(config, os.getcwd() + '/cache')
 tok2id = tokenizer.vocab
 tok2id['<del>'] = len(tok2id)
 
-
+nltk.download('stopwords')
 # read an article 
 url = "https://www.foxnews.com/politics/gop-senators-immigration-deal-border-crisis"
 res = newscraper.article_parse(url)
@@ -129,13 +141,24 @@ print("DONE SCRAPING")
 
 text = res_obj['feedText']
 
-nltk.download('punkt')
+keywords = keyword_detection.get_keywords(text)
+print(keywords)
+
+'''
+print(title)
+ml = MonkeyLearn("d28b596641e1690c696909f66408b6d0ad53e5ca")
+model_id = "ex_YCya9nrn"
+result = ml.extractors.extract(model_id, title)
+#print(result.body)
+for item in result.body:
+  print(item['extractions'])
+
+#nltk.download('punkt')
 sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 sentences = sentence_tokenizer.tokenize(text)
 results = TestSentence.output(sentences)
 print(results)
 
-'''
 for s in sentences: 
     sentence_dat = nlp(s)
     sentence_pos = [i.pos_ for i in sentence_dat]
@@ -149,6 +172,7 @@ for s in sentences:
             final_pos.append(pos)
     print(len(final_pos), len(final_tokens))
     print(final_pos, final_tokens)
-    input("Continue...")'''
+    input("Continue...")
+'''
 
     
