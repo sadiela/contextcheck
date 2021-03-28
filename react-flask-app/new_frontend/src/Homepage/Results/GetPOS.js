@@ -79,6 +79,5 @@ const allPOS = [
 
 export default function whatPOS(thekey){
     const pos_obj = allPOS.filter(apos => apos.key === thekey);
-    console.log(pos_obj[0].pos);
     return pos_obj[0].pos
 }

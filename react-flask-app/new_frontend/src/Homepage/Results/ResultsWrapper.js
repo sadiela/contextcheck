@@ -33,14 +33,15 @@ export default class ResultsWrapper extends Component {
             else {bias = 'is probably unbiased'; variant='success'}
             return(
                 <div className='result-wrapper'>
-                    <h1>Results</h1>
-                    <h4>ContextCheck thinks this article <Badge variant={variant}>{bias}</Badge></h4>
-                    <p className='border'></p>
+                    <h1 className='results-header'>Analyze Results</h1>
                     <div>
                         <BiasIndicator 
                             bias_score={score}
                             runtime={this.props.results.bias_results.runtime.slice(0,5)}
+                            end_sentence={bias}
+                            variant={variant}
                         />
+                        <p className='border'></p>
                         <MetaWrapper 
                             author={this.props.results.author}
                             title={this.props.results.title}

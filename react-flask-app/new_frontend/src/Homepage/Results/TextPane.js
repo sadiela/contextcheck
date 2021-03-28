@@ -11,7 +11,6 @@ export default class TextPane extends Component {
                 const threshold = parseFloat(this.props.threshold);
                 if(word[1] > threshold){
                     const part_of_speech = whatPOS(word[2]);
-                    console.log(part_of_speech);
                     return (
                         <OverlayTrigger
                             key={word}
