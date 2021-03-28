@@ -39,7 +39,7 @@ export default class Homepage extends Component {
                 console.log(res.data);
             }).catch(err => {
                 console.log(err);
-                this.setState({ error: err });
+                this.setState({ error: err.message });
                 this.setState({ loading: false })
             });
     }
@@ -58,7 +58,7 @@ export default class Homepage extends Component {
                 console.log(res.data);
             }).catch(err => {
                 console.log(err);
-                this.setState({ error: err });
+                this.setState({ error: err.message });
                 this.setState({ loading: false })
             });
     }

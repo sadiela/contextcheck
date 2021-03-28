@@ -27,7 +27,6 @@ export default class IOWrapper extends Component {
     }
     TypeToVal = (type) => {
         // When the user hits the next button on the input type step
-        console.log(type);
         this.setState({input_type: type});
         this.setState({step: 1});
     }
