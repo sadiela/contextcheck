@@ -19,6 +19,7 @@ export default class Homepage extends Component {
             },
             results: false,
             input_type: '',
+            error: '',
         }
         this.handlePTSubmit = this.handlePTSubmit.bind(this);
         this.handleURLSubmit = this.handleURLSubmit.bind(this);
@@ -36,6 +37,10 @@ export default class Homepage extends Component {
                 this.setState({ loading: false })
                 this.setState({results: true})
                 console.log(res.data);
+            }).catch(err => {
+                console.log(err);
+                this.setState({ error: err });
+                this.setState({ loading: false })
             });
     }
     handleURLSubmit = (input_url) => {
@@ -51,8 +56,11 @@ export default class Homepage extends Component {
                 this.setState({ loading: false })
                 this.setState({results: true})
                 console.log(res.data);
+            }).catch(err => {
+                console.log(err);
+                this.setState({ error: err });
+                this.setState({ loading: false })
             });
-        console.log(this.state.output);
     }
     render() {
         return (
@@ -62,6 +70,7 @@ export default class Homepage extends Component {
                     handleURLSubmit={this.handleURLSubmit}
                     handlePTSubmit={this.handlePTSubmit}
                     loading={this.state.loading}
+                    error={this.state.error}
                 />
                 <Results 
                     results={this.state.output}

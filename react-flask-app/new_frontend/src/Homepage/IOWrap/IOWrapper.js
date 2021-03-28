@@ -44,6 +44,14 @@ export default class IOWrapper extends Component {
                     <Spinner animation="border" variant="info" />
                 </div>
             )
+        } else if (this.props.error != ''){
+            return(
+                <div className='input-step'>
+                    <p style={{fontSize: '40px', color:'red'}}><strong>Ruh roh... something went wrong.</strong></p>
+                    <p style={{fontSize: '20px', color:'red'}}>{this.props.error}</p>
+                    <p style={{fontSize: '15px'}}>Refresh the page and try again. Sorry for the trouble! If the issue persists, take a screenshot and send it to beton@bu.edu (if you have a spare moment).</p>
+                </div>
+            )
         } else {
             if(this.state.step === 0){
                 return(
