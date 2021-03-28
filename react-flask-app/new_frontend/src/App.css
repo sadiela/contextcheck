@@ -144,3 +144,7 @@
 .results-header {
   font-weight: bold;
 }
+
+.supported-dropdown {
+  margin-top: 5px;
+}

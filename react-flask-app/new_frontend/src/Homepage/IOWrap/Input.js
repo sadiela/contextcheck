@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import URLDropdown from './SupportedDropdown';
+import isValidURL from './PossibleURLs';
 
 export default class Input extends Component {
     constructor(props){
@@ -29,13 +31,22 @@ export default class Input extends Component {
     handleBack(){
         this.props.ValToType();
     }
+    sleep(miliseconds) {
+        var currentTime = new Date().getTime();
+     
+        while (currentTime + miliseconds >= new Date().getTime()) {
+        }
+     }
     handleSubmit() {
         const input = this.state.input;
         if(this.state.input_type === 'url'){ 
             // Submit a URL
-            // ***TODO: Check if it is a valid URL***
-            // ***TODO: Check if it is one of our supported websites***
-            this.props.handleURLSubmit(input);
+            if(isValidURL(input)){
+                this.props.handleURLSubmit(input);
+                this.setState({error: ''});
+            } else {
+                this.setState({error: 'Invalid URL Error'})
+            }
         } else { 
             // Submit a Plaintext
             if(input === ''){
@@ -47,7 +58,13 @@ export default class Input extends Component {
             }
         }
     }
-    // Need a dropdown for URL input containing all supported articles
+    getDropdown() {
+        if(this.state.input_type === 'url'){
+            return(
+                <URLDropdown/>            
+            )
+        } else return(<></>)
+    }
     render() {
         return (
             <div className='input-step'>
@@ -56,6 +73,7 @@ export default class Input extends Component {
                     <div>
                         <input style={{ width: '80%' }} type="text" id="text" name="input-type" onChange={this.handleChange} value={this.state.input} placeholder="Type / Paste here"/>
                     </div>
+                    {this.getDropdown()}
                     <span className='input-button-row'>
                         <button className='back-button' onClick={this.handleBack}>Back</button>
                         <button className='next-button' onClick={this.handleSubmit}>Submit</button>

@@ -13,15 +13,15 @@ const SUPPORTED_URLS = [
 ]
 
 export default function isItSupported(url){
-    const isSupported = SUPPORTED_URLS.some(supported => {
-        url.includes(supported);
-    });
-    var isiturl;
+    // const isSupported = SUPPORTED_URLS.some(supported => {
+    //     url.includes(supported);
+    // });
+    var isiturl = true;
     try {
         const isurl = new URL(url);
         isiturl = true;
     } catch (_) {
         isiturl = false;
     }
-    return (isSupported && isiturl);
+    return (isiturl);
 }
