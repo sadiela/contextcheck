@@ -1,0 +1,87 @@
+The Senate is on its way to passing a huge new economic relief package for Americans, especially those who are still suffering the worst of the pandemic’s effects. And there are some progressive measures bundled into this legislation, like a higher minimum wage, that economists and activists have been championing for years. It does seem like some version of it actually might pass; Biden made clear that he’s not willing to undercut his own measures through compromise with Republicans, but there are still plenty of treacherous negotiations ahead. On Wednesday’s episode of What Next, I spoke with Jordan Weissmann, Slate’s senior business and economics correspondent, about how the stimulus talks have been going, what’s in the final legislation, and what Americans can expect to receive from the bill. Our conversation has been edited and condensed for clarity.
+
+Mary Harris: Let’s start off with some basics: What is in this bill?
+
+Jordan Weissmann: It’s a lot of money because Congress trying to make sure there’s economic relief that will last long enough to deal with this crisis, that we aren’t just hopping from cliff to cliff, as we have been for the past year under the Trump administration.
+
+So it’ll carry folks through the fall.
+
+That’s the idea, right? When Congress passed its compromise $900 billion bill in December, what I wrote then was that this was really a piece of legislation that was a bridge to the spring. The unemployment benefits ran out in March, for instance. It was designed so that once we had the vaccination program going by the spring, things would be better and we wouldn’t have to worry as much about supporting people. It’s kind of taken a while to get that whole vaccine thing rolling., it turns out. So this bill is meant to push us much further along into the recovery process. For instance, it would provide slightly larger unemployment benefits, an extra $400 a week as opposed to the $300 through September. It tops people off with that extra $1,400 on the economic impact payments that they received before, getting to the promise $2,000. The bill also provides money for state and local governments that have had their budgets just thrashed by this pandemic.
+
+And it also sneaks in these bigger goals for Democrats, like the $15 minimum wage.
+
+Yes it does. It’s a long-term goal, and it’s something Biden campaigned on and that many Democrats have said is a central goal of their agenda in the coming years.
+
+There’s another policy in there that’s really, really interesting. They want to they want to increase the size of the child tax credit and make make it fully refundable, which is this awful Washingtonese way of saying they’re going to give it to poor people even if they don’t make any money. Instead of being a tax credit, it’s more like a cash payment. So what it really does is creates a minimum income for children. They would do this for one year, and the idea is that it targets lower-income families a little bit better than the checks do.
+
+Because the checks are going out to a lot of different people regardless of their circumstances.
+
+Exactly. I mean, there’s some there’s some means-testing on the checks too. Biden would phase them out for couples that make more than $150,000, but they go to the vast majority of the country. The child tax credit does too, but it’s a little bit more targeted. More importantly, there’s been this yearslong effort to make it fully refundable and expanded. Sens. Michael Bennet and Sherrod Brown have made this a marquee crusade for themselves, that later on, they could potentially make this permanent.
+
+Biden wanted to pass this bill with bipartisan support, but it doesn’t look like that’s going to happen. And we know that because of what happened this week: This group of Republican senators wrote a letter to Joe Biden, and basically said: Will you meet with us? We think you should really be shrinking your target down.
+
+So this week, a group of 10 Republicans sent Biden a letter asking to meet and they put forward this proposal of their own. It was about $600 billion, quite a haircut. And they had a roughly two-hour meeting with Biden on Monday where they discussed it. It was hard to tell how seriously to take this offer because on the one hand, the fact that 10 Republicans said they would work with the Biden administration on any kind of a bill was significant because it requires 10 Republican votes to break a Senate filibuster. It met that basic threshold.
+
+And it shows that this group of 10 wants to make themselves into a little bit of a force.
+
+To they at least want to present themselves as the potential audience for bipartisan compromise in the Republican Party. The problem is that $600 billion is really small.
+
+Our old colleague Jamelle Bouie made this really good point on Twitter where he said, a lot of people keep talking about: Are the Democrats serious about unity? What is Joe Biden doing to get the Republicans to meet him halfway? And this offer raises the question of whether the Republicans are serious about bipartisanship.
+
+If Republicans want to make a bipartisan compromise, they need to show that they are negotiating in good faith and not just popping up to make an offer that Biden inevitably rejects so they can claim he’s not serious about unity. You do have to negotiate in good faith, and it wasn’t entirely clear that they were.
+
+I do want to talk about one of the criticisms that I hear more conservative economists and commentators making about the stimulus bill, which is that if a stimulus is too big, it can overheat the economy. I don’t know what that means and what the real risks are, so I’m hoping you can explain it to me.
+
+Oh yeah. “The economy is going to get too hot. It’s too smoldering.” It’s definitely an argument a lot of Republican and conservative and moderate wonks are open to, but I don’t think this is going to have any purchase whatsoever with Americans.
+
+But what does that even mean?
+
+The oversimplified, slightly reductive version is that you’ve poured so much money into the economy that you’re going to get some inflation. That’s really what it means.
+
+
+Inflation is a conservative bugaboo.
+
+And … we need inflation! We haven’t had decent inflation for 10 years or more. The Federal Reserve has been desperately trying to get to create inflation. And a that’s a perk of this bill. I think we should be trying to overheat the economy, because the only way to figure out what our maximum employment rate is or when we might like to spark inflation is to actually try. You have to push past your limits to figure out what they are. You purposely max yourself out and go beyond what you can really do to figure out what your total is. That’s how I think it works. We should be trying to overheat.
+
+Maybe I’ll eat my words when we’re dealing with out-of-control inflation in two years and everybody says, “Jordan, you were an idiot.” But to be very serious, I think it’s worth trying. We’ve made the opposite mistake for so long now. It’s become clear that the U.S. economy has been undershooting its potential, that we’ve actually been so conservative about macroeconomic policy—whether it’s monetary policy or fiscal stimulus—that we have not been hitting our potential. So why not take a risk and go in the other direction? Worst comes to worst, the Federal Reserve will just raise interest rates a bit and it’ll be OK. I’m pretty confident.
+
+It did seem like Biden was rejecting any kind of compromise or half-steps with Republicans. His press secretary went out and was pretty straightforward. She said, he’s happy to hear from them, but he feels strongly about the need to make sure the size of the stimulus package meets this moment.
+
+Can we talk about reconciliation and what that means? Because it seems like it’s going to make this process a lot more complicated.
+
+Reconciliation is the is the Senate’s not-so-secret workaround to avoid the filibuster with a bare majority vote. You just need 51 senators, or 50 and the vice president in this case.
+
+Which is exactly what the Democrats have.
+
+No more, no less.
+
+The most important thing to know about reconciliation legislation is that can’t be filibustered. It’s just written into the rules. The problem is there are all sorts of rules and catches about what can and can’t be included in a reconciliation bill. It gets very complicated.
+
+We have all these trimmings on this bill: the $15 minimum wage, the child tax credit. Can you jam that through with budget reconciliation?
+
+Child tax credit, definitely. The minimum wage, maybe. I think the conventional wisdom for a long time was that you could not. I think you probably still can’t.
+
+The main rule with reconciliation bills is that everything included in it has to affect taxes or spending, revenues or outlays, that it has to have a significant impact on them.
+
+But it means you can’t pass, like, a Voting Rights Act through reconciliation.
+
+There’s a lot. You probably can’t pass gun control unless you try to do it with some kind of tax. You can’t do a lot of things that if they’re purely regulatory, like the minimum wage. But they have been trying to figure out ways around this. One of them is, Democrats are trying to get the Congressional Budget Office to give them a score on the $15 minimum wage that says it would reduce spending and increase tax revenue because people will be paid more. So they’d pay more in taxes and also need fewer benefits.
+
+Reconciliation has these precise rules that govern what happens when you use it. There’s the Pay-as-You-Go Act of 2010: If you raise the national debt, it triggers automatic cuts to social safety net revenue. Can you explain this?
+
+Reconciliation has very specific rules about deficit spending. When you do a reconciliation bill, you have to first pass a budget resolution. Budget resolution typically lasts for 10 years now, and under the rules of reconciliation, you are allowed to increase the deficit during that budget window, but not after it. The result is that if you want to make a permanent program, you have to pay for it. But if you just want new temporary stimulus spending or relief spending, you can probably just do that. You can deficit-finance that.
+
+So what does that mean for this bill?
+
+They are planning to deficit-finance this bill because it’s all temporary spending. The catch is, of there’s this thing out there known as statutory PAYGO, this awful piece of legislation that Barack Obama and co. passed in 2010 when they wanted to show they were serious about the deficit. I think it really is the dumbest legacy of the of the 2010s. What it basically says is that if Congress passes legislation that raises the deficit, that money goes on a scorecard. There’s a five-year scorecard and a 10-year scorecard. If at the end of the year there’s deficit spending on the scorecard, the federal government is required to make budget cuts across all sorts of popular mandatory spending programs in order to make up for them. The idea is that these cuts would be super unpopular, so no one would ever let them happen. One of the major cuts would be to Medicare. Also there are all sorts of important programs that are exempt from this: Medicaid, food stamps, Pell grants are exempt basic welfare state programs that serve the poor. But stuff like the farm subsidy program would just be blown up. It’s all sorts of stuff that would wreak havoc with the basic functioning of government.
+
+And lawmakers are so scared of what would happen to them if they go over this cliff.
+
+The cuts are so dumb and ridiculous that nobody wants that to happen. So the way they’ve always dealt with it is just wave them away. With the Republican tax cuts, there was a lot of talk, will they trigger these cuts? No, we’re not going to cut Medicare and food stamps and the farm program and parts of Obamacare because of this. So they just waived the sequester.
+
+We could be heading into a situation where Joe Biden and Congress use reconciliation and pass a big stimulus, and then they have a year to figure out how to avoid these major cuts. It sets them up to have a push and pull with Mitch McConnell, and that guy wants the Democrats to fall on their face.
+
+So there are two things. One—and this is what’s most likely to happen, I think—is they can just tack a waiver onto an end-of-the-year must-pass spending bill, like for funding the government or funding the military, and basically say to the Republicans: “If you want to try to shut down the government in order to cut Medicare, you are welcome to do so. But that’s not a political fight you’re going to win.” Frankly, I don’t think Republicans are going to shut down the government in order to cut Medicare and destroy the farm subsidy program. Like, what’s the political argument there?
+There’s also a fallback plan, which is that if Democrats can’t get Republicans to waive this for some reason, they can do it next year when they pass their next reconciliation bill. They can just top off all the programs that are supposed to be cut and that would fix things for one year. The problem is then all that spending would go on to the next PAYGO scorecard, and this would have to become an annual ritual.
+
+Because of all the technical stuff we have to do with reconciliation and because of the impeachment trial, it’s possible we won’t see a final bill actually pass through Congress until early March. And by then, maybe we’re talking about a $1.3 trillion or $1.5 trillion bill instead of a $1.9 trillion package. I don’t know. But my gut says that right now, barring some sort of unforeseen disaster, we’ll be talking about a big old honking relief bill sometime in the near future.

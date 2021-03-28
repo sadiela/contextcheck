@@ -89,7 +89,7 @@ def foxScrape(url):
  
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
 	return data
- 
+
 def huffScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
 		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})

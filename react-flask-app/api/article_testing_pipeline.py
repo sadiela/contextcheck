@@ -1,58 +1,130 @@
 import sys
 sys.path.append('c:\python38\lib\site-packages')
 sys.path.append('c:\\users\\sadie\\appdata\\roaming\\python\\python38\\site-packages')
-sys.path.append('..\\..\\Related_Articles')
-sys.path.append('../../Related_Articles')
-from flask import Flask, request, jsonify
+from pathlib import Path
 import json
 import TestSentence
 import time
 import string
-#import newscraper
-#import pymongo
-#from pymongo import MongoClient
 import nltk.data
-#import RelatedArticles_five_calls #import getarticles
+from os import listdir 
+from os.path import isfile, join
+from copy import copy
+import newscraper
+import argparse
 
-# Incorporate web scrape 
+def get_free_filename(stub, directory, suffix=''):
+    counter = 0
+    while True:
+        file_candidate = '{}/{}-{}{}'.format(
+            str(directory), stub, counter, suffix)
+        if Path(file_candidate).exists():
+            print("file exists")
+            counter += 1
+        else:  # No match found
+            print("no file")
+            if suffix:
+                Path(file_candidate).touch()
+            else:
+                Path(file_candidate).mkdir()
+            return file_candidate
 
-# Take list of URLS --> if web scraper working
-# Assume single text file with urls separated by newlines
-url_filename = "../../testing/urls.txt" # include directory
-#with 
-
-# OR
-# Take directory with text files
-# Return list of bias scores
-
-
-def analyze_sentences(text, start_time):
-    # Split into multiple sentences here
-    nltk.download('punkt')
+def analyze_sentences(text):
+    #nltk.download('punkt')
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = sentence_tokenizer.tokenize(text)
-    #sentences = var.split('. ')
-    #print(sentences)
 
     # Run through algorithm 
     results = TestSentence.output(sentences)
+    print('ARTICLE RESULTS:', results['article_score'])
 
-    print('SENTENCE RESULTS!', results['sentence_results']['article_score'])
-    #results['runtime'] = str(time.time() - start_time) + " seconds\n"
-    #return_res = results['sentence_results']
     return results
 
-print("Start")
+# Take list of URLS --> if web scraper working
+# Assume single text file with urls separated by newlines
+#url_filename = "../../testing/urls.txt" # include directory
+#with 
+def get_url_results(filepath, results_folder, results_filename="url"):
+    url_result_path = get_free_filename(results_filename + '_results', results_folder, suffix='.json')
+    full_url_result_path = get_free_filename(results_filename + '_full_results', results_folder, suffix='.json')
+    url_list = []
+    url_results = []
+    full_url_results = []
+    with open(filepath, encoding='utf-8') as file: 
+        lines = file.readlines()
+    for line in lines: 
+        url_list.append(line.rstrip())
+    print("URLS:", url_list)
+    
+    for url in url_list:
+        try:
+            article_results = {"url": url, "article_score":0}
+            full_article_results = {"url": url, "results":0}
+            cur_scrape = newscraper.article_parse(url)
+            scrape_obj = json.loads(cur_scrape) 
+            cur_results = analyze_sentences(scrape_obj['feedText'])
 
-text = 'House Democrats on Wednesday announced that a floor vote will be held Thursday to remove Representative Marjorie Taylor Greene from her committee assignments after House Republicans refused to take swift action against the conspiracy-mongering Georgia congresswoman. “I spoke to Leader McCarthy this morning, and it is clear there is no alternative to holding a Floor vote on the resolution to remove Rep. Greene from her committee assignments,” House Majority Leader Steny Hoyer said in a statement. Hoyer added that the Rules Committee is scheduled to meet Wednesday afternoon, and the House will vote on the resolution on Thursday. House Minority Leader Kevin McCarthy met with Greene for several hours on Tuesday night, but House GOP leadership has appeared reticent to punish her. House Speaker Nancy Pelosi chastised Republican leadership on Thursday for failing to do more to rebuke Greene after reports that Greene previously indicated support on social media for executing prominent Democratic politicians, including Pelosi. “What I\'m concerned about is the Republican leadership in the House of Representatives, who is willing to overlook, ignore those statements,” Pelosi said at her weekly press briefing. Greene, who represents Georgia\'s 14th Congressional District, is infamous for her support of the QAnon conspiracy, which claims that a cabal of Democrats and celebrities are pedophiles who collude against conservatives and former President Trump. In a January, 2019 post, before she was elected to Congress, Greene liked a comment reading, “a bullet to the head would be quicker” to remove Pelosi, according to a CNN KFile deep dive on Greene\'s Facebook page. Greene also liked posts referring to executing FBI agents. In a statement posted to Twitter, Greene claimed that “over the years, I\'ve had teams of people manage my pages.” “Many posts have been liked. Many posts have been shared. Some did not represent my views,” Greene wrote, complaining that “CNN hasn\'t once tried to cancel a Democrat,” not even “those who called for violence while in office.” Pelosi also slammed GOP leadership for assigning Greene to the House Education Committee in light of a video of Greene confronting David Hogg, one of the student survivors of the Parkland school shooting. Social media comments recently surfaced showing Greene agreeing with people online who said the 2018 mass shooting was a planned “false flag” event. “It\'s absolutely appalling, and I think the focus has to be on the Republican leadership of this House of Representatives for the disregard they have for the death of those children,” she said. GOP Minority Whip Steve Scalise, who was shot in 2017 by a left-wing activist, has come out against Greene\'s rhetoric. “I\'ve consistently condemned the use of violent rhetoric in politics on both sides, and this is no exception. There is no place for comments like that in our political discourse,” Scalise said.'
-#nltk.download('punkt')
-sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-sentences = sentence_tokenizer.tokenize(text)
-#sentences = var.split('. ')
-#print(sentences)
+            article_results['article_score'] = cur_results['article_score']
+            full_article_results['results'] = cur_results
 
-# Run through algorithm 
-results = TestSentence.output(sentences)
+            url_results.append(copy(article_results))
+            full_url_results.append(copy(full_article_results))
+            # save spec results and full_spec results to results folder
+        except:
+            print("URL parsing error:", url)
 
-# Save to file? 
-print(results['article_score'])
+    with open(url_result_path, 'w') as fp:
+        json.dump(url_results, fp, indent=4)
+    with open(full_url_result_path, 'w') as fp:
+        json.dump(full_url_results, fp, indent=4)
+
+    
+# OR
+# Take directory with text files
+# Return list of bias scores
+def get_text_results(directory, results_folder, results_filename="text"):
+    dir_results_path = get_free_filename(results_filename + '_results', results_folder, suffix='.json')
+    full_dir_results_path = get_free_filename(results_filename + '_full_results', results_folder, suffix='.json')
+    #spec_results_path = results_folder + spec + ".json"
+    #full_spec_results_path = results_folder + spec + "_full.json"
+    dir_results = []
+    full_dir_results = []
+    cur_spec_files = [f for f in listdir(directory) if isfile(join(directory, f))]
+    for f in cur_spec_files: 
+        article_results = {"filename": f, "article_score":0}
+        full_article_results = {"filename": f, "results":0}
+        # read in the text
+        print(f)
+        with open(directory + '/' + f, 'r', encoding='utf-8') as file: 
+            article_text = file.read().replace('\n', ' ')
+
+        testsentence_results = analyze_sentences(article_text)
+
+        article_results['article_score'] = testsentence_results['article_score']
+        full_article_results['results'] = testsentence_results
+
+        dir_results.append(copy(article_results))
+        full_dir_results.append(copy(full_article_results))
+        # save spec results and full_spec results to results folder
+        with open(dir_results_path, 'w') as fp:
+            json.dump(dir_results, fp, indent=4)
+        with open(full_dir_results_path, 'w') as fp:
+            json.dump(full_dir_results, fp, indent=4)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    results_folder = "../../testing/results/"
+    default_directory_name = "../../testing/Article_Txt_Files/"
+
+    #-db DATABASE -u USERNAME -p PASSWORD -size 20000
+    parser.add_argument("-t", "--type", dest = "flag_arg", default = "text", help="dir of TEXT files or file of URLs?")
+    parser.add_argument('-d', "--directoryorfile", dest="path_arg", default = default_directory_name, help="path of dir/file you want to analyze")
+    parser.add_argument('-r', "--result_filename", dest="results_fname", default = "pipeline_run", help="name for your results file(s)")
+
+    args = parser.parse_args()
+
+    if args.flag_arg =="url":
+        get_url_results(args.path_arg, results_folder, args.results_fname)
+    elif args.flag_arg == "text":
+        get_text_results(args.path_arg, results_folder, args.results_fname)

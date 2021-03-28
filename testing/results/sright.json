@@ -1,0 +1,42 @@
+[
+    {
+        "filename": "Biden_routine_nypost.txt",
+        "article_score": 6.5264856815338135
+    },
+    {
+        "filename": "Chris_Cuomo_NYPost.txt",
+        "article_score": 8.042256290262396
+    },
+    {
+        "filename": "CPAC_ny_post.txt",
+        "article_score": 6.02565375658182
+    },
+    {
+        "filename": "immigration_wfb.txt",
+        "article_score": 7.2901072767045765
+    },
+    {
+        "filename": "Minwage_WE.txt",
+        "article_score": 6.2184882909059525
+    },
+    {
+        "filename": "Rush_nypost.txt",
+        "article_score": 5.997903550926008
+    },
+    {
+        "filename": "Rush_WE.txt",
+        "article_score": 5.330592741568883
+    },
+    {
+        "filename": "Schools_wfb.txt",
+        "article_score": 7.8542139530181885
+    },
+    {
+        "filename": "Stimulous_reason.txt",
+        "article_score": 6.249828589589972
+    },
+    {
+        "filename": "Syria_reason.txt",
+        "article_score": 9.03020441532135
+    }
+]

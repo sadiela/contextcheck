@@ -13,8 +13,14 @@ import newscraper
 #from pymongo import MongoClient
 import nltk.data
 import RelatedArticles_five_calls #import getarticles
+from monkeylearn import MonkeyLearn
+import keyword_detection
+
 
 app = Flask(__name__)
+
+
+keyword_api = "d28b596641e1690c696909f66408b6d0ad53e5ca"
 
 '''m_client = MongoClient("mongodb://3.134.119.225")
 db = m_client.sentence_results
@@ -22,11 +28,9 @@ collection = db.res'''
 
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
-    nltk.download('punkt')
+    #nltk.download('punkt')
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = sentence_tokenizer.tokenize(text)
-    #sentences = var.split('. ')
-    #print(sentences)
 
     # Run through algorithm 
     results = TestSentence.output(sentences)
@@ -80,6 +84,7 @@ def scrape_article():
     res_obj = json.loads(res) 
     #print(res_obj)
     # res.title, res.author, res.feedText, res.date, res.meta (?)
+    print("DONE SCRAPING")
     results = analyze_sentences(res_obj['feedText'], start_time)
     res_obj['bias_results'] = results
 
@@ -88,10 +93,11 @@ def scrape_article():
     separate_words = res_obj['title'].split(' ')
     ####
     #print(separate_words) # remove 'the', 'a', etc in the future
-    filtered_separate_words = [i for i in separate_words if i != "the" and i != "a" and i != "in" and i != "to" and i != "his" and i != "her" and i != "and" and i != "on" and i != "with"]
-    related_articles = ''#RelatedArticles_five_calls.getarticles(" ".join(filtered_separate_words[:3]))
+    #filtered_separate_words = [i for i in separate_words if i != "the" and i != "a" and i != "in" and i != "to" and i != "his" and i != "her" and i != "and" and i != "on" and i != "with"]
+    
+    keywords = keyword_detection.get_keywords(text)
+    related_articles = RelatedArticles_five_calls.getarticles(" ".join(keywords))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res_obj['related'] = related_articles
-    ####
     return res_obj
 

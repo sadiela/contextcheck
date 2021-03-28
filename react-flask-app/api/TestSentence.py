@@ -1,6 +1,9 @@
 #################
 #### Imports ####
 #################
+
+# C:\Users\sadie\AppData\Roaming\Python\Python38\Scripts\pipenv shell
+
 import sys
 import time
 import os
@@ -12,6 +15,7 @@ sys.path.append('..\..\ML')
 
 import numpy as np
 import statistics
+import spacy
 
 # torch imports
 import torch
@@ -26,6 +30,8 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 # other user scripts
 from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
+
+nlp = spacy.load("en_core_web_sm")
 
 CUDA = (torch.cuda.device_count() > 0)
 if CUDA:
@@ -149,7 +155,7 @@ def to_probs(logits, lens):
     return out
 
 # Take one sentence ... 
-def run_inference(model, ids): #, tokenizer):
+def run_inference(model, ids, pos_ids): #, tokenizer):
     #global ARGS
     # we will pass in one sentence, no post_toks, 
 
@@ -163,7 +169,7 @@ def run_inference(model, ids): #, tokenizer):
 
     with torch.no_grad():
         _, tok_logits = model(ids, attention_mask=None,
-            rel_ids=None, pos_ids=None, categories=None,
+            rel_ids=None, pos_ids=pos_ids, categories=None,
             pre_len=None) # maybe pre_len
     
     out['input_toks'] += [tokenizer.convert_ids_to_tokens(seq) for seq in ids.cpu().numpy()]
@@ -173,18 +179,16 @@ def run_inference(model, ids): #, tokenizer):
 
     return out
 
-def test_sentence(model, s): 
-    tokens = tokenizer.tokenize(s)
-    length = len(tokens)
-    
-    # get tokens from BERT
+def test_sentence(model, tokens, pos): 
+    # get tokens ids from BERT
     ids = pad([tok2id.get(x, 0) for x in tokens], 0)
     ids = torch.LongTensor(ids)
     ids = ids.unsqueeze(0)
-    
+    pos_ids = pad([POS2ID.get(x, POS2ID['<UNK>']) for x in pos], 0)
+
     model.eval() # constant random seed
-    output = run_inference(model, ids) #, tokenizer)
-    return output, length
+    output = run_inference(model, ids, pos_ids) #, tokenizer)
+    return output
 
 def changeRange(old_range, new_range, value):
     # given an old range, new range, and value in the old range, 
@@ -194,10 +198,8 @@ def changeRange(old_range, new_range, value):
     return  new_min + ((value - old_min) * (new_max - new_min) / (old_max - old_min))
 
 def output(sentences):
+    print("BIAS START")
     results = {}
-    word_score_list = []
-    preformatted_words = []
-    preformatted_scores = []
     results['sentence_results'] = []
     #print('sentences:', sentences)
     #print("New testsentence code!")
@@ -208,6 +210,7 @@ def output(sentences):
     #       bias_list = [[0.1,0.33, ... 0.02], . . .[0.9, 0.002, ... 0.5]]
 
     # using new models with linguistic features
+
     model = BertForMultitaskWithFeatures.from_pretrained(
         config, LEXICON_DIRECTORY,
         cls_num_labels=cls_num_labels,
@@ -220,83 +223,74 @@ def output(sentences):
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     word_list = []
+    pos_list = []
     bias_list = []
     for sentence in sentences:
-        sentence=sentence.lower() 
+        sentence_dat = nlp(sentence)
+        sentence_pos = [i.pos_ for i in sentence_dat]
+        sentence_tokens = [i.text.lower() for i in sentence_dat]
+        final_tokens = []
+        final_pos = [] 
+        for word, pos in zip(sentence_tokens, sentence_pos):
+            cur_tok = tokenizer.tokenize(word)
+            for c in cur_tok:
+                final_tokens.append(c)
+                final_pos.append(pos)
         #print(sentence)
-        out, length = test_sentence(model, sentence) 
+        out = test_sentence(model, final_tokens, final_pos) 
         #print("Results:")
 
-        bias_val = out['tok_probs'][0][:length]
+        bias_val = out['tok_probs'][0][:len(final_pos)]
         prob_bias = [b[1] for b in bias_val]
 
-        word_list.append(out['input_toks'][0][:length])
+        word_list.append(out['input_toks'][0][:len(final_pos)])
+        pos_list.append(final_pos)
         bias_list.append(prob_bias)
-
-    #print("LENGTHS:", len(word_list), len(bias_list))
 
     scaled_bias_scores = []
     num = 0
-    for words, biases in zip(word_list, bias_list):
+    for words, biases, pos in zip(word_list, bias_list, pos_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
         outWordsScores = []
         avg_sum = 0
-        max_biased = words[0]
-        max_score = biases[0]   
-        most_biased_words = []
-        for word, score in zip(words, biases):
-            preformatted_words.append(word)
-            preformatted_scores.append(score)
-            if score > max_score:
-                max_biased = word
-                max_score = score
-            avg_sum += score
+
+        for word, score, cur_pos in zip(words, biases, pos):
+            bias_score = score*10 #changeRange([0,1], [0,10], score)
+            avg_sum += bias_score
             if len(word) >= 3 and word[:2] == "##":
                 # stuff
                 last_word_score = outWordsScores[-1]
-                print(last_word_score, word, score)
+                #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
-                outWordsScores[-1][1] = (last_word_score[1] + score)/2
+                outWordsScores[-1][1] = max(last_word_score[1], bias_score)
+                # won't have to change/add POS!
             else:
-                outWordsScores.append([word, score])
-            if score >= 0.45:
-                most_biased_words.append(word)
+                outWordsScores.append([word, bias_score, cur_pos])
         
+        max_biased = outWordsScores[0]
+
+        for elem in outWordsScores:
+            if elem[1] > max_biased[1]:
+                max_biased = elem
         # one of these per sentence
-        bias_score = changeRange([0,1], [0,10], max_score)
-        scaled_bias_scores.append(bias_score)
-        print("Scaled bias scores: ", scaled_bias_scores)
+        
+        scaled_bias_scores.append(max_biased[1])
+        #print("Scaled bias scores: ", scaled_bias_scores)
 
         #print("max biased and max score:", max_biased, max_score)
         num = num + 1
         s_level_results = {
             "words" : outWordsScores,
             "average": "{:.5f}".format(avg_sum/len(words)),
-            "max_biased_word": max_biased + ": " + "{:.5f}".format(max_score),
-            "bias_score":bias_score,
+            "max_biased_word": max_biased[0] + ": " + "{:.5f}".format(max_biased[1]),
+            "bias_score":max_biased[1],
             "order":num
         } 
 
         results['sentence_results'].append(s_level_results)
-    
-    formatted_words = []
-    formatted_scores = []
-    for word, score in zip(preformatted_words, preformatted_scores):
-        if len(word) >= 3 and word[:2] == "##":
-            # stuff
-            last_word = formatted_words[-1]
-            formatted_words[-1] = last_word + word[2:]
-            last_score = formatted_scores[-1]
-            formatted_scores[-1] = (last_score + score)/2
-        else:
-            formatted_words.append(word)
-            formatted_scores.append(score)
 
-    print(len(formatted_scores), len(formatted_words))
-    for word, score in zip(formatted_words, formatted_scores): 
-        word_score_list.append({'word':word, 'score':score}) # add type later!
-
+    # out of for loop...
     # Full article data
     # Sort scaled bias score largest to smallest: 
     scaled_bias_scores.sort(reverse=True)
@@ -307,10 +301,5 @@ def output(sentences):
 
     top_twenty_fifth = scaled_bias_scores[:upper_bound]
     results['article_score'] = statistics.mean(top_twenty_fifth)
-    results['word_list'] = word_score_list
-
-    print(results['article_score'])
-
-    print('DONE IN TEST SENTENCE')
     
     return results 

@@ -1,10 +1,10 @@
-from newsapi import NewsApiClient
+from newsapi.newsapi_client import NewsApiClient
 import json
 import random
 import requests
 
 
-def getarticles(inp,date):
+def getarticles(inp,date="03-02-2021"):
     api_key='c1ff125522de4c749e615dca5cba6eb5'
     # Init
     newsapi = NewsApiClient(api_key)
