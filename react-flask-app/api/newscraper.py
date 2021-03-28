@@ -1,7 +1,6 @@
 from newspaper import Article
 import lxml.html
 import requests, re, json
-from bs4 import BeautifulSoup
 #import eval
 import time
 #from Related_Articles import RelatedArticles
@@ -21,144 +20,181 @@ def article_parse(url):
 	#works for AP news, progressive.org, NYpost and maybe more
 	
 def cnnScrape(url): #run time ~.3 seconds
-	article = Article(url)	
-	try:
-		article.download()	
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
 	except:
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
 		return "Error"
-	article.parse()
-	author = article.authors
-	title = article.title
-	date = article.publish_date
-	#parseText = article.text.lower()
-	parseText = article.text.replace("\n", " ")
-	#feedText = parseText.split(".")
-	try: 
-		date = date.strftime("%m/%d/%Y, %H:%M:%S")
-	except:
-		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
-	return json.dumps(data)
-
-def foxScrape(url): #run time ~.2 seconds
-	article = Article(url)	
-	try:
-		article.download()	
-	except:
-		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
-		return "Error"
-	article.parse()
-	author = article.authors
-	try:
-		print("AUTHOR:", author)
-		author = author[0]
-		date = article.publish_date
-		title = article.title
-	except: 
-		print("Metadata issue")
-		author = ""
-		date = ""
-		title = ""
-	#parseText = article.text.lower()
-	parseText = article.text.replace("\n", " ") #ads scrubbing!
-	parseText2 = ""
-	textList = parseText.split()
-	for word in textList:
-		if word.isupper():
-			word = ""
-		parseText2 = parseText2 + word + " "
-     
-	#feedText = parseText.split(".")
-	#for word in feedText:
-	#	if word.isupper():
-	#		feedText.remove(word)
-
-	re = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
-	fox_soup = BeautifulSoup(re.text, 'html.parser')
-	meta = fox_soup.find("meta", {"name":"classification-isa"})['content']
-	meta = meta.replace(',', " ")
-	data = {"title": title, "author": author, "feedText": parseText2, "date": date, "meta": meta}
-	return json.dumps(data)
-	
-def huffScrape(url): #runtime ~1.2-1.4 seconds
-	article = Article(url)	
-	try:
-		article.download()	
-	except:
-		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
-		return "Error"
-	article.parse()
-	huff_soup = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
-	huff_text = BeautifulSoup(huff_soup.text, 'html.parser')
-	try:
-        	author = huff_text.find("div", {"class":"author-card"}).text
-        	author = author.replace("\n", "")
-	except:
-		author = huff_text.find("div", {"class":"wire-partner-component"}).text
-		author = author.replace("\n", "")
-	title = article.title
-	date = article.publish_date
-	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
-	if response.status_code != 200:
-		return "FAIL TO GET URL"
-	parseText = article.text
-	parseText = parseText.replace("\n", " ")
-	#feedText = parseText.split(".")
-	try: 
-		date = date.strftime("%m/%d/%Y, %H:%M:%S")
-	except:
-		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
-	return json.dumps(data)
-
-def nypScrape(url): #runtime ~1.2-1.4 seconds
+ 
 	article = Article(url)
+	article.download()
 	try:
-		article.download()
 		article.parse()
 	except:
-		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
-		return "Error"
-	nyp_soup = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
-	nyp_text = BeautifulSoup(nyp_soup.text, 'html.parser')
-
-	author = nyp_text.find("div", {"id":"author-byline"})
-	author = author.find("p", {"class":"byline"}).text
-	author = author.replace("\n", "")
-
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+ 
+	author = article.authors
 	title = article.title
 	date = article.publish_date
-	response = requests.get(url, headers = {'User-Agent': 'Mozilla/5.0'})
-	if response.status_code != 200:
-		return "FAIL TO GET URL"
-	parseText = article.text
-	parseText = parseText.replace("\n", " ")
-	#feedText = parseText.split(".")
+	text = article.text
+	sourceType = cnnArticle.cssselect('meta[name="section"]')[0].get('content')
+ 
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	except:
 		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
+ 
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
 	return json.dumps(data)
-	
+
+def foxScrape(url):
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#download and parse article
+	article = Article(url)
+	article.download()
+	try:
+		article.parse()
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#begin gathering text and title
+	text = article.text
+	title = article.title
+	#scrub text-based advertisements
+	text = re.sub(r'[.,-_\']*[A-Z]+(?![a-z])[.,-_\']*',"", text)
+ 
+	#LXML for dates/author
+	author = article.authors
+	if len(author) == 0:
+		try:
+			author = article_H.cssselect('div[class="author-byline"]')[0].text_content()
+		except:
+			author = "NOT FOUND"
+ 
+	date = article_H.cssselect('div[class="article-date"]')[0].text_content()
+	try:
+		sourceType = article_H.cssselect('meta[name="classification-isa"]')[0].attrib['content']
+	except:
+		sourceType = "not found"
+ 
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
+	return data
+
+def huffScrape(url):
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#download and parse article
+	article = Article(url)
+	article.download()
+	try:
+		article.parse()
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#LXML for authors
+	try:
+		author = article_H.cssselect('div[class="author-card__name"]')[0].text_content()
+	except:
+		author = "NOT FOUND"
+	text = article.text
+	title = article.title
+	date = article.publish_date
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
+	sourceType = article_H.cssselect('meta[property="article:section"]')[0].get('content')
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
+	return json.dumps(data)
+
+def nypScrape(url):
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#download and parse article
+	article = Article(url)
+	article.download()
+	try:
+		article.parse()
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#LXML for authors
+	try:
+		author = article_H.cssselect('p[class="byline"]')[0].text_content()
+	except:
+		author = "NOT FOUND"
+	text = article.text
+	title = article.title
+	date = article.publish_date
+	try: 
+		date = date.strftime("%m/%d/%Y, %H:%M:%S")
+	except:
+		date = "NOT FOUND"
+	sourceType = article_H.cssselect('meta[name="nypost-section"]')[0].get('content')
+ 
+	if article_H.cssselect('meta[property="article:opinion"]')[0].get('content') == "false":
+		sourceType = "Opinion " + sourceType
+ 
+        #do nothing
+ 
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
+	return json.dumps(data)
+
 def genScrape(url):
+	try: #requests can fail if URL is not correct, possibly unnecessary
+		article_R = requests.get(url, headers = {'User-Agent':'Mozilla/5.0'})
+		if article_R.status_code != 200:
+			return "INVALID URL/ARTICLE (possibly unsupported)"
+		else:
+			article_H = lxml.html.fromstring(article_R.content)
+	except:
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+	#download and parse article
 	article = Article(url)
+	article.download()
 	try:
-		article.download()
 		article.parse()
 	except:
-		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
-		return "Error"
-	article.parse()
-	parseText = article.text.replace("\n", "")
-	author = article.authors
+		return "INVALID URL/ARTICLE (possibly unsupported)"
+		author = article.authors
+	if len(author) == 0:
+		author = "NOT FOUND"
+	text = article.text
 	title = article.title
 	date = article.publish_date
+    
 	try: 
 		date = date.strftime("%m/%d/%Y, %H:%M:%S")
 	except:
 		date = "NOT FOUND"
-	data = {"title": title, "author": author, "feedText": parseText, "date": date}
+    
+	try:
+		if article_H.cssselect('meta[property="article:opinion"]')[0].get('content') == "true":
+			sourceType = "Opinion"
+		else:
+			sourceType = "Non-Opinion"
+	except:
+		sourceType = "Not found"
+    
+	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
 	return json.dumps(data)
-
