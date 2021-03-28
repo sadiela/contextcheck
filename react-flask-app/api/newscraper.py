@@ -25,7 +25,7 @@ def cnnScrape(url): #run time ~.3 seconds
 		if article_R.status_code != 200:
 			return "INVALID URL/ARTICLE (possibly unsupported)"
 		else:
-			article_H = lxml.html.fromstring(article_R.content)
+			cnnArticle = lxml.html.fromstring(article_R.content)
 	except:
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
 		return "Error"

@@ -46,6 +46,7 @@ export default class ResultsWrapper extends Component {
                             author={this.props.results.author}
                             title={this.props.results.title}
                             date={this.props.results.date}
+                            source_type={this.props.results.sourceType}
                         />
                         <RelatedArticles
                             related={this.props.results.related}

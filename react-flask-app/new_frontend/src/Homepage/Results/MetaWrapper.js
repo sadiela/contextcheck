@@ -9,6 +9,7 @@ export default class MetaWrapper extends Component {
                     <thead>
                         <tr>
                             <th>Article Title</th>
+                            <th>Source Type</th>
                             <th>Author</th>
                             <th>Date</th>
                         </tr>
@@ -16,6 +17,7 @@ export default class MetaWrapper extends Component {
                     <tbody>
                         <tr>
                             <td>{this.props.title}</td>
+                            <td>{this.props.source_type}</td>
                             <td>{this.props.author}</td>
                             <td>{this.props.date}</td>
                         </tr>
