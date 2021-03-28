@@ -15,6 +15,7 @@ sys.path.append('..\..\ML')
 
 import numpy as np
 import statistics
+import spacy
 
 # torch imports
 import torch
@@ -29,6 +30,8 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 # other user scripts
 from myfeatures import FeatureGenerator # might not need this
 from models import AddCombine, BertForMultitaskWithFeatures #, BertForMultitask
+
+nlp = spacy.load("en_core_web_sm")
 
 CUDA = (torch.cuda.device_count() > 0)
 if CUDA:
@@ -152,7 +155,7 @@ def to_probs(logits, lens):
     return out
 
 # Take one sentence ... 
-def run_inference(model, ids): #, tokenizer):
+def run_inference(model, ids, pos_ids): #, tokenizer):
     #global ARGS
     # we will pass in one sentence, no post_toks, 
 
@@ -166,7 +169,7 @@ def run_inference(model, ids): #, tokenizer):
 
     with torch.no_grad():
         _, tok_logits = model(ids, attention_mask=None,
-            rel_ids=None, pos_ids=None, categories=None,
+            rel_ids=None, pos_ids=pos_ids, categories=None,
             pre_len=None) # maybe pre_len
     
     out['input_toks'] += [tokenizer.convert_ids_to_tokens(seq) for seq in ids.cpu().numpy()]
@@ -176,18 +179,16 @@ def run_inference(model, ids): #, tokenizer):
 
     return out
 
-def test_sentence(model, s): 
-    tokens = tokenizer.tokenize(s)
-    length = len(tokens)
-    
-    # get tokens from BERT
+def test_sentence(model, tokens, pos): 
+    # get tokens ids from BERT
     ids = pad([tok2id.get(x, 0) for x in tokens], 0)
     ids = torch.LongTensor(ids)
     ids = ids.unsqueeze(0)
-    
+    pos_ids = pad([POS2ID.get(x, POS2ID['<UNK>']) for x in pos], 0)
+
     model.eval() # constant random seed
-    output = run_inference(model, ids) #, tokenizer)
-    return output, length
+    output = run_inference(model, ids, pos_ids) #, tokenizer)
+    return output
 
 def changeRange(old_range, new_range, value):
     # given an old range, new range, and value in the old range, 
@@ -197,6 +198,7 @@ def changeRange(old_range, new_range, value):
     return  new_min + ((value - old_min) * (new_max - new_min) / (old_max - old_min))
 
 def output(sentences):
+    print("BIAS START")
     results = {}
     results['sentence_results'] = []
     #print('sentences:', sentences)
@@ -208,6 +210,7 @@ def output(sentences):
     #       bias_list = [[0.1,0.33, ... 0.02], . . .[0.9, 0.002, ... 0.5]]
 
     # using new models with linguistic features
+
     model = BertForMultitaskWithFeatures.from_pretrained(
         config, LEXICON_DIRECTORY,
         cls_num_labels=cls_num_labels,
@@ -220,30 +223,39 @@ def output(sentences):
     model.load_state_dict(torch.load(saved_model_path, map_location=torch.device("cpu")))
 
     word_list = []
+    pos_list = []
     bias_list = []
     for sentence in sentences:
-        sentence=sentence.lower() 
+        sentence_dat = nlp(sentence)
+        sentence_pos = [i.pos_ for i in sentence_dat]
+        sentence_tokens = [i.text.lower() for i in sentence_dat]
+        final_tokens = []
+        final_pos = [] 
+        for word, pos in zip(sentence_tokens, sentence_pos):
+            cur_tok = tokenizer.tokenize(word)
+            for c in cur_tok:
+                final_tokens.append(c)
+                final_pos.append(pos)
         #print(sentence)
-        out, length = test_sentence(model, sentence) 
+        out = test_sentence(model, final_tokens, final_pos) 
         #print("Results:")
 
-        bias_val = out['tok_probs'][0][:length]
+        bias_val = out['tok_probs'][0][:len(final_pos)]
         prob_bias = [b[1] for b in bias_val]
 
-        word_list.append(out['input_toks'][0][:length])
+        word_list.append(out['input_toks'][0][:len(final_pos)])
+        pos_list.append(final_pos)
         bias_list.append(prob_bias)
-
-    #print("LENGTHS:", len(word_list), len(bias_list))
 
     scaled_bias_scores = []
     num = 0
-    for words, biases in zip(word_list, bias_list):
+    for words, biases, pos in zip(word_list, bias_list, pos_list):
         # Format output string 
         # starts as python dictionary which we will convert to a json string
         outWordsScores = []
         avg_sum = 0
-        #max_biased = words[0]
-        for word, score in zip(words, biases):
+
+        for word, score, cur_pos in zip(words, biases, pos):
             bias_score = score*10 #changeRange([0,1], [0,10], score)
             avg_sum += bias_score
             if len(word) >= 3 and word[:2] == "##":
@@ -252,8 +264,9 @@ def output(sentences):
                 #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
                 outWordsScores[-1][1] = max(last_word_score[1], bias_score)
+                # won't have to change/add POS!
             else:
-                outWordsScores.append([word, bias_score])
+                outWordsScores.append([word, bias_score, cur_pos])
         
         max_biased = outWordsScores[0]
 
@@ -264,7 +277,6 @@ def output(sentences):
         
         scaled_bias_scores.append(max_biased[1])
         #print("Scaled bias scores: ", scaled_bias_scores)
-
 
         #print("max biased and max score:", max_biased, max_score)
         num = num + 1
@@ -277,7 +289,6 @@ def output(sentences):
         } 
 
         results['sentence_results'].append(s_level_results)
-
 
     # out of for loop...
     # Full article data
