@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import whatPOS from './GetPOS';
 
 export default class TextPane extends Component {
     getWords = (sentence) => {
@@ -9,13 +10,16 @@ export default class TextPane extends Component {
                 const score = Math.round(word[1] * 100) / 100;
                 const threshold = parseFloat(this.props.threshold);
                 if(word[1] > threshold){
+                    const part_of_speech = whatPOS(word[2]);
+                    console.log(part_of_speech);
                     return (
                         <OverlayTrigger
                             key={word}
                             placement='top'
                             overlay={
                                 <Tooltip id={`tooltip-$word[0]`}>
-                                    Score: <strong>{score}</strong>
+                                    <p>Score: <strong>{score}</strong></p>
+                                    <p>Part of Speech: <strong>{part_of_speech}</strong></p>
                                 </Tooltip>
                             }                        
                         >
