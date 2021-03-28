@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Badge from 'react-bootstrap/Badge';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import ExplainRankingModal from './ExplainRankingModal';
 
 export default class BiasIndicator extends Component {
     // render() {
@@ -29,7 +30,8 @@ export default class BiasIndicator extends Component {
             >
                 <div className='we-think'>
                     <h3>ContextCheck thinks this article <Badge variant={this.props.variant}>{this.props.end_sentence}</Badge></h3>
-                    <h4>Runtime: <Badge variant="info">{this.props.runtime} seconds</Badge></h4>
+                    <h4>Runtime: <Badge variant="secondary">{this.props.runtime} seconds</Badge></h4>
+                    <ExplainRankingModal />
                 </div>
             </OverlayTrigger>
         );
