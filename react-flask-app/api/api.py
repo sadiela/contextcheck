@@ -103,7 +103,7 @@ def scrape_article():
     res['related'] = related_articles
     return res
 
-def read_lexicon(self, fp):
+def read_lexicon(fp):
         # returns word list as a set
         out = set([
             l.strip() for l in open(fp, errors='ignore') 
@@ -116,7 +116,7 @@ def read_lexicon(self, fp):
 def word_type():
     data = request.data
     word = data.decode('utf-8')
-    
+
     DATA_DIRECTORY = '../../ML/data/'
     LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
 
