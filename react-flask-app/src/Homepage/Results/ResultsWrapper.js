@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import BiasIndicator from './BiasIndicator';
-import Jubmotron from 'react-bootstrap/Jumbotron';
-import Badge from 'react-bootstrap/Badge';
 import TextPane from './TextPane';
 import MetaWrapper from './MetaWrapper';
 import RelatedArticles from './RelatedArticles';

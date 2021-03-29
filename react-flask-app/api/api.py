@@ -103,7 +103,7 @@ def scrape_article():
     res['related'] = related_articles
     return res
 
-def read_lexicon(self, fp):
+def read_lexicon(fp):
         # returns word list as a set
         out = set([
             l.strip() for l in open(fp, errors='ignore') 
@@ -146,5 +146,6 @@ def word_type():
 
     if not word_tags:
         word_tags.append("NONE")
+    print(word_tags)
 
-    return word_tags
+    return word_tags[0]
