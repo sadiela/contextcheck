@@ -129,42 +129,6 @@ def getarticles(inp):
 
 
     #all urls being sorted from json files into political catagory arrays
-<<<<<<< HEAD
-    try:
-        for x in articles1['articles']:
-            middle.append(x['url'])
-    except: 
-        print(articles1)
-    try: 
-        for x in articles2['articles']:
-            sleft.append(x['url'])
-    except: 
-        print(articles1)
-    try: 
-        for x in articles3['articles']:
-            pleft.append(x['url'])
-    except: 
-        print(articles1)
-
-    try:
-        for x in articles4['articles']:
-            pright.append(x['url'])
-    except: 
-        print(articles1)
-
-    try: 
-        for x in articles5['articles']:
-            sright.append(x['url'])
-    except: 
-        print(articles1)
-
-    # print("pleft:", pleft)
-    # print("sleft:", sleft)
-    # print("middle:", middle)
-    # print("sright:", sright)
-    # print("pright:", pright)
-    # #this removes the blank space placeholder for each array
-=======
     for x in articles1['articles']:
         middle.append({
             x['title']: x['url']
@@ -196,7 +160,6 @@ def getarticles(inp):
     # print(sright)
     # print(pright)
     #this removes the blank space placeholder for each array
->>>>>>> 33a92d2392eb9967140148bb6aaa78f07b17281e
     related = []
     if len(pleft) > 1:
          pleft.remove('')
