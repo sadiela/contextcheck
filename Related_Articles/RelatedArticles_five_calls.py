@@ -4,8 +4,9 @@ import random
 import requests
 
 
-def getarticles(inp,date="03-02-2021"):
-    api_key='c1ff125522de4c749e615dca5cba6eb5'
+def getarticles(inp):
+    #api_key='c1ff125522de4c749e615dca5cba6eb5'
+    api_key = 'b6a1f64d144b43c1bba5370b62d879e0'
     # Init
     newsapi = NewsApiClient(api_key)
     
@@ -15,7 +16,6 @@ def getarticles(inp,date="03-02-2021"):
     #centerist source call
     url1 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        f'from={date}&'
         f'sortBy={sort}&'
         'sources=associated-press&'
         'domains= reuters.com,cbsnews.com,abcnews.go.com,bloomburg.com,economist.com,forbes.com,cnbc.com,thehill.com,politico.com$'
@@ -29,7 +29,6 @@ def getarticles(inp,date="03-02-2021"):
     #skew left source call
     url2 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        f'from={date}&'
         f'sortBy={sort}&'
         'sources=cnn&'
         'domains= nytimes.com,theguardian.com,msnbc.com,theatlantic.com,vox.com,washingtonpost.com,huffpost.com,thedailybeast.com&'
@@ -43,7 +42,6 @@ def getarticles(inp,date="03-02-2021"):
     #partisan left source call
     url3 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        f'from={date}&'
         f'sortBy={sort}&'
         'domains= slate.com,jacobinmag.com,rawstory.com,progressive.org&'
         f'pageSize={pagesize}&'
@@ -56,7 +54,6 @@ def getarticles(inp,date="03-02-2021"):
     #partisan right source call
     url4 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        f'from={date}&'
         f'sortBy={sort}&'
         'sources=fox-news&'
         'domains= dailywire.com,dailycaller.com,nationalreview.com&'
@@ -70,7 +67,6 @@ def getarticles(inp,date="03-02-2021"):
     #skew right source call
     url5 = ('http://newsapi.org/v2/everything?'
         f'q={inp}&'
-        f'from={date}&'
         f'sortBy={sort}&'
         'sources=the-wall-street-journal&'
         'domains= reason.com,quillette.com,realclearpolitics.com,nypost.com,washingtonexaminer.com,rasmussenreports.com,freebeacon.com,zerohedge.com&'
@@ -90,20 +86,33 @@ def getarticles(inp,date="03-02-2021"):
 
 
     #all urls being sorted from json files into political catagory arrays
-    for x in articles1['articles']:
-        middle.append(x['url'])
+    try:
+        for x in articles1['articles']:
+            middle.append(x['url'])
+    except: 
+        print(articles1)
+    try: 
+        for x in articles2['articles']:
+            sleft.append(x['url'])
+    except: 
+        print(articles1)
+    try: 
+        for x in articles3['articles']:
+            pleft.append(x['url'])
+    except: 
+        print(articles1)
 
-    for x in articles2['articles']:
-        sleft.append(x['url'])
+    try:
+        for x in articles4['articles']:
+            pright.append(x['url'])
+    except: 
+        print(articles1)
 
-    for x in articles3['articles']:
-        pleft.append(x['url'])
-
-    for x in articles4['articles']:
-        pright.append(x['url'])
-
-    for x in articles5['articles']:
-        sright.append(x['url'])
+    try: 
+        for x in articles5['articles']:
+            sright.append(x['url'])
+    except: 
+        print(articles1)
 
     # print("pleft:", pleft)
     # print("sleft:", sleft)
