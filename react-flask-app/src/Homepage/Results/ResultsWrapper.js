@@ -19,7 +19,7 @@ export default class ResultsWrapper extends Component {
                         <h6>Words in red may be biased, hover over them to see why.</h6>
                         <TextPane
                             text={this.props.results.sentence_results}
-                            threshold='0.7'
+                            threshold='4'
                         />
                     </div>
             )
@@ -55,7 +55,7 @@ export default class ResultsWrapper extends Component {
                         <h6>Words in red may be biased, hover over them to see why.</h6>
                         <TextPane
                             text={this.props.results.bias_results.sentence_results}
-                            threshold='6'
+                            threshold='4'
                         />
                     </div>
                 </div>
