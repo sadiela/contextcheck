@@ -8,7 +8,7 @@ export default class Related extends Component {
                 return(
                     <tr>
                         <td>{related_obj.Source}</td>
-                        <td><a href={related_obj.URL}>{related_obj.Headline}</a></td>
+                        <td><a href={related_obj.URL} target="_blank">{related_obj.Headline}</a></td>
                     </tr>
                 )
             }

@@ -146,6 +146,4 @@ def word_type():
 
     if not word_tags:
         word_tags.append("NONE")
-    print(word_tags)
-
     return word_tags[0]
