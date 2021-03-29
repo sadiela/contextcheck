@@ -8,8 +8,10 @@ from operator import itemgetter
 import json 
 
 def get_top_n(dict_elem, n):
-    result = dict(sorted(dict_elem.items(), key = itemgetter(1), reverse = True)[:n]) 
-    return result
+    result = dict(sorted(dict_elem.items(), key = itemgetter(1), reverse = True)) 
+    words = result.keys() 
+    filtered_result = [i for i in words if i.isalpha() ]
+    return filtered_result[:n]
 
 def check_sent(word, sentences): 
     final = [all([w in x for w in word]) for x in sentences] 
@@ -56,7 +58,7 @@ def get_keywords(body_text):
 
     tf_idf_score = {key: tf_score[key] * idf_score.get(key, 0) for key in tf_score.keys()}
     
-    dic = (get_top_n(tf_idf_score, 5))
-    return list(dic.keys())
+    keywords = (get_top_n(tf_idf_score, 3))
+    return keywords
 
     # citation: https://www.analyticsvidhya.com/blog/2020/11/words-that-matter-a-simple-guide-to-keyword-extraction-in-python/

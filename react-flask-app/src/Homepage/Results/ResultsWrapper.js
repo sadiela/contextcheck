@@ -9,11 +9,20 @@ import RelatedArticles from './RelatedArticles';
 export default class ResultsWrapper extends Component {
     render() {
         if(this.props.is_populated && this.props.input_type === 'plaintext'){
+            let bias = '';
+            let variant = '';
+            let score = Math.round(this.props.results.article_score * 100) / 100;
+            if (score >= 7){bias = 'is probably biased'; variant='danger'}
+            else if (score >=5){bias = 'could be biased'; variant='warning'}
+            else if (score >= 3){bias = 'could be unbiased'; variant='primary'}
+            else {bias = 'is probably unbiased'; variant='success'}
             return(
                     <div className='result-wrapper'>
                         <BiasIndicator 
-                            bias_score={Math.round(this.props.results.article_score * 100) / 100}
+                            bias_score={score}//{Math.round(this.props.results.article_score * 100) / 100}
                             runtime={this.props.results.runtime.slice(0,5)}
+                            end_sentence={bias}
+                            variant={variant}
                         />
                         <h3><strong>Sentences</strong></h3>
                         <h6>Words in red may be biased, hover over them to see why.</h6>

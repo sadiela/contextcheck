@@ -49,7 +49,7 @@ def cnnScrape(url): #run time ~.3 seconds
 		date = "NOT FOUND"
  
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
-	return json.dumps(data)
+	return data
 
 def foxScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -120,7 +120,7 @@ def huffScrape(url):
 		date = "NOT FOUND"
 	sourceType = article_H.cssselect('meta[property="article:section"]')[0].get('content')
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
-	return json.dumps(data)
+	return data
 
 def nypScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -158,7 +158,7 @@ def nypScrape(url):
         #do nothing
  
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
-	return json.dumps(data)
+	return data
 
 def genScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -197,4 +197,4 @@ def genScrape(url):
 		sourceType = "Not found"
     
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
-	return json.dumps(data)
+	return data
