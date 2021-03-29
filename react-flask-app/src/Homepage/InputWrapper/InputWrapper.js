@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import StepZero from './IOSwitch';
-import StepOne from './Input';
+import StepZero from './StepZero';
+import StepOne from './StepOne';
 import Spinner from 'react-bootstrap/Spinner';
 
 export default class IOWrapper extends Component {

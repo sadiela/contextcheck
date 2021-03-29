@@ -2,6 +2,17 @@ import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 
 export default class Related extends Component {
+    getTableBody() {
+        return this.props.related.map(related_obj => {
+            // If not empty return this, else return empty
+            return(
+                <tr>
+                    <td>Article Source Goes Here</td>
+                    <td>Related Article Link Goes Here (with title)</td>
+                </tr>
+            )
+        })
+    }
     render() {
         return(
             <Table striped bordered hover>

@@ -31,12 +31,6 @@ export default class Input extends Component {
     handleBack(){
         this.props.ValToType();
     }
-    sleep(miliseconds) {
-        var currentTime = new Date().getTime();
-     
-        while (currentTime + miliseconds >= new Date().getTime()) {
-        }
-     }
     handleSubmit() {
         const input = this.state.input;
         if(this.state.input_type === 'url'){ 

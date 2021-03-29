@@ -12,14 +12,14 @@ export default class ResultsWrapper extends Component {
             let bias = '';
             let variant = '';
             let score = Math.round(this.props.results.article_score * 100) / 100;
-            if (score >= 7){bias = 'is probably biased'; variant='danger'}
-            else if (score >=5){bias = 'could be biased'; variant='warning'}
-            else if (score >= 3){bias = 'could be unbiased'; variant='primary'}
-            else {bias = 'is probably unbiased'; variant='success'}
+            if (score >= 6.5){bias = 'contains a large amount of biased language'; variant='danger'}
+            else if (score >=5){bias = 'contains fair amount of biased language'; variant='warning'}
+            else if (score >= 3.5){bias = 'contains some biased language'; variant='primary'}
+            else {bias = 'contains very little to no biased language'; variant='success'}
             return(
                     <div className='result-wrapper'>
                         <BiasIndicator 
-                            bias_score={score}//{Math.round(this.props.results.article_score * 100) / 100}
+                            bias_score={score}
                             runtime={this.props.results.runtime.slice(0,5)}
                             end_sentence={bias}
                             variant={variant}
@@ -36,10 +36,10 @@ export default class ResultsWrapper extends Component {
             const score = Math.round(this.props.results.bias_results.article_score * 100) / 100;
             let bias = '';
             let variant = '';
-            if (score >= 7){bias = 'is probably biased'; variant='danger'}
-            else if (score >=5){bias = 'could be biased'; variant='warning'}
-            else if (score >= 3){bias = 'could be unbiased'; variant='primary'}
-            else {bias = 'is probably unbiased'; variant='success'}
+            if (score >= 6.5){bias = 'contains a large amount of biased language'; variant='danger'}
+            else if (score >=5){bias = 'contains fair amount of biased language'; variant='warning'}
+            else if (score >= 3.5){bias = 'contains some biased language'; variant='primary'}
+            else {bias = 'contains very little to no biased language'; variant='success'}
             return(
                 <div className='result-wrapper'>
                     <h1 className='results-header'>Analyze Results</h1>
