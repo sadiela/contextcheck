@@ -116,22 +116,35 @@ def read_lexicon(self, fp):
 def word_type():
     data = request.data
     word = data.decode('utf-8')
+    
+    DATA_DIRECTORY = '../../ML/data/'
+    LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
 
     lexicons = {
-            'assertives': read_lexicon(lexicon_path + 'assertives_hooper1975.txt'),
-            'entailed_arg': read_lexicon(lexicon_path + 'entailed_arg_berant2012.txt'),
-            'entailed': read_lexicon(lexicon_path + 'entailed_berant2012.txt'), 
-            'entailing_arg': read_lexicon(lexicon_path + 'entailing_arg_berant2012.txt'), 
-            'entailing': read_lexicon(lexicon_path + 'entailing_berant2012.txt'), 
-            'factives': read_lexicon(lexicon_path + 'factives_hooper1975.txt'),
-            'hedges': read_lexicon(lexicon_path + 'hedges_hyland2005.txt'),
-            'implicatives': read_lexicon(lexicon_path + 'implicatives_karttunen1971.txt'),
-            'negatives': read_lexicon(lexicon_path + 'negative_liu2005.txt'),
-            'positives': read_lexicon(lexicon_path + 'positive_liu2005.txt'),
-            'npov': read_lexicon(lexicon_path + 'npov_lexicon.txt'),
-            'reports': read_lexicon(lexicon_path + 'report_verbs.txt'),
-            'strong_subjectives': read_lexicon(lexicon_path + 'strong_subjectives_riloff2003.txt'),
-            'weak_subjectives': read_lexicon(lexicon_path + 'weak_subjectives_riloff2003.txt')
+            'assertives': read_lexicon(LEXICON_DIRECTORY + 'assertives_hooper1975.txt'),
+            'entailed_arg': read_lexicon(LEXICON_DIRECTORY + 'entailed_arg_berant2012.txt'),
+            'entailed': read_lexicon(LEXICON_DIRECTORY + 'entailed_berant2012.txt'), 
+            'entailing_arg': read_lexicon(LEXICON_DIRECTORY + 'entailing_arg_berant2012.txt'), 
+            'entailing': read_lexicon(LEXICON_DIRECTORY + 'entailing_berant2012.txt'), 
+            'factives': read_lexicon(LEXICON_DIRECTORY + 'factives_hooper1975.txt'),
+            'hedges': read_lexicon(LEXICON_DIRECTORY + 'hedges_hyland2005.txt'),
+            'implicatives': read_lexicon(LEXICON_DIRECTORY + 'implicatives_karttunen1971.txt'),
+            'negatives': read_lexicon(LEXICON_DIRECTORY + 'negative_liu2005.txt'),
+            'positives': read_lexicon(LEXICON_DIRECTORY + 'positive_liu2005.txt'),
+            'npov': read_lexicon(LEXICON_DIRECTORY + 'npov_lexicon.txt'),
+            'reports': read_lexicon(LEXICON_DIRECTORY + 'report_verbs.txt'),
+            'strong_subjectives': read_lexicon(LEXICON_DIRECTORY + 'strong_subjectives_riloff2003.txt'),
+            'weak_subjectives': read_lexicon(LEXICON_DIRECTORY + 'weak_subjectives_riloff2003.txt')
         }
-    # check against wordlists, return word type OR "NONE"
 
+    word_tags = []
+    for l in list(lexicons.keys()):
+        #print(lexicons[l], type(lexicons[l]))
+        # each lexicon is a set
+        if word in lexicons[l]:
+            word_tags.append(l)
+
+    if not word_tags:
+        word_tags.append("NONE")
+
+    return word_tags
