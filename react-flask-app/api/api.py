@@ -82,6 +82,11 @@ def api_post():
 
     results = analyze_sentences(var, start_time)
 
+    data_path = "/results_jsons/plaintext"
+    outdir = get_free_filename('plaintext_res', data_path, suffix='.json')
+    with open(outdir, 'w') as fp:
+        json.dump(res, fp)
+
     return results
 
 @app.route('/scrape', methods=['POST'])
@@ -116,8 +121,11 @@ def scrape_article():
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res['related'] = related_articles
 
-    data_path = "\results_jsons\urls"
-    
+    data_path = "/results_jsons/urls"
+    outdir = get_free_filename('article_res', data_path, suffix='.json')
+    with open(outdir, 'w') as fp:
+        json.dump(res, fp)
+
     return res
 
 def read_lexicon(fp):
