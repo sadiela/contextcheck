@@ -16,6 +16,7 @@ import RelatedArticles_five_calls #import getarticles
 from monkeylearn import MonkeyLearn
 import keyword_detection
 import tips
+from pathlib import Path
 
 
 app = Flask(__name__)
@@ -26,6 +27,20 @@ keyword_api = "d28b596641e1690c696909f66408b6d0ad53e5ca"
 '''m_client = MongoClient("mongodb://3.134.119.225")
 db = m_client.sentence_results
 collection = db.res'''
+
+def get_free_filename(stub, directory, suffix=''):
+    counter = 0
+    while True:
+        file_candidate = '{}/{}-{}{}'.format(
+            str(directory), stub, counter, suffix)
+        if Path(file_candidate).exists():
+            counter += 1
+        else:  # No match found
+            if suffix:
+                Path(file_candidate).touch()
+            else:
+                Path(file_candidate).mkdir()
+            return file_candidate
 
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
@@ -69,6 +84,11 @@ def api_post():
 
     results = analyze_sentences(var, start_time)
 
+    data_path = "./results_jsons/plaintext"
+    outdir = get_free_filename('plaintext_res', data_path, suffix='.json')
+    with open(outdir, 'w') as fp:
+        json.dump(res, fp)
+
     return results
 
 @app.route('/scrape', methods=['POST'])
@@ -102,6 +122,12 @@ def scrape_article():
     related_articles = RelatedArticles_five_calls.getarticles(" ".join(keywords))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res['related'] = related_articles
+
+    data_path = "./results_jsons/urls"
+    outdir = get_free_filename('article_res', data_path, suffix='.json')
+    with open(outdir, 'w') as fp:
+        json.dump(res, fp)
+
     return res
 
 def read_lexicon(fp):

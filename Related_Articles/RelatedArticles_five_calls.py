@@ -5,9 +5,8 @@ import requests
 
 
 def getarticles(inp):
-    #api_key='c1ff125522de4c749e615dca5cba6eb5'
-    api_key = 'b6a1f64d144b43c1bba5370b62d879e0'
-
+    api_key='b6a1f64d144b43c1bba5370b62d879e0'
+    # Init
     newsapi = NewsApiClient(api_key)
     
     pagesize = '50'
@@ -129,30 +128,43 @@ def getarticles(inp):
 
 
     #all urls being sorted from json files into political catagory arrays
-    for x in articles1['articles']:
-        middle.append({
-            x['title']: x['url']
-        })
-
-    for x in articles2['articles']:
-        sleft.append({
-            x['title']: x['url']
-        })
-
-    for x in articles3['articles']:
-        pleft.append({
-            x['title']: x['url']
-        })
-
-    for x in articles4['articles']:
-        pright.append({
-            x['title']: x['url']
-        })
-
-    for x in articles5['articles']:
-        sright.append({
-            x['title']: x['url']
-        })
+    
+    try:
+        for x in articles1['articles']:
+            middle.append({
+                x['title']: x['url']
+            })
+    except:
+        print(articles1)
+    
+    try:
+        for x in articles2['articles']:
+            sleft.append({
+                x['title']: x['url']
+            })
+    except:
+        print(articles1)
+    try:
+        for x in articles3['articles']:
+            pleft.append({
+                x['title']: x['url']
+            })
+    except:
+        print(articles1)
+    try:
+        for x in articles4['articles']:
+            pright.append({
+                x['title']: x['url']
+            })
+    except:
+        print(articles1)
+    try:
+        for x in articles5['articles']:
+            sright.append({
+                x['title']: x['url']
+            })
+    except:
+        print(articles1)
 
     # print(pleft)
     # print(sleft)
@@ -172,6 +184,9 @@ def getarticles(inp):
     if len(pright) > 1:
         pright.remove('')
 
+  
+
+
     pleft_sor =[]
     sleft_sor=[]
     middle_sor=[]
@@ -179,150 +194,139 @@ def getarticles(inp):
     pright_sor = []
     #print(pleft)
     
+    if pleft == ['']:
+        pleft_sor.append({
+            'Source': '',              
+            'URL': '',
+            'Headline': ''
+        })
+    else:
+        pl = {
+            jb: 'Jacobin',
+            ra: 'Raw Story',
+            pr: 'Progressive',
+            sl: 'Slate'
+        } 
+        for x in pleft:
+            for title, url in x.items():
+                for key, value in pl.items():
+                    if key in url:
+                        pleft_sor.append({
+                            'Source': value,              
+                            'URL': url,
+                            'Headline': title
+                        })
 
-    pl = {
-        jb: 'Jacobin',
-        ra: 'Raw Story',
-        pr: 'Progressive',
-        sl: 'Slate'
-    } 
-    for x in pleft:
-        for title, url in x.items():
-            for key, value in pl.items():
-                if key in url:
-                    pleft_sor.append({
-                        'Source': value,              
-                        'URL': url,
-                        'Headline': title
-                    })
+    if sleft == ['']:
+        sleft_sor.append({
+            'Source': '',              
+            'URL': '',
+            'Headline': ''
+        })
+    else: 
 
+        ps = {
+            cn: 'CNN',
+            nt: 'New York Times',
+            gu: 'The Gurdian',
+            ms: 'MSNBC',
+            al: 'The Atlantic',
+            vo: 'VOX',
+            wp: 'Washington Post',
+            hp: 'Huffington Post',
+            db: 'The Daily Beast'
+
+        } 
+        for x in sleft:
+            for title, url in x.items():
+                for key, value in ps.items():
+                    if key in url:
+                        sleft_sor.append({
+                            'Source': value,              
+                            'URL': url,
+                            'Headline': title
+                        })
+
+    if middle == ['']:
+        middle_sor.append({
+            'Source': '',              
+            'URL': '',
+            'Headline': ''
+        })
+    else: 
+        md = {
+            ap: 'Associated Press',
+            re: 'Reuters',
+            cb: 'CBC News',
+            ab: 'ABC News',
+            bl: 'Bloomburg',
+            ec: 'Economist',
+            fo: 'Forbes',
+            cc: 'CNBC',
+            hi: 'The Hill',
+            po: 'Politico'
+
+        } 
+
+        for x in middle:
+            for title, url in x.items():
+                for key, value in md.items():
+                    if key in url:
+                        middle_sor.append({
+                            'Source': value,              
+                            'URL': url,
+                            'Headline': title
+                        }) 
     
-
-    ps = {
-        cn: 'CNN',
-        nt: 'New York Times',
-        gu: 'The Gurdian',
-        ms: 'MSNBC',
-        al: 'The Atlantic',
-        vo: 'VOX',
-        wp: 'Washington Post',
-        hp: 'Huffington Post',
-        db: 'The Daily Beast'
-
-    } 
-    for x in sleft:
-        for title, url in x.items():
-            for key, value in ps.items():
-                if key in url:
-                    sleft_sor.append({
-                        'Source': value,              
-                        'URL': url,
-                        'Headline': title
-                    })
-
-
-    md = {
-        ap: 'Associated Press',
-        re: 'Reuters',
-        cb: 'CBC News',
-        ab: 'ABC News',
-        bl: 'Bloomburg',
-        ec: 'Economist',
-        fo: 'Forbes',
-        cc: 'CNBC',
-        hi: 'The Hill',
-        po: 'Politico'
-
-    } 
-
-    for x in middle:
-        for title, url in x.items():
-            for key, value in md.items():
-                if key in url:
-                    middle_sor.append({
-                        'Source': value,              
-                        'URL': url,
-                        'Headline': title
-                    }) 
-                           
+    if sright == ['']:
+        sright_sor.append({
+            'Source': '',              
+            'URL': '',
+            'Headline': ''
+        })
+    else:                        
         sr = {
         rs: 'Reason',
         np: 'New York Post',
         we: 'Washington Examiner',
         fb: 'Washington Free Beacon',
 
-    } 
-    for x in sright:
-        for title, url in x.items():
-            for key, value in sr.items():
-                if key in url:
-                    sright_sor.append({
-                        'Source': value,              
-                        'URL': url,
-                        'Headline': title
-                    }) 
+        } 
+        for x in sright:
+            for title, url in x.items():
+                for key, value in sr.items():
+                    if key in url:
+                        sright_sor.append({
+                            'Source': value,              
+                            'URL': url,
+                            'Headline': title
+                        }) 
                             
-
+    if pright == ['']:
+        pright_sor.append({
+            'Source': '',              
+            'URL': '',
+            'Headline': ''
+        })
+    else: 
         pr = {
-        dw: 'The Daily Wire',
-        fn: 'Fox News',
-        dc: 'The Daily Caller',
-        nr: 'National Review',
+            dw: 'The Daily Wire',
+            fn: 'Fox News',
+            dc: 'The Daily Caller',
+            nr: 'National Review',
 
 
-    } 
-    for x in pright:
-        for title, url in x.items():
-            for key, value in pr.items():
-                if key in url:
-                    pright_sor.append({
-                        'Source': value,              
-                        'URL': url,
-                        'Headline':title
-                    }) 
-                           
-
-
-    #     for name in pl_sname:
-    #         pleft_sor[]
-
-    # for z in pl_sname:
-    #     for y in pl_source:
-    #         for x in pleft:
-    #             if y in x:
-    #                 pleft_sor.append({
-    #                     'Source': z,              
-    #                     'URL': x,
-    #                 })
-
-
-    # pleft sor = [
-    #  {
-    #       Source: "Raw Story"              
-    #       URL: [
-                # "a url"
-    #       ],
-    #         Headline: ''
-    #     } 
-    # ]
-                
-
-
-    # }             
-    
-
-        #pleft_sor.append([jb,pleft)
-        #pleft_sor[0] = [jb, pleft[0]]
-        
-    """     for x in sleft:
-
-        for x in middle:
-
-    for x in sright:
-
-    for x in pright:
-        
-     """
+        } 
+        for x in pright:
+            for title, url in x.items():
+                for key, value in pr.items():
+                    if key in url:
+                        pright_sor.append({
+                            'Source': value,              
+                            'URL': url,
+                            'Headline':title
+                        }) 
+                            
 
      #random selection for each political catagory
     related.append(random.choice(pleft_sor))
@@ -331,9 +335,21 @@ def getarticles(inp):
     related.append(random.choice(sright_sor))
     related.append(random.choice(pright_sor))
 
+    """     for x in related:
+        if x == {'Source': '', 'URL': '', 'Headline': ''}:
+            x = random.choice(middle_sor)
+        if x == {'Source': '', 'URL': '', 'Headline': ''}:
+            x = random.choice(sleft_sor) 
+        if x == {'Source': '', 'URL': '', 'Headline': ''}:
+            x = random.choice(sright_sor)
+        if x == {'Source': '', 'URL': '', 'Headline': ''}:
+            x = random.choice(pright_sor)
+        if x == {'Source': '', 'URL': '', 'Headline': ''}:
+            x = random.choice(pleft_sor)  
+    """
     #returns array of articles, elements 0-4 is partisan left to partisan right respectively
     return related
 
-# for x in getarticles('Republicans Citizenship'):
-#       print (x)
+# for x in getarticles('how much wood could a woodchuck joe biden'):
+#        print (x)
 
