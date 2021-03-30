@@ -71,7 +71,7 @@ def foxScrape(url):
 	text = article.text
 	title = article.title
 	#scrub text-based advertisements
-	text = re.sub(r'[.,-_\']*[A-Z]+(?![a-z])[.,-_\']*',"", text)
+	text = re.sub(r'[.,-_\']*[A-Z][A-Z]+(?![a-z])[.,-_\']*',"", text)
  
 	#LXML for dates/author
 	author = article.authors
@@ -176,7 +176,7 @@ def genScrape(url):
 		article.parse()
 	except:
 		return "INVALID URL/ARTICLE (possibly unsupported)"
-		author = article.authors
+	author = article.authors
 	if len(author) == 0:
 		author = "NOT FOUND"
 	text = article.text
@@ -195,6 +195,28 @@ def genScrape(url):
 			sourceType = "Non-Opinion"
 	except:
 		sourceType = "Not found"
+
+	#specific article source types
+	try:
+		if "slate.com" in url:
+			sourceType = article_H.cssselect('meta[property="og:type"]')[0].get('content')
+		elif "reuters.com" in url:
+			sourceType = article_H.cssselect('meta[name="analyticsAttributes.contentChannel"]')[0].get('content')
+		else:
+			sourceType = article_H.cssselect('meta[property="article:section"]')[0].get('content')
+	except:
+		sourceType = "Not Found"
+			
     
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
 	return json.dumps(data)
+
+'''
+def main():
+	x = genScrape("https://www.theguardian.com/us-news/live/2021/mar/29/derek-chauvin-trial-george-floyd-minneapolis-joe-biden-coronavirus-live")
+	print(x)
+
+if __name__ == "__main__":
+	main()
+'''
+
