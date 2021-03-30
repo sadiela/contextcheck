@@ -22,19 +22,19 @@ export default function ExplainRankingModal() {
                         <p>Remember, these are just a tool to help you interpret your own understanding of the article's bias.</p>
                         <div className='explain-rank-wrap'>
                             <Alert variant='success'>Contains very little to no biased language</Alert>
-                            <p>This is our lowest ranking, meaning very few (if any) of the words in this article displayed bias in our algorithm</p>
+                            <p>Our algorithm found barely any biased language! This reporting seems pretty objective.</p>
                         </div>
                         <div className='explain-rank-wrap'>
                             <Alert variant='info'>Contains some biased language</Alert>
-                            <p>Some words displayed bias, but most seem to be okay.</p>
+                            <p>Our algorithm found some biased language. This reporting is probably objective, but look out for the highlighted words.</p>
                         </div>
                         <div className='explain-rank-wrap'>
                             <Alert variant='warning'>Contains fair amount of biased language</Alert>
-                            <p>Be careful here, a few sentences might be displaying bias. Review the red words to see more.</p>
+                            <p>Our algorithm found a fair amount of biased language. This reporting might not be objective. Review the red words to see more.</p>
                         </div>
                         <div className='explain-rank-wrap'>
                             <Alert variant='danger'>Contains a large amount of biased language</Alert>
-                            <p>Danger zone. This is our highest ranking. Make sure to review the red words. Also check the source tags (it may be an opinion piece)</p>
+                            <p>Danger zone. Our algorithm found highly biased words in many sentences. This reporting is probably not objective. Make sure to review the red words. Also check the source tags (it may be an opinion piece)</p>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
