@@ -26,6 +26,20 @@ keyword_api = "d28b596641e1690c696909f66408b6d0ad53e5ca"
 db = m_client.sentence_results
 collection = db.res'''
 
+def get_free_filename(stub, directory, suffix=''):
+    counter = 0
+    while True:
+        file_candidate = '{}/{}-{}{}'.format(
+            str(directory), stub, counter, suffix)
+        if Path(file_candidate).exists():
+            counter += 1
+        else:  # No match found
+            if suffix:
+                Path(file_candidate).touch()
+            else:
+                Path(file_candidate).mkdir()
+            return file_candidatej
+
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
     #nltk.download('punkt')
@@ -101,6 +115,9 @@ def scrape_article():
     related_articles = RelatedArticles_five_calls.getarticles(" ".join(keywords))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res['related'] = related_articles
+
+    data_path = "\results_jsons\urls"
+    
     return res
 
 def read_lexicon(fp):
