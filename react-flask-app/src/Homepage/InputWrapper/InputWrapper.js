@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import StepZero from './StepZero';
 import StepOne from './StepOne';
 import Spinner from 'react-bootstrap/Spinner';
+import axios from 'axios';
 
 export default class IOWrapper extends Component {
     constructor(props){
@@ -9,21 +10,41 @@ export default class IOWrapper extends Component {
         this.state={
             step: 0,
             input_type: '',
+            loader_word: '',
         }
         this.TypeToVal = this.TypeToVal.bind(this);
         this.ValToType = this.ValToType.bind(this);
         this.handleURLSubmit = this.handleURLSubmit.bind(this);
         this.handlePTSubmit = this.handlePTSubmit.bind(this);
+        
+        axios.get("/loaderwords")
+        .then(res => {
+            this.setState({loader_word: res.data})
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    getNewWord() {
+        axios.get("/loaderwords")
+        .then(res => {
+            this.setState({loader_word: res.data})
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
     handlePTSubmit = (text) => {
         // Passes to Homepage to make the axios call
         this.props.handlePTSubmit(text);
         this.setState({step: 0});
+        this.getNewWord();
     }
     handleURLSubmit = (url) => {
         // Passes to Homepage to make the axios call
         this.props.handleURLSubmit(url);
         this.setState({step: 0});
+        this.getNewWord();
     }
     TypeToVal = (type) => {
         // When the user hits the next button on the input type step
@@ -40,6 +61,7 @@ export default class IOWrapper extends Component {
             return(
                 <div className='input-step'>
                     <p style={{fontSize: '40px'}}><strong>Loading...</strong></p>
+                    <p>{this.state.loader_word}</p>
                     <Spinner animation="border" variant="info" />
                 </div>
             )
