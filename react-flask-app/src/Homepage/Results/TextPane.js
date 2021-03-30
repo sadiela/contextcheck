@@ -5,6 +5,11 @@ import whatPOS from './GetPOS';
 import axios from 'axios';
 
 export default class TextPane extends Component {
+    mapTypes = wordtypearray => {
+        return wordtypearray.map(item => {
+            return(<span>{item} </span>)
+        })
+    }
     /**
      * This takes in the sentence level results and returns the words
      * If the word scored over the threshold, it will be red
@@ -38,7 +43,7 @@ export default class TextPane extends Component {
                                         <Tooltip id={`tooltip-$word[0]`}>
                                             <p>Score: <strong>{score}</strong></p>
                                             <p>Part of Speech: <strong>{part_of_speech}</strong></p>
-                                            <p>Bias Type: <strong>{wordtype}</strong></p>
+                                            <p>Bias Type: <strong>{this.mapTypes(wordtype)}</strong></p>
                                         </Tooltip>
                                     }                        
                                 >
