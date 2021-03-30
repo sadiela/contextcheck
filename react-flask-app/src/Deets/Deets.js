@@ -4,7 +4,15 @@ import Header from '../Homepage/Header/HomeButtonRow';
 export default class Deets extends Component {
     render() {
         return(
-            <Header />
+            <>
+                <Header />
+                <span className='full-deets-wrapper'>
+                    <h1 className='the-question'>
+                    </h1>
+                    <span className='the-answer-body'>
+                    </span>
+                </span>
+            </>
         )
     }
 }
