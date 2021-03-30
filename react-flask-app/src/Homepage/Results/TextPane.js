@@ -43,7 +43,7 @@ export default class TextPane extends Component {
                                         <Tooltip id={`tooltip-$word[0]`}>
                                             <p>Score: <strong>{score}</strong></p>
                                             <p>Part of Speech: <strong>{part_of_speech}</strong></p>
-                                            <p>Bias Type: <strong>{this.mapTypes(wordtype)}</strong></p>
+                                            <p>Word Type: <strong>{this.mapTypes(wordtype)}</strong></p>
                                         </Tooltip>
                                     }                        
                                 >
