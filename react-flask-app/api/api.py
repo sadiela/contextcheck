@@ -116,7 +116,7 @@ def read_lexicon(fp):
 def word_type():
     data = request.data
     word = data.decode('utf-8')
-    
+
     DATA_DIRECTORY = '../../ML/data/'
     LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
 
