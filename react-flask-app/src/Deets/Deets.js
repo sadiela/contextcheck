@@ -137,7 +137,10 @@ export default class Deets extends Component {
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Assertives</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Verbs whose complement clauses assert a proposition; the asserting verb can imply different levels of certainty in the claim.</p>
+                                <p className='the-answer-list-paragraph'>Verbs whose complement clauses assert a proposition; the asserting verb can imply different levels of certainty in the claim.
+                                    <p><strong>Pointed out</strong> that it is disproved by... (more certainty)</p>
+                                    <p><strong>Said</strong> that it is disproved by... (less certainty)</p>
+                                </p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
@@ -149,13 +152,19 @@ export default class Deets extends Component {
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Factive verbs</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Verbs that presuppose the truth of their complement clause.</p>
+                                <p className='the-answer-list-paragraph'>Verbs that presuppose the truth of their complement clause.
+                                    <p>He <strong>realized</strong> ... (Factive)</p>
+                                    <p>His stand was that... (neutral)</p>
+                                </p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Hedges</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Used to reduce one’s commitment to the truth of a proposition.</p>
+                                <p className='the-answer-list-paragraph'>Used to reduce one’s commitment to the truth of a proposition.
+                                    <p>Will decrease...</p>
+                                    <p><strong>May</strong> decrease... (Hedge)</p>
+                                </p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
@@ -167,7 +176,10 @@ export default class Deets extends Component {
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Negatives / Positives</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Words with distinctly negative or positive emotional connotations.</p>
+                                <p className='the-answer-list-paragraph'>Words with distinctly negative or positive emotional connotations.
+                                    <p>Positive emotional words: excel, easy, thrive</p>
+                                    <p>Negative emotional words: terrible, bulky, absurd</p>
+                                </p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
@@ -179,13 +191,18 @@ export default class Deets extends Component {
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Reports</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>A verb belonging to a class of verbs conveying the action of speaking and used with both direct and reported speech.</p>
+                                <p className='the-answer-list-paragraph'>A verb belonging to a class of verbs conveying the action of speaking and used with both direct and reported speech.
+                                    <p>eg. alert, comment, maintain</p>
+                                </p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
                                     <h6 className='answer-list-title'>Strong / Weak Subjectives</h6>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Adjectives or adverbs that add (subjective) force to the meaning of a phrase or proposition.</p>
+                                <p className='the-answer-list-paragraph'>Adjectives or adverbs that add (subjective) force to the meaning of a phrase or proposition.
+                                    <p>... did the <strong>fantastic</strong> reproductions... (subjective intensifier)</p>
+                                    <p>... did the accurate reproductions...</p>
+                                </p>
                             </span>
                         </span>
                     </span>
