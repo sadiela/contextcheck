@@ -82,14 +82,14 @@ def api_post():
     #print(dictionary['myText'])
     var = dictionary['myText'] #.lower()
 
-    results = analyze_sentences(var, start_time)
+    res = analyze_sentences(var, start_time)
 
     data_path = "./results_jsons/plaintext"
     outdir = get_free_filename('plaintext_res', data_path, suffix='.json')
     with open(outdir, 'w') as fp:
         json.dump(res, fp)
 
-    return results
+    return res
 
 @app.route('/scrape', methods=['POST'])
 def scrape_article():
@@ -143,6 +143,8 @@ def read_lexicon(fp):
 def word_type():
     data = request.data
     word = data.decode('utf-8')
+    word = json.loads(word)
+    print(type(word))
 
     DATA_DIRECTORY = '../../ML/data/'
     LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
@@ -168,12 +170,13 @@ def word_type():
     for l in list(lexicons.keys()):
         #print(lexicons[l], type(lexicons[l]))
         # each lexicon is a set
-        if word in lexicons[l]:
+        if word['theword'] in lexicons[l]:
             word_tags.append(l)
 
     if not word_tags:
         word_tags.append("NONE")
-    return word_tags[0]
+    print(word_tags)
+    return word_tags
 
 @app.route('/loaderwords', methods=['GET'])
 def get_word():
