@@ -104,8 +104,7 @@
 .sentence-list-wrapper {
   border-top: 1px solid black;
   width: 80vw;
-  margin: auto;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .sentence-word-wrapper {
@@ -115,8 +114,7 @@
 .word-level {
   width: auto;
   margin: auto;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding: 3px;
 }
 
 .meta-wrapper {

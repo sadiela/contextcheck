@@ -6,13 +6,15 @@ export default class Related extends Component {
         return this.props.related.map(related_obj => {
             if(related_obj.Headline !== ""){
                 return(
-                    <tr>
+                    <tr key={related_obj.Source}>
                         <td>{related_obj.Source}</td>
-                        <td><a href={related_obj.URL} target="_blank">{related_obj.Headline}</a></td>
+                        <td><a rel="noreferrer" href={related_obj.URL} target="_blank">{related_obj.Headline}</a></td>
                     </tr>
                 )
+            } else {
+                return(<></>)
             }
-        })
+        });
     }
     render() {
         return(
