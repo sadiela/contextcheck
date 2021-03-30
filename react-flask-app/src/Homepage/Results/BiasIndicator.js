@@ -30,7 +30,7 @@ export default class BiasIndicator extends Component {
             >
                 <div className='we-think'>
                     <h3>ContextCheck thinks this article <Badge variant={this.props.variant}>{this.props.end_sentence}</Badge></h3>
-                    <h4>Runtime: <Badge variant="secondary">{this.props.runtime} seconds</Badge></h4>
+                    <h4>Runtime: {this.props.runtime} seconds</h4>
                     <ExplainRankingModal />
                 </div>
             </OverlayTrigger>

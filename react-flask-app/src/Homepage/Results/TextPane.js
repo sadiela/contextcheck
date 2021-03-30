@@ -80,7 +80,7 @@ export default class TextPane extends Component {
             this.props.text.map(sentence => {
                 return(
                     <div className='sentence-list-wrapper'>
-                        <ul className='sentences-list'>{this.getSentences(sentence)}</ul>
+                        {this.getSentences(sentence)}
                     </div>
                 )
             })
