@@ -5,11 +5,6 @@ import whatPOS from './GetPOS';
 import axios from 'axios';
 
 export default class TextPane extends Component {
-    mapTypes = wordtypearray => {
-        return wordtypearray.map(item => {
-            return(<span>{item} </span>)
-        })
-    }
     /**
      * This takes in the sentence level results and returns the words
      * If the word scored over the threshold, it will be red
@@ -21,20 +16,11 @@ export default class TextPane extends Component {
     getWords = (sentence) => {
         return(
             sentence.words.map(word => {
-                let wordtype = "NONE";
                 const score = Math.round(word[1] * 100) / 100;
                 const threshold = parseFloat(this.props.threshold);
-                const theword = word[0];
                 if(word[1] > threshold){
                     const part_of_speech = whatPOS(word[2]);
-                    axios.post("/type", {theword}) // The axios call to see if the word has a bias type associated with it
-                        .then(res => {
-                            wordtype = res.data;
-                            console.log(wordtype);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    
                         return (
                                 <OverlayTrigger
                                     key={word}
@@ -43,7 +29,7 @@ export default class TextPane extends Component {
                                         <Tooltip id={`tooltip-$word[0]`}>
                                             <p>Score: <strong>{score}</strong></p>
                                             <p>Part of Speech: <strong>{part_of_speech}</strong></p>
-                                            <p>Word Type: <strong>{this.mapTypes(wordtype)}</strong></p>
+                                            <p>Word Type: <strong>{word[3]}</strong></p>
                                         </Tooltip>
                                     }                        
                                 >

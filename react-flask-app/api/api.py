@@ -130,54 +130,6 @@ def scrape_article():
 
     return res
 
-def read_lexicon(fp):
-        # returns word list as a set
-        out = set([
-            l.strip() for l in open(fp, errors='ignore') 
-            if not l.startswith('#') and not l.startswith(';')
-            and len(l.strip().split()) == 1
-        ])
-        return out
-
-@app.route('/type', methods=['POST'])
-def word_type():
-    data = request.data
-    word = data.decode('utf-8')
-    word = json.loads(word)
-    print(type(word))
-
-    DATA_DIRECTORY = '../../ML/data/'
-    LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
-
-    lexicons = {
-            'assertives': read_lexicon(LEXICON_DIRECTORY + 'assertives_hooper1975.txt'),
-            'entailed_arg': read_lexicon(LEXICON_DIRECTORY + 'entailed_arg_berant2012.txt'),
-            'entailed': read_lexicon(LEXICON_DIRECTORY + 'entailed_berant2012.txt'), 
-            'entailing_arg': read_lexicon(LEXICON_DIRECTORY + 'entailing_arg_berant2012.txt'), 
-            'entailing': read_lexicon(LEXICON_DIRECTORY + 'entailing_berant2012.txt'), 
-            'factives': read_lexicon(LEXICON_DIRECTORY + 'factives_hooper1975.txt'),
-            'hedges': read_lexicon(LEXICON_DIRECTORY + 'hedges_hyland2005.txt'),
-            'implicatives': read_lexicon(LEXICON_DIRECTORY + 'implicatives_karttunen1971.txt'),
-            'negatives': read_lexicon(LEXICON_DIRECTORY + 'negative_liu2005.txt'),
-            'positives': read_lexicon(LEXICON_DIRECTORY + 'positive_liu2005.txt'),
-            'npov': read_lexicon(LEXICON_DIRECTORY + 'npov_lexicon.txt'),
-            'reports': read_lexicon(LEXICON_DIRECTORY + 'report_verbs.txt'),
-            'strong_subjectives': read_lexicon(LEXICON_DIRECTORY + 'strong_subjectives_riloff2003.txt'),
-            'weak_subjectives': read_lexicon(LEXICON_DIRECTORY + 'weak_subjectives_riloff2003.txt')
-        }
-
-    word_tags = []
-    for l in list(lexicons.keys()):
-        #print(lexicons[l], type(lexicons[l]))
-        # each lexicon is a set
-        if word['theword'] in lexicons[l]:
-            word_tags.append(l)
-
-    if not word_tags:
-        word_tags.append("NONE")
-    print(word_tags)
-    return word_tags
-
 @app.route('/loaderwords', methods=['GET'])
 def get_word():
     return tips.get_tips()

@@ -38,6 +38,55 @@ if CUDA:
     print("GPUS!")
     input()
 
+
+## UPDATE THESE!!!
+DATA_DIRECTORY = '../../ML/data/'
+LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
+cache_dir = DATA_DIRECTORY + 'cache/'
+model_save_dir = '../../ML/saved_models/'
+
+
+def read_lexicon(fp):
+        # returns word list as a set
+        out = set([
+            l.strip() for l in open(fp, errors='ignore') 
+            if not l.startswith('#') and not l.startswith(';')
+            and len(l.strip().split()) == 1
+        ])
+        return out
+
+def wordtype(word):
+    print(word)
+
+    lexicons = {
+            'assertives': read_lexicon(LEXICON_DIRECTORY + 'assertives_hooper1975.txt'),
+            'entailed_arg': read_lexicon(LEXICON_DIRECTORY + 'entailed_arg_berant2012.txt'),
+            'entailed': read_lexicon(LEXICON_DIRECTORY + 'entailed_berant2012.txt'), 
+            'entailing_arg': read_lexicon(LEXICON_DIRECTORY + 'entailing_arg_berant2012.txt'), 
+            'entailing': read_lexicon(LEXICON_DIRECTORY + 'entailing_berant2012.txt'), 
+            'factives': read_lexicon(LEXICON_DIRECTORY + 'factives_hooper1975.txt'),
+            'hedges': read_lexicon(LEXICON_DIRECTORY + 'hedges_hyland2005.txt'),
+            'implicatives': read_lexicon(LEXICON_DIRECTORY + 'implicatives_karttunen1971.txt'),
+            'negatives': read_lexicon(LEXICON_DIRECTORY + 'negative_liu2005.txt'),
+            'positives': read_lexicon(LEXICON_DIRECTORY + 'positive_liu2005.txt'),
+            'npov': read_lexicon(LEXICON_DIRECTORY + 'npov_lexicon.txt'),
+            'reports': read_lexicon(LEXICON_DIRECTORY + 'report_verbs.txt'),
+            'strong_subjectives': read_lexicon(LEXICON_DIRECTORY + 'strong_subjectives_riloff2003.txt'),
+            'weak_subjectives': read_lexicon(LEXICON_DIRECTORY + 'weak_subjectives_riloff2003.txt')
+        }
+
+    word_tags = []
+    for l in list(lexicons.keys()):
+        #print(lexicons[l], type(lexicons[l]))
+        # each lexicon is a set
+        if word in lexicons[l]:
+            word_tags.append(l)
+
+    if not word_tags:
+        word_tags.append("NONE")
+    print(word_tags)
+    return word_tags[0]
+
 #####################
 ### Softmax #############
 #####################
@@ -49,11 +98,7 @@ def softmax(x, axis=None):
 ##########################################################
 #### SET UP ID DICTIONARIES FOR WORDS, RELATIONS, POS ####
 ##########################################################
-## UPDATE THESE!!!
-DATA_DIRECTORY = '../../ML/data/'
-LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
-cache_dir = DATA_DIRECTORY + 'cache/'
-model_save_dir = '../../ML/saved_models/'
+
 
 RELATIONS = [
   'det', # determiner (the, a)
@@ -264,9 +309,10 @@ def output(sentences):
                 #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
                 outWordsScores[-1][1] = max(last_word_score[1], bias_score)
+                outWordsScores[-1][3] = wordtype(outWordsScores[-1][0])
                 # won't have to change/add POS!
             else:
-                outWordsScores.append([word, bias_score, cur_pos])
+                outWordsScores.append([word, bias_score, cur_pos, wordtype(word)])
         
         max_biased = outWordsScores[0]
 
