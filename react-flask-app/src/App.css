@@ -178,13 +178,11 @@
 .answer-list-wrapper {
   display: grid;
   grid-template-columns: 40% 60%;
-  border: 1px solid black;
   margin: 5px;
 }
 
 .answer-list {
-  list-style-type: upper-latin;
-  border-left: 1px solid black;
+  list-style-type: upper-roman;
   height: 100%;
   background-color: #D1ECF1;
 }
@@ -208,7 +206,6 @@
 }
 
 .the-answer-list-paragraph {
-  border-left: 1px solid black;
   height: 100%;
   background-color: #D1ECF1;
   padding: 5px;

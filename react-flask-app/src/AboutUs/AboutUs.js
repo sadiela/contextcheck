@@ -131,7 +131,7 @@ export default class AboutUs extends Component {
                                 <div className='title-wrapper'>
                                     <h4 className='answer-list-title'>Bayard Eton</h4>
                                 </div>
-                                <p className='the-answer-list-paragraph'>Bayard is majoring in computer engineering. He'll join the workforce after graduation, but he is planning to pursue an advanced degree in 2-3 years. He is a huge Boston sports fan, loves to meditate, and enjoys tossing a ball around with the boys on a warm summer’s eve.</p>
+                                <p className='the-answer-list-paragraph'>Bayard is majoring in computer engineering. He'll join the workforce as a software engineer after graduation, but he is planning to pursue an advanced degree in 2-3 years. He is a huge Boston sports fan, loves to meditate, and enjoys tossing a ball with the boys on a warm summer’s eve.</p>
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
