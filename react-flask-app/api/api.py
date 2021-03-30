@@ -80,24 +80,71 @@ def scrape_article():
     url = url['input_url']
     print("PARSING URL")
     res = newscraper.article_parse(url)
-    #print(res)
-    res_obj = json.loads(res) 
-    #print(res_obj)
+    if type(res) is not dict: 
+        print("NOT A DICTIONARY:", type(res))
+        res = json.loads(res) 
+
     # res.title, res.author, res.feedText, res.date, res.meta (?)
     print("DONE SCRAPING")
-    results = analyze_sentences(res_obj['feedText'], start_time)
-    res_obj['bias_results'] = results
+    results = analyze_sentences(res['feedText'], start_time)
+    res['bias_results'] = results
+    print("DATE:", res['date'])
 
     ####
     # function gets keywords from title, looks for frequent words in article itself??
-    separate_words = res_obj['title'].split(' ')
+    separate_words = res['title'].split(' ')
     ####
     #print(separate_words) # remove 'the', 'a', etc in the future
-    #filtered_separate_words = [i for i in separate_words if i != "the" and i != "a" and i != "in" and i != "to" and i != "his" and i != "her" and i != "and" and i != "on" and i != "with"]
     
-    keywords = keyword_detection.get_keywords(text)
+    keywords = keyword_detection.get_keywords(res['title'] + " " + res['feedText'])
+    print(keywords)
     related_articles = RelatedArticles_five_calls.getarticles(" ".join(keywords))
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
-    res_obj['related'] = related_articles
-    return res_obj
+    res['related'] = related_articles
+    return res
 
+def read_lexicon(fp):
+        # returns word list as a set
+        out = set([
+            l.strip() for l in open(fp, errors='ignore') 
+            if not l.startswith('#') and not l.startswith(';')
+            and len(l.strip().split()) == 1
+        ])
+        return out
+
+@app.route('/type', methods=['POST'])
+def word_type():
+    data = request.data
+    word = data.decode('utf-8')
+
+    DATA_DIRECTORY = '../../ML/data/'
+    LEXICON_DIRECTORY = DATA_DIRECTORY + 'lexicons/'
+
+    lexicons = {
+            'assertives': read_lexicon(LEXICON_DIRECTORY + 'assertives_hooper1975.txt'),
+            'entailed_arg': read_lexicon(LEXICON_DIRECTORY + 'entailed_arg_berant2012.txt'),
+            'entailed': read_lexicon(LEXICON_DIRECTORY + 'entailed_berant2012.txt'), 
+            'entailing_arg': read_lexicon(LEXICON_DIRECTORY + 'entailing_arg_berant2012.txt'), 
+            'entailing': read_lexicon(LEXICON_DIRECTORY + 'entailing_berant2012.txt'), 
+            'factives': read_lexicon(LEXICON_DIRECTORY + 'factives_hooper1975.txt'),
+            'hedges': read_lexicon(LEXICON_DIRECTORY + 'hedges_hyland2005.txt'),
+            'implicatives': read_lexicon(LEXICON_DIRECTORY + 'implicatives_karttunen1971.txt'),
+            'negatives': read_lexicon(LEXICON_DIRECTORY + 'negative_liu2005.txt'),
+            'positives': read_lexicon(LEXICON_DIRECTORY + 'positive_liu2005.txt'),
+            'npov': read_lexicon(LEXICON_DIRECTORY + 'npov_lexicon.txt'),
+            'reports': read_lexicon(LEXICON_DIRECTORY + 'report_verbs.txt'),
+            'strong_subjectives': read_lexicon(LEXICON_DIRECTORY + 'strong_subjectives_riloff2003.txt'),
+            'weak_subjectives': read_lexicon(LEXICON_DIRECTORY + 'weak_subjectives_riloff2003.txt')
+        }
+
+    word_tags = []
+    for l in list(lexicons.keys()):
+        #print(lexicons[l], type(lexicons[l]))
+        # each lexicon is a set
+        if word in lexicons[l]:
+            word_tags.append(l)
+
+    if not word_tags:
+        word_tags.append("NONE")
+
+    return word_tags

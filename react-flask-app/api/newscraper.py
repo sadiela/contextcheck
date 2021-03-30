@@ -25,7 +25,7 @@ def cnnScrape(url): #run time ~.3 seconds
 		if article_R.status_code != 200:
 			return "INVALID URL/ARTICLE (possibly unsupported)"
 		else:
-			article_H = lxml.html.fromstring(article_R.content)
+			cnnArticle = lxml.html.fromstring(article_R.content)
 	except:
 		print("Invalid URL or article.\nNote: Paywalled/subscriber articles will not work")
 		return "Error"
@@ -49,7 +49,7 @@ def cnnScrape(url): #run time ~.3 seconds
 		date = "NOT FOUND"
  
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
-	return json.dumps(data)
+	return data
 
 def foxScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -120,7 +120,7 @@ def huffScrape(url):
 		date = "NOT FOUND"
 	sourceType = article_H.cssselect('meta[property="article:section"]')[0].get('content')
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
-	return json.dumps(data)
+	return data
 
 def nypScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -158,7 +158,7 @@ def nypScrape(url):
         #do nothing
  
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType":sourceType}
-	return json.dumps(data)
+	return data
 
 def genScrape(url):
 	try: #requests can fail if URL is not correct, possibly unnecessary
@@ -209,14 +209,7 @@ def genScrape(url):
 			
     
 	data = {"title": title, "author": author, "feedText": text, "date": date, "sourceType": sourceType}
+
 	return json.dumps(data)
-
-'''
-def main():
-	x = genScrape("https://www.theguardian.com/us-news/live/2021/mar/29/derek-chauvin-trial-george-floyd-minneapolis-joe-biden-coronavirus-live")
-	print(x)
-
-if __name__ == "__main__":
-	main()
-'''
+	return data
 

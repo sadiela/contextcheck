@@ -2,7 +2,7 @@
 
 A web application that parses online articles/text and measures bias via a linguistic patterns based machine learning algorithm. 
 
-## How To Run
+## How To Run (still needs update)
 1) First clone the repo `git clone https://github.com/BostonUniversitySeniorDesign/21-22-newsbias.git`
 
 2) Then start the virtual environment `cd 21-22-newsbias/react-flask-app/ && pipenv shell`
@@ -30,6 +30,13 @@ All code related to the bias detection machine learning algorithm.
 ## react-flask-app
 
 Our web app prototype. Front-end UI is written in ReactJS and back-end that interacts with the ML model is written in Python3 and uses Flask. 
+
+### src
+
+src is broken into 3 main pages which are all routed by App.js: (**for more detailed documentation, refer to the README inside react-flask-app**)
+- **Homepage:** All components that appear on the bias-detecting page ("/") 
+- **Deets:** All components that appear on the deets page, which displays technical details about our application ("/deets")
+- **AboutUs:** All components that appear on the about us page ("/about-us")
 
 ## Documentation
 

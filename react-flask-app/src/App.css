@@ -1,13 +1,150 @@
 .App {
   text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App-header {
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
+.divider {
+  background-color: white;
+  margin: 0px;
+}
+
+.error {
+  color: red;
+}
+
+.how-to-use-steps {
+  display: grid;
+  grid-template-columns: 33vw 33vw 33vw;
+  margin: auto;
+  background-color: #343A40;
+}
+
+.card-how-to {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: whitesmoke;
+  border: 3px solid #D1ECF1;
+  border-radius: 12px;
+  width: 80%;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  margin: auto;
+  margin-top: 10px;
+  height: 80%;
+}
+
+.step-title {
+  color: #0D5460;
+}
+
+.input-step {
+  width: 80vw;
+  margin: auto;
+  margin-top: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.radio-group {
+  display: grid;
+  grid-template-rows: auto auto auto;
+}
+
+.radio-label {
+  font-size: 20px;
+  margin-left: 10px;
+  text-align: right;
+}
+
+.next-button {
+  border: 1px solid rgb(0, 121, 0);
+  background-color: rgb(0, 121, 0);
+  color: white;
+  border-radius: 20px;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.next-button:hover {
+  background-color: white;
+  color: rgb(0, 121, 0);
+}
+
+.back-button {
+  border: 1px solid rgb(121, 0, 0);
+  color: rgb(121, 0, 0);
+  background-color: white;
+  border-radius: 20px;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.back-button:hover {
+  color: white;
+  background-color: rgb(121, 0, 0);
+}
+
+.input-button-row {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 5px;
+}
+
+.sentences-list {
+  list-style-type: none;
+  text-align: left;
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.sentence-list-wrapper {
+  border-top: 1px solid black;
+  width: 80vw;
+  margin: auto;
+  overflow-wrap: break-word;
+}
+
+.sentence-word-wrapper {
+  overflow:scroll;
+}
+
+.word-level {
+  width: auto;
+  margin: auto;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.meta-wrapper {
+  width: 80vw;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.result-wrapper {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 80vw;
+  margin: auto;
+}
+
+.we-think {
+  background-color: #D1ECF1;
+  padding: 10px;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 5px;
+  border: 1px solid #343A40;
+}
+
+.results-header {
+  font-weight: bold;
+}
+
+.supported-dropdown {
+  margin-top: 5px;
 }

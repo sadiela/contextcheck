@@ -13,6 +13,8 @@ python-dotenv = "*"
 newsapi = "*"
 newspaper3k = "*"
 newsapi-python = "*"
+spacy = "*"
+monkeylearn = "*"
 
 [dev-packages]
 
