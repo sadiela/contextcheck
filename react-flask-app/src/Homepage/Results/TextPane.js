@@ -30,8 +30,7 @@ export default class TextPane extends Component {
                         .catch(err => {
                             console.log(err);
                         });
-                        if (wordtype !== "NONE"){ // Case for when word scored higher than threshold and bias type found
-                            return (
+                        return (
                                 <OverlayTrigger
                                     key={word}
                                     placement='top'
@@ -46,22 +45,6 @@ export default class TextPane extends Component {
                                 <span style={{color: 'red'}} className='word-level'>{word[0]}</span>
                                 </OverlayTrigger>
                             )
-                        } else { // Case for when the word scored higher than threshold, but no bias type was found
-                            return (
-                                <OverlayTrigger
-                                    key={word}
-                                    placement='top'
-                                    overlay={
-                                        <Tooltip id={`tooltip-$word[0]`}>
-                                            <p>Score: <strong>{score}</strong></p>
-                                            <p>Part of Speech: <strong>{part_of_speech}</strong></p>
-                                        </Tooltip>
-                                    }                        
-                                >
-                                <span style={{color: 'red'}} className='word-level'>{word[0]}</span>
-                                </OverlayTrigger>
-                            )
-                        }
                 } else { // Case for when the word did not score higher than the threshold
                     return (
                         <span className='word-level'>{word[0]}</span>
