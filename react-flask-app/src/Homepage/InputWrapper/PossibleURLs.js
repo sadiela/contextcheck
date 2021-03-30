@@ -16,12 +16,12 @@ export default function isItSupported(url){
     // const isSupported = SUPPORTED_URLS.some(supported => {
     //     url.includes(supported);
     // });
-    var isiturl = true;
+    var isurl = true
     try {
-        const isurl = new URL(url);
-        isiturl = true;
+        isurl = new URL(url);
+        isurl = true;
     } catch (_) {
-        isiturl = false;
+        isurl = false;
     }
-    return (isiturl);
+    return (isurl);
 }

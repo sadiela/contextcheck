@@ -2,6 +2,20 @@ import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 
 export default class Related extends Component {
+    getTableBody() {
+        return this.props.related.map(related_obj => {
+            if(related_obj.Headline !== ""){
+                return(
+                    <tr key={related_obj.Source}>
+                        <td>{related_obj.Source}</td>
+                        <td><a rel="noreferrer" href={related_obj.URL} target="_blank">{related_obj.Headline}</a></td>
+                    </tr>
+                )
+            } else {
+                return(<></>)
+            }
+        });
+    }
     render() {
         return(
             <Table striped bordered hover>
@@ -12,26 +26,7 @@ export default class Related extends Component {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Article Source</td>
-                    <td><a href={this.props.related[0]}>Link</a></td>
-                </tr>
-                <tr>
-                    <td>Article Source</td>
-                    <td><a href={this.props.related[0]}>Link</a></td>
-                </tr>
-                <tr>
-                    <td>Article Source</td>
-                    <td><a href={this.props.related[0]}>Link</a></td>
-                </tr>
-                <tr>
-                    <td>Article Source</td>
-                    <td><a href={this.props.related[0]}>Link</a></td>
-                </tr>
-                <tr>
-                    <td>Article Source</td>
-                    <td><a href={this.props.related[0]}>Link</a></td>
-                </tr>
+                {this.getTableBody()}
             </tbody>
         </Table>
         )

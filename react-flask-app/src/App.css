@@ -104,19 +104,14 @@
 .sentence-list-wrapper {
   border-top: 1px solid black;
   width: 80vw;
-  margin: auto;
-  overflow-wrap: break-word;
-}
-
-.sentence-word-wrapper {
-  overflow:scroll;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
 }
 
 .word-level {
-  width: auto;
-  margin: auto;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding: 3px;
+  display: inline-block;
 }
 
 .meta-wrapper {
@@ -147,4 +142,8 @@
 
 .supported-dropdown {
   margin-top: 5px;
+}
+
+.explain-rank-wrap {
+  border: 1px solid black;
 }

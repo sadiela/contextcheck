@@ -15,6 +15,7 @@ import nltk.data
 import RelatedArticles_five_calls #import getarticles
 from monkeylearn import MonkeyLearn
 import keyword_detection
+import tips
 
 
 app = Flask(__name__)
@@ -171,5 +172,8 @@ def word_type():
 
     if not word_tags:
         word_tags.append("NONE")
+    return word_tags[0]
 
-    return word_tags
+@app.route('/loaderwords', methods=['GET'])
+def get_word():
+    return tips.get_tips()

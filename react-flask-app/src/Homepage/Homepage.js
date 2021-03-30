@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from './Header/HeaderWrapper';
-import IOWrapper from './IOWrap/IOWrapper';
+import InputWrapper from './InputWrapper/InputWrapper';
 import Results from './Results/ResultsWrapper';
 import axios from 'axios';
 
@@ -8,8 +8,8 @@ export default class Homepage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            loading: false,
-            output: {
+            loading: false, // To render the loading indicator
+            output: { // The output object that is returned from backend server
                 author: [],
                 bias_results: {},
                 date: "",
@@ -17,13 +17,21 @@ export default class Homepage extends Component {
                 related: {},
                 title: ""
             },
-            results: false,
-            input_type: '',
+            results: false, // Whether or not results have been fetched
+            input_type: '', 
             error: '',
         }
         this.handlePTSubmit = this.handlePTSubmit.bind(this);
         this.handleURLSubmit = this.handleURLSubmit.bind(this);
     }
+    /**
+     * This method handles the plaintext submit
+     * It makes a POST request using the inputted text as the request body
+     * It catches errors and handles the loading indicator
+     * On success, it sets the state of output to be the output from the flask script
+     * 
+     * @param {String} myText 
+     */
     handlePTSubmit = (myText) => {
         this.setState({
             input_type: 'plaintext',
@@ -43,6 +51,14 @@ export default class Homepage extends Component {
                 this.setState({ loading: false })
             });
     }
+    /**
+     * This method handles the url submit
+     * It makes a POST request using the inputted url as the request body
+     * It catches errors and handles the loading indicator
+     * On success, it sets the state of output to be the output from the flask script
+     * 
+     * @param {String} input_url 
+     */
     handleURLSubmit = (input_url) => {
         this.setState({
             input_type: 'url',
@@ -66,7 +82,7 @@ export default class Homepage extends Component {
         return (
             <div>
                 <Header />
-                <IOWrapper 
+                <InputWrapper 
                     handleURLSubmit={this.handleURLSubmit}
                     handlePTSubmit={this.handlePTSubmit}
                     loading={this.state.loading}

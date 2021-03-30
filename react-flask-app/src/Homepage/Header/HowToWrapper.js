@@ -15,7 +15,7 @@ export default class HowToWrapper extends Component {
                 />
                 <HowToCard 
                     subtitle="3: Think"
-                    body="Use ContextCheck as a tool for you to discover your own bias-interpretation. Check the Learn More section!"
+                    body="Use ContextCheck as a tool for you to discover your own bias-interpretation. Check The Deets / About Us to learn more!"
                 />
             </span>
         )
