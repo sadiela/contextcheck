@@ -19,7 +19,7 @@ def check_sent(word, sentences):
     return int(len(sent_len))
 
 def get_keywords(body_text):
-    nltk.download('stopwords')
+    #nltk.download('stopwords')
     # read an article 
     #print(res)
 
