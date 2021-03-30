@@ -16,6 +16,7 @@ import RelatedArticles_five_calls #import getarticles
 from monkeylearn import MonkeyLearn
 import keyword_detection
 import tips
+from pathlib import Path
 
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ def get_free_filename(stub, directory, suffix=''):
                 Path(file_candidate).touch()
             else:
                 Path(file_candidate).mkdir()
-            return file_candidatej
+            return file_candidate
 
 def analyze_sentences(text, start_time):
     # Split into multiple sentences here
@@ -83,7 +84,7 @@ def api_post():
 
     results = analyze_sentences(var, start_time)
 
-    data_path = "/results_jsons/plaintext"
+    data_path = "./results_jsons/plaintext"
     outdir = get_free_filename('plaintext_res', data_path, suffix='.json')
     with open(outdir, 'w') as fp:
         json.dump(res, fp)
@@ -122,7 +123,7 @@ def scrape_article():
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res['related'] = related_articles
 
-    data_path = "/results_jsons/urls"
+    data_path = "./results_jsons/urls"
     outdir = get_free_filename('article_res', data_path, suffix='.json')
     with open(outdir, 'w') as fp:
         json.dump(res, fp)
