@@ -5,7 +5,8 @@ import requests
 
 
 def getarticles(inp):
-    api_key='b6a1f64d144b43c1bba5370b62d879e0'
+    #api_key='b6a1f64d144b43c1bba5370b62d879e0'
+    api_key='c1ff125522de4c749e615dca5cba6eb5'
     # Init
     newsapi = NewsApiClient(api_key)
     

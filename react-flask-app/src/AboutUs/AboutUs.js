@@ -38,7 +38,7 @@ export default class AboutUs extends Component {
                             </span>
                             <span className='answer-list-wrapper'>
                                 <div className='title-wrapper'>
-                                    <h4 className='answer-list-title'>Aticle Level</h4>
+                                    <h4 className='answer-list-title'>Article Level</h4>
                                 </div>
                                 <ul className='answer-list'>
                                     <li className='answer-list-item'>What is the title of the article? Is it misleading? </li>

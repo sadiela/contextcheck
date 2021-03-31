@@ -309,10 +309,14 @@ def output(sentences):
                 #print(last_word_score, word, score)
                 outWordsScores[-1][0] = last_word_score[0] + word[2:]
                 outWordsScores[-1][1] = max(last_word_score[1], bias_score)
-                outWordsScores[-1][3] = wordtype(outWordsScores[-1][0])
+                if outWordsScores[-1][1] > 4:
+                    outWordsScores[-1][3] = wordtype(outWordsScores[-1][0])
                 # won't have to change/add POS!
             else:
-                outWordsScores.append([word, bias_score, cur_pos, wordtype(word)])
+                if bias_score > 4:
+                    outWordsScores.append([word, bias_score, cur_pos, wordtype(word)])
+                else:
+                    outWordsScores.append([word, bias_score, cur_pos, "NONE"])
         
         max_biased = outWordsScores[0]
 
