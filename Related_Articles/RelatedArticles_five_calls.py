@@ -4,18 +4,20 @@ import random
 import requests
 
 
-def getarticles(inp):
-    #api_key='b6a1f64d144b43c1bba5370b62d879e0'
-    api_key='c1ff125522de4c749e615dca5cba6eb5'
+def getarticles(inp, orig_url):
+    api_key='b6a1f64d144b43c1bba5370b62d879e0'
+    #api_key='c1ff125522de4c749e615dca5cba6eb5'
     # Init
     newsapi = NewsApiClient(api_key)
+
+    keyword_str = " ".join(inp[1:]) # REMEMBER TO CHANGE!
     
     pagesize = '50'
     sort='relavency'
 
     #centerist source call
     url1 = ('http://newsapi.org/v2/everything?'
-        f'q={inp}&'
+        f'q={keyword_str}&'
         f'sortBy={sort}&'
         'sources=associated-press&'
         'domains= reuters.com,cbsnews.com,abcnews.go.com,bloomburg.com,cnbc.com,thehill.com,politico.com$'
@@ -28,7 +30,7 @@ def getarticles(inp):
 
     #skew left source call
     url2 = ('http://newsapi.org/v2/everything?'
-        f'q={inp}&'
+        f'q={keyword_str}&'
         f'sortBy={sort}&'
         'sources=cnn&'
         'domains= nytimes.com,theguardian.com,msnbc.com,theatlantic.com,vox.com,washingtonpost.com,huffpost.com,thedailybeast.com&'
@@ -41,7 +43,7 @@ def getarticles(inp):
 
     #partisan left source call
     url3 = ('http://newsapi.org/v2/everything?'
-        f'q={inp}&'
+        f'q={keyword_str}&'
         f'sortBy={sort}&'
         'domains= slate.com,jacobinmag.com,rawstory.com,progressive.org&'
         f'pageSize={pagesize}&'
@@ -53,7 +55,7 @@ def getarticles(inp):
 
     #partisan right source call
     url4 = ('http://newsapi.org/v2/everything?'
-        f'q={inp}&'
+        f'q={keyword_str}&'
         f'sortBy={sort}&'
         'sources=fox-news&'
         'domains= dailywire.com,dailycaller.com,nationalreview.com&'
@@ -66,7 +68,7 @@ def getarticles(inp):
 
     #skew right source call
     url5 = ('http://newsapi.org/v2/everything?'
-        f'q={inp}&'
+        f'q={keyword_str}&'
         f'sortBy={sort}&'
         'domains= reason.com,nypost.com,washingtonexaminer.com,freebeacon.com &'
         f'pageSize={pagesize}&'
@@ -132,38 +134,41 @@ def getarticles(inp):
     
     try:
         for x in articles1['articles']:
-            middle.append({
-                x['title']: x['url']
-            })
+            if x['url'] != orig_url: 
+                middle.append({x['title']: x['url']})
     except:
         print(articles1)
     
     try:
         for x in articles2['articles']:
-            sleft.append({
-                x['title']: x['url']
-            })
+            if x['url'] != orig_url: 
+                sleft.append({
+                    x['title']: x['url']
+                })
     except:
         print(articles1)
     try:
         for x in articles3['articles']:
-            pleft.append({
-                x['title']: x['url']
-            })
+            if x['url'] != orig_url: 
+                pleft.append({
+                    x['title']: x['url']
+                })
     except:
         print(articles1)
     try:
         for x in articles4['articles']:
-            pright.append({
-                x['title']: x['url']
-            })
+            if x['url'] != orig_url:
+                pright.append({
+                    x['title']: x['url']
+                })
     except:
         print(articles1)
     try:
         for x in articles5['articles']:
-            sright.append({
-                x['title']: x['url']
-            })
+            if x['url'] != orig_url:
+                sright.append({
+                    x['title']: x['url']
+                })
     except:
         print(articles1)
 

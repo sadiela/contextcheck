@@ -119,7 +119,7 @@ def scrape_article():
     
     keywords = keyword_detection.get_keywords(res['title'] + " " + res['feedText'])
     print(keywords)
-    related_articles = RelatedArticles_five_calls.getarticles(" ".join(keywords))
+    related_articles = RelatedArticles_five_calls.getarticles(keywords, url)
     # Call function # return dictionary of {"left":url1, "left-leaning":url2 etc.}
     res['related'] = related_articles
 

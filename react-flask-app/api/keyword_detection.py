@@ -25,6 +25,7 @@ def get_keywords(body_text):
 
     stop_words = set(stopwords.words('english'))
 
+    body_text = body_text.lower()
     total_words = body_text.split()
     total_word_length = len(total_words)
 

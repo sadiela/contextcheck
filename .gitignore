@@ -9,3 +9,4 @@ pickle_dir/
 /ML/.DS_Store
 __pycache__/
 /react-flask-app/api/result_jsons/
+api/results_jsons/
