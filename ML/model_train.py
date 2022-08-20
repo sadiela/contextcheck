@@ -21,7 +21,7 @@ import pickle
 import os
 from pytorch_pretrained_bert.modeling import BertForTokenClassification
 from torch.nn import CrossEntropyLoss
-from tensorboardX import SummaryWriter
+#from tensorboardX import SummaryWriter
 import argparse
 import sklearn.metrics as metrics
 #from simplediff import diff
@@ -30,7 +30,7 @@ from pytorch_pretrained_bert.optimization import BertAdam
 from pytorch_pretrained_bert.modeling import BertModel, BertSelfAttention
 from pytorch_pretrained_bert.modeling import BertPreTrainedModel
 
-from features import FeatureGenerator
+from myfeatures import FeatureGenerator
 
 ###################
 # DIRECTORY PATHS #
